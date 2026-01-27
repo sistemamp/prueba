@@ -1,0 +1,3336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Causas - Con Dictado por Voz</title>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+    <style>
+        /* MANTENGO TODO EL CSS ORIGINAL SIN CAMBIOS */
+        :root {
+            --primary-blue: #007bff;
+            --primary-light-blue: #e7f4ff;
+            --primary-dark-blue: #0056b3;
+            --secondary-gray: #f8f9fa;
+            --secondary-light-gray: #e9ecef;
+            --secondary-dark-gray: #6c757d;
+            --status-success: #28a745;
+            --status-warning: #ff8c00;
+            --status-danger: #dc3545;
+            --status-info: #17a2b8;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --text-link: #007bff;
+            --text-light: #ffffff;
+            --background-default: #ffffff;
+            --background-card: #ffffff;
+            --background-header: #ffffff;
+            --background-table-header: #f8f9fa;
+            --border-default: #dee2e6;
+            --font-family: 'Arial', 'Helvetica', sans-serif;
+            --display-size: 24px;
+            --h1-size: 20px;
+            --h2-size: 18px;
+            --body-large-size: 16px;
+            --body-regular-size: 14px;
+            --caption-size: 12px;
+            --font-weight-regular: 400;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            --spacing-unit: 8px;
+            --spacing-xs: 4px;
+            --spacing-s: 8px;
+            --spacing-m: 16px;
+            --spacing-l: 24px;
+            --spacing-xl: 32px;
+            --spacing-gutter: 20px;
+            --border-radius-small: 2px;
+            --border-radius-default: 4px;
+            --border-radius-pill: 20px;
+            --shadow-none: none;
+            --shadow-subtle: 0 1px 3px rgba(0,0,0,0.1);
+            --radius: 12px;
+            --shadow: 0 4px 15px rgba(0,0,0,.08);
+            --color-audiencias: #007bff;
+            --color-vencimientos: #dc3545;
+            --color-gesell: #28a745;
+            --color-recursos: #6f42c1;
+            --color-diligencias: #fd7e14;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-default);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        
+        /* ESTILOS PARA DICTADO POR VOZ */
+        .btn-dictado {
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            margin-left: 8px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+        .btn-dictado:hover {
+            color: var(--primary-blue);
+            background: #e9ecef;
+        }
+        .btn-dictado.grabando {
+            color: #dc3545;
+            background: rgba(220, 53, 69, 0.1);
+            animation: pulse-grabacion 1.5s infinite;
+        }
+        @keyframes pulse-grabacion {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(220, 53, 69, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+        }
+        /* FIN ESTILOS DICTADO */
+
+        .header {
+            background-color: var(--background-header);
+            border-bottom: 1px solid var(--border-default);
+            padding: var(--spacing-s) var(--spacing-m);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-subtle);
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+            gap: var(--spacing-s);
+        }
+        .logo {
+            font-size: var(--h1-size);
+            font-weight: var(--font-weight-bold);
+            color: var(--primary-blue);
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: var(--spacing-m) var(--spacing-gutter);
+        }
+        .filters-section {
+            background-color: var(--background-card);
+            padding: var(--spacing-m);
+            border-radius: var(--border-radius-default);
+            border: 1px solid var(--border-default);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-subtle);
+        }
+        .filters-title {
+            font-size: var(--h2-size);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--spacing-m);
+        }
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-m);
+        }
+        .filter-row-1, .filter-row-2 {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-m);
+            width: 100%;
+        }
+        .filter-group {
+            flex: 1;
+            min-width: 150px;
+        }
+        .filter-label {
+            display: block;
+            font-size: var(--body-regular-size);
+            margin-bottom: var(--spacing-xs);
+            font-weight: var(--font-weight-semibold);
+        }
+        .input, .dropdown {
+            border: 1px solid var(--border-default);
+            border-radius: var(--border-radius-default);
+            padding: var(--spacing-s);
+            background-color: var(--background-default);
+            color: var(--text-primary);
+            font-size: var(--body-regular-size);
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+        .input:focus, .dropdown:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-s);
+            margin-top: var(--spacing-m);
+            flex-wrap: wrap;
+        }
+        .button {
+            background-color: var(--primary-blue);
+            color: var(--text-light);
+            border: none;
+            border-radius: var(--border-radius-default);
+            padding: var(--spacing-s) var(--spacing-m);
+            font-size: var(--body-regular-size);
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+        .button:hover {
+            opacity: 0.9;
+        }
+        .button-success {
+            background-color: #1e7e34;
+        }
+        .button-secondary {
+            background-color: var(--secondary-dark-gray);
+        }
+        .button-danger {
+            background-color: var(--status-danger);
+        }
+        .table-section {
+            background-color: var(--background-card);
+            border-radius: var(--border-radius-default);
+            border: 1px solid var(--border-default);
+            overflow: hidden;
+            box-shadow: var(--shadow-subtle);
+        }
+        .table-title {
+            font-size: var(--h2-size);
+            font-weight: var(--font-weight-semibold);
+            padding: var(--spacing-m);
+            background-color: var(--background-table-header);
+            border-bottom: 1px solid var(--border-default);
+        }
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+        .data-table th {
+            background-color: var(--background-table-header);
+            font-weight: var(--font-weight-semibold);
+            border-bottom: 2px solid var(--border-default);
+            padding: var(--spacing-m);
+            color: var(--text-primary);
+            font-size: var(--caption-size);
+            text-transform: uppercase;
+        }
+        .data-table td {
+            border-bottom: 1px solid var(--border-default);
+            padding: var(--spacing-m);
+            color: var(--text-primary);
+            font-size: var(--body-regular-size);
+        }
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        .data-table tr:hover td {
+            background-color: var(--secondary-gray);
+        }
+        .prioridad-pill {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #fff;
+            text-transform: uppercase;
+        }
+        .prioridad-baja { background-color: var(--status-success); }
+        .prioridad-media { background-color: var(--status-warning); }
+        .prioridad-alta { background-color: var(--status-danger); }
+        .prioridad-ninguna { background-color: var(--secondary-dark-gray); }
+        .prioridad-texto {
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        .prioridad-texto.alta { 
+            background-color: rgba(220, 53, 69, 0.1); 
+            color: var(--status-danger); 
+            border: 2px solid var(--status-danger);
+        }
+        .prioridad-texto.media { 
+            background-color: rgba(255, 140, 0, 0.1);
+            color: var(--status-warning); 
+            border: 2px solid var(--status-warning);
+        }
+        .prioridad-texto.baja { 
+            background-color: rgba(40, 167, 69, 0.1); 
+            color: var(--status-success); 
+            border: 2px solid var(--status-success);
+        }
+        .prioridad-texto.ninguna { 
+            background-color: rgba(108, 117, 125, 0.1); 
+            color: var(--secondary-dark-gray); 
+            border: 2px solid var(--secondary-dark-gray);
+        }
+        #paginacion-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-m);
+            margin-top: var(--spacing-m);
+            background: var(--background-card);
+            border-radius: var(--border-radius-default);
+            box-shadow: var(--shadow-subtle);
+        }
+        #paginacion-container .page-info {
+            font-size: var(--body-regular-size);
+            color: var(--text-secondary);
+            font-weight: var(--font-weight-semibold);
+        }
+        #paginacion-container .nav-buttons {
+            display: flex;
+            gap: var(--spacing-s);
+        }
+        #modal, #modalVer, #alertModal, #modalEventosHoy {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.6);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+        #modal .content, #modalVer .content, #alertModal .content, #modalEventosHoy .content {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 980px;
+            width: 100%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            animation: fadeIn .25s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-header {
+            position: sticky;
+            top: 0;
+            background: var(--primary-blue);
+            color: #fff;
+            padding: 12px 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 16px 16px 0 0;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+        .modal-body {
+            padding: 16px 16px 0;
+            overflow-y: auto;
+        }
+        .controls-form {
+            position: sticky;
+            bottom: 0;
+            background: #fff;
+            padding: 12px 16px;
+            border-top: 1px solid #eee;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+            z-index: 5;
+        }
+        #formCausa .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        @media(max-width:900px) { 
+            #formCausa .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        #formCausa label {
+            font-weight: 600;
+            color: var(--primary-blue);
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            display: block;
+        }
+        /* Ajuste para alinear botón de microfono con el label */
+        .label-with-mic {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #formCausa input, #formCausa textarea, #formCausa select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            background: #fafafa;
+            transition: .2s;
+        }
+        #formCausa input:focus, #formCausa textarea:focus, #formCausa select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            background: #fff;
+        }
+        .counter {
+            font-size: .8rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        #agregarNota {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f4f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        #agregarNota label {
+            font-weight: 600;
+            color: var(--primary-blue);
+            display: block;
+            margin-bottom: 8px;
+        }
+        #agregarNota textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            resize: vertical;
+        }
+        #agregarNota button {
+            background: var(--primary-blue);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #verContenido p {
+            margin: .35rem 0;
+            font-size: .92rem;
+        }
+        #verContenido strong {
+            color: var(--primary-blue);
+        }
+        .note {
+            border-left: 3px solid var(--primary-blue);
+            padding: 6px;
+            margin: 6px 0;
+            background: #f9fbff;
+            border-radius: 6px;
+        }
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        #alertModal .content {
+            max-width: 400px;
+            padding: 24px;
+            text-align: center;
+            gap: 16px;
+        }
+        #alertModal h3 {
+            margin: 0;
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+        #alertModal p {
+            margin: 0;
+            color: var(--secondary-dark-gray);
+            font-size: 0.95rem;
+        }
+        #alertModal .actions-row {
+            display: flex;
+            justify-content: space-around;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        #alertModal .actions-row .btn {
+            flex-grow: 1;
+        }
+        .alert-danger { background: var(--status-danger); color: white; }
+        .alert-success { background: var(--status-success); color: white; }
+        .floating-alert {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--status-danger);
+            color: #fff;
+            padding: 16px 24px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(220, 53, 69, 0.3);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            max-width: 500px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: var(--font-weight-semibold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        .floating-alert.success {
+            background-color: var(--status-success);
+            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.3);
+        }
+        .floating-alert.show {
+            opacity: 1;
+            visibility: visible;
+            top: 30px;
+        }
+        .floating-alert i {
+            font-size: 1.3rem;
+        }
+        .audiencias-container {
+            margin-bottom: 10px;
+        }
+        .audiencia-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .audiencia-item input {
+            flex: 1;
+        }
+        .btn-eliminar-audiencia {
+            background: var(--status-danger);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        .btn-audiencia {
+            background: var(--status-success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .diligencias-container {
+            margin-bottom: 10px;
+        }
+        .diligencia-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .diligencia-item input[type="datetime-local"] {
+            flex: 1;
+        }
+        .diligencia-item input[type="text"] {
+            flex: 2;
+        }
+        .btn-eliminar-diligencia {
+            background: var(--status-danger);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        .btn-diligencia {
+            background: var(--color-diligencias);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .tabs-container {
+            margin-bottom: 15px;
+        }
+        .tabs-nav {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .tab-button {
+            background: #f0f0f0;
+            border: none;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #777;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        .tab-button.active {
+            background: var(--primary-blue);
+            color: #fff;
+            position: relative;
+            bottom: -2px;
+            border-bottom: 2px solid var(--primary-blue);
+        }
+        .tab-content {
+            padding: 15px 0;
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .tab-content .field:not(:last-child) {
+            margin-bottom: 10px;
+        }
+        .field.error input,
+        .field.error textarea,
+        .field.error select {
+            border-color: var(--status-danger);
+            background-color: #ffeef0;
+        }
+        .field .error-message {
+            color: var(--status-danger);
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: none;
+        }
+        .field.error .error-message {
+            display: block;
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        #verContenido .prioridad-destacada {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 12px;
+            color: #fff;
+        }
+        .prioridad-destacada h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .prioridad-destacada .fa-exclamation-triangle {
+            font-size: 1.5rem;
+        }
+        .prioridad-destacada.prioridad-baja { background-color: var(--status-success); }
+        .prioridad-destacada.prioridad-media { background-color: var(--status-warning); }
+        .prioridad-destacada.prioridad-alta { background-color: var(--status-danger); }
+        .prioridad-destacada.prioridad-ninguna { background-color: var(--secondary-dark-gray); }
+        .notes-history {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .notes-history h4 {
+            margin: 0 0 10px;
+            color: var(--primary-blue);
+            font-size: 1rem;
+            border-bottom: 2px solid var(--primary-blue);
+            padding-bottom: 5px;
+        }
+        .note-item {
+            background: #f8f8f8;
+            border-left: 4px solid var(--primary-blue);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        .note-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--secondary-dark-gray);
+            margin-bottom: 5px;
+        }
+        .note-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .editor-toolbar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .editor-toolbar button {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .editor-toolbar button:hover {
+            background: #e9ecef;
+        }
+        .editor-toolbar button.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+        .color-button {
+            font-weight: bold;
+            min-width: 50px;
+        }
+        .color-button.azul {
+            color: #007bff;
+            border-color: #007bff;
+        }
+        .color-button.rojo {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+        .color-button.verde {
+            color: #28a745;
+            border-color: #28a745;
+        }
+        .color-button.normal {
+            color: #212529;
+            border-color: #6c757d;
+        }
+        #observaciones-editor {
+            min-height: 120px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            background: #fff;
+            line-height: 1.5;
+        }
+        #observaciones-editor:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+        input[type="time"]::-webkit-datetime-edit-ampm-field {
+            display: none;
+        }
+        input[type="time"]::-moz-datetime-edit-ampm-field {
+            display: none;
+        }
+        input[type="datetime-local"]::-webkit-datetime-edit-ampm-field {
+            display: none;
+        }
+        input[type="datetime-local"]::-moz-datetime-edit-ampm-field {
+            display: none;
+        }
+        @media print {
+            .button, .actions, .action-buttons, .controls-form,
+            #btnNuevo, #btnPrintListado, #btnPrintFechas, #btnPrintForm,
+            #btnPrintRegistro, #btnCerrarVer, #btnAgregarNota, #btnVerLineaTiempo,
+            #btnPrintTodos, #btnPrintFiltrado, #btnEventosHoy,
+            .fa-solid, .fas, .far, .fa, .fa-eye, .fa-pen, .fa-trash, .fa-plus,
+            .fa-save, .fa-print, .fa-xmark, .fa-check, .fa-arrow-left, .fa-arrow-right,
+            .fa-exclamation-triangle, .fa-timeline, .fa-file-pen, .fa-calendar-day,
+            .btn-eliminar-audiencia, .btn-audiencia, .floating-alert,
+            .prioridad-destacada, .tabs-nav, .tab-button, .editor-toolbar, .btn-dictado {
+                display: none !important;
+            }
+            .header, .filters-section, .sidebar, .pagination-container {
+                display: none !important;
+            }
+            body, .container, .main-layout, .main {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            .table-section, .kpi-section, .modal .content, #modalVer .content {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                page-break-inside: avoid;
+            }
+            .data-table {
+                min-width: 100% !important;
+            }
+            .kpi-cards {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 10px !important;
+            }
+            .prioridad-pill {
+                color: #000 !important;
+                background-color: transparent !important;
+                border: 1px solid #000 !important;
+            }
+            .tab-content {
+                display: block !important;
+            }
+            #formCausa .grid {
+                display: table !important;
+                width: 100% !important;
+            }
+            .field {
+                display: table-row !important;
+                margin-bottom: 0 !important;
+            }
+            .field label {
+                display: table-cell !important;
+                padding: 8px !important;
+                font-weight: bold !important;
+                width: 40% !important;
+                border-bottom: 1px solid #ddd !important;
+            }
+            .field input, .field textarea, .field select {
+                display: table-cell !important;
+                width: 100% !important;
+                padding: 8px !important;
+                border: none !important;
+                border-bottom: 1px solid #ddd !important;
+                background: transparent !important;
+            }
+            .field textarea {
+                height: auto !important;
+                min-height: 60px !important;
+            }
+            .prioridad-texto {
+                color: #000 !important;
+                background-color: transparent !important;
+                border: 1px solid #000 !important;
+                font-weight: bold !important;
+            }
+            #observaciones-editor {
+                border: none !important;
+                padding: 0 !important;
+                min-height: auto !important;
+                max-height: none !important;
+            }
+        }
+        /* Estilos para el modal de eventos de hoy */
+        #modalEventosHoy .content {
+            max-width: 500px;
+        }
+        .eventos-hoy-modal {
+            padding: 10px;
+        }
+        .evento-titulo {
+            font-weight: bold;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 2px solid;
+            font-size: 1rem;
+        }
+        .evento-audiencias { color: var(--color-audiencias); border-color: var(--color-audiencias); }
+        .evento-vencimientos { color: var(--color-vencimientos); border-color: var(--color-vencimientos); }
+        .evento-gesell { color: var(--color-gesell); border-color: var(--color-gesell); }
+        .evento-recursos { color: var(--color-recursos); border-color: var(--color-recursos); }
+        .evento-diligencias { color: var(--color-diligencias); border-color: var(--color-diligencias); }
+        .evento-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            margin-bottom: 6px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid;
+            transition: all 0.2s;
+        }
+        .evento-item-audiencias { border-left-color: var(--color-audiencias); }
+        .evento-item-vencimientos { border-left-color: var(--color-vencimientos); }
+        .evento-item-gesell { border-left-color: var(--color-gesell); }
+        .evento-item-recursos { border-left-color: var(--color-recursos); }
+        .evento-item-diligencias { border-left-color: var(--color-diligencias); }
+        .evento-item:hover {
+            background: #e9ecef;
+        }
+        .evento-numero {
+            font-weight: bold;
+            color: var(--primary-blue);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .evento-numero:hover {
+            color: var(--primary-dark-blue);
+        }
+        .evento-hora {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .evento-vacio {
+            font-style: italic;
+            color: var(--text-secondary);
+            padding: 6px 8px;
+        }
+        .eventos-lista {
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+        }
+        .evento-tabla {
+            padding: 4px 6px;
+            margin-bottom: 3px;
+            border-left: 3px solid;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .evento-tabla.audiencia { border-left-color: var(--color-audiencias); }
+        .evento-tabla.gesell { border-left-color: var(--color-gesell); }
+        .evento-tabla.vencimiento { border-left-color: var(--color-vencimientos); }
+        .evento-tabla.recurso { border-left-color: var(--color-recursos); }
+        .evento-tabla.diligencia { border-left-color: var(--color-diligencias); }
+        @media (max-width: 1024px) {
+            .container {
+                max-width: 100%;
+                padding: var(--spacing-s);
+            }
+            #modal .content, #modalVer .content, #modalEventosHoy .content {
+                max-width: 95%;
+            }
+            .filter-row-1, .filter-row-2 {
+                flex-wrap: wrap;
+            }
+            .filter-group {
+                min-width: 120px;
+            }
+        }
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: var(--spacing-s);
+                text-align: center;
+            }
+            .filter-row {
+                flex-direction: column;
+            }
+            .filter-group {
+                min-width: auto;
+            }
+            #paginacion-container {
+                flex-direction: column;
+                gap: var(--spacing-m);
+                text-align: center;
+            }
+            .table-title {
+                padding: var(--spacing-s);
+            }
+            .data-table th, 
+            .data-table td {
+                padding: var(--spacing-s);
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+            .controls-form {
+                flex-direction: column;
+            }
+            #formCausa .grid {
+                grid-template-columns: 1fr;
+            }
+            .tabs-nav {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .tab-button {
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
+            .data-table {
+                min-width: 600px;
+            }
+            .actions {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 4px;
+            }
+            .editor-toolbar {
+                flex-wrap: wrap;
+            }
+            .filter-row-1, .filter-row-2 {
+                flex-direction: column;
+            }
+        }
+        @media (max-width: 576px) {
+            .container {
+                padding: var(--spacing-xs);
+                width: 100%;
+            }
+            .filters-section,
+            .table-section {
+                padding: var(--spacing-s);
+            }
+            .filters-title,
+            .table-title {
+                font-size: var(--body-large-size);
+            }
+            #modal .content, #modalVer .content, #modalEventosHoy .content {
+                max-width: 100%;
+                max-height: 100vh;
+                border-radius: 0;
+                margin: 0;
+            }
+            .modal-header,
+            .modal-body,
+            .controls-form {
+                padding: var(--spacing-s);
+            }
+            .filter-group {
+                width: 100%;
+            }
+            .button {
+                width: 100%;
+                justify-content: center;
+            }
+            .tab-button {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            .table-wrap {
+                margin: 0 -8px;
+                padding: 0 8px;
+            }
+            .data-table {
+                min-width: 100%;
+            }
+            .prioridad-pill {
+                font-size: 0.7rem;
+                padding: 3px 6px;
+            }
+            .actions {
+                flex-direction: column;
+                gap: 4px;
+            }
+            .actions .button {
+                width: 100%;
+                font-size: 0.85rem;
+            }
+            .floating-alert {
+                max-width: 90%;
+                font-size: 0.9rem;
+                padding: 10px 15px;
+            }
+            .editor-toolbar {
+                padding: 6px;
+            }
+            .editor-toolbar button {
+                padding: 4px 8px;
+                font-size: 0.8rem;
+            }
+        }
+        @media (max-width: 360px) {
+            .container {
+                padding: 4px;
+            }
+            .filters-section,
+            .table-section {
+                padding: 8px;
+            }
+            .tab-button {
+                padding: 6px 8px;
+                font-size: 0.75rem;
+            }
+            .data-table th, 
+            .data-table td {
+                padding: 6px;
+                font-size: 0.8rem;
+            }
+            .button {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-alert" id="floating-alert">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span id="floating-alert-text"></span>
+    </div>
+    
+    <header class="header">
+        <div class="header-content">
+            <button id="btnNuevo" class="button">
+                <i class="fas fa-plus"></i> Nuevo Expediente
+            </button>
+            <button id="btnEventosHoy" class="button">
+                <i class="fas fa-calendar-day"></i> Eventos Hoy
+            </button>
+        </div>
+    </header>
+    <main class="container">
+        <section class="filters-section">
+            <h2 class="filters-title">Filtros de Búsqueda</h2>
+            <div class="filter-row">
+                <div class="filter-row-1">
+                    <div class="filter-group">
+                        <label class="filter-label" for="buscador">Búsqueda</label>
+                        <input type="text" id="buscador" class="input" placeholder="🔍 Buscar...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label" for="filtroTipoProceso">Tipo de Proceso</label>
+                        <select id="filtroTipoProceso" class="dropdown">
+                            <option value="">Tipo de Proceso (todos)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label" for="filtroIntervencion">Intervención</label>
+                        <select id="filtroIntervencion" class="dropdown">
+                            <option value="">Intervención (todas)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label" for="filtroEstado">Estado</label>
+                        <select id="filtroEstado" class="dropdown">
+                            <option value="">Estado (todos)</option>
+                            <option>En trámite</option><option>Finalizado</option><option>En Alzada</option><option>Archivado</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label" for="filtroUsuario">Usuario</label>
+                        <select id="filtroUsuario" class="dropdown">
+                            <option value="">Usuario (todos)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label" for="filtroPrioridad">Prioridad</label>
+                        <select id="filtroPrioridad" class="dropdown">
+                            <option value="">Prioridad (todas)</option>
+                            <option value="Ninguna">Ninguna</option>
+                            <option value="Baja">Baja</option>
+                            <option value="Media">Media</option>
+                            <option value="Alta">Alta</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-row-2">
+                    <div class="filter-group">
+                        <label class="filter-label" for="filtroEventos">Filtrar por Evento</label>
+                        <select id="filtroEventos" class="dropdown">
+                            <option value="">Todos los eventos</option>
+                            <option value="audiencias">Audiencias</option>
+                            <option value="gesell">Cámara Gesell</option>
+                            <option value="vencimientos">Vencimientos</option>
+                            <option value="recursos">Recursos</option>
+                            <option value="diligencias">Diligencias</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label" for="filtroFechaDesde">Fecha Desde</label>
+                        <input type="date" id="filtroFechaDesde" class="input">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label" for="filtroFechaHasta">Fecha Hasta</label>
+                        <input type="date" id="filtroFechaHasta" class="input">
+                    </div>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button id="btnPrintFiltrado" class="button button-success">
+                    <i class="fas fa-print"></i> Imprimir Filtrado
+                </button>
+            </div>
+        </section>
+        <section class="table-section">
+            <h2 class="table-title">Expedientes Judiciales</h2>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Carátula</th>
+                            <th>Tipo</th>
+                            <th>Juzgado</th>
+                            <th>Usuario</th>
+                            <th>Estado</th>
+                            <th>Prioridad</th>
+                            <th>Registro</th>
+                            <th>Eventos</th>
+                            <th class="no-print">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyCausas">
+                        <tr>
+                            <td colspan="10">Cargando expedientes...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <div id="paginacion-container"></div>
+    </main>
+
+    <div id="modalEventosHoy">
+        <div class="content">
+            <div class="modal-header">
+                <i class="fas fa-calendar-day"></i>
+                <h2 style="margin:0;">Eventos de Hoy</h2>
+            </div>
+            <div class="modal-body eventos-hoy-modal">
+                <div class="eventos-hoy">
+                    <div class="evento-titulo evento-audiencias">Audiencias</div>
+                    <div id="listAudHoy"></div>
+                </div>
+                <div class="eventos-hoy">
+                    <div class="evento-titulo evento-gesell">Cámara Gesell</div>
+                    <div id="listGesellHoy"></div>
+                </div>
+                <div class="eventos-hoy">
+                    <div class="evento-titulo evento-vencimientos">Vencimientos</div>
+                    <div id="listVencHoy"></div>
+                </div>
+                <div class="eventos-hoy">
+                    <div class="evento-titulo evento-recursos">Recursos</div>
+                    <div id="listRecursosHoy"></div>
+                </div>
+                <div class="eventos-hoy">
+                    <div class="evento-titulo evento-diligencias">Diligencias</div>
+                    <div id="listDiligenciasHoy"></div>
+                </div>
+            </div>
+            <div class="controls-form">
+                <button id="btnCerrarEventosHoy" class="button button-secondary">
+                    <i class="fa fa-xmark"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal">
+        <div class="content">
+            <div class="modal-header">
+                <i class="fa-solid fa-file-pen"></i>
+                <h2 id="tituloForm" style="margin:0;">Nuevo Expediente</h2>
+            </div>
+            <div class="modal-body">
+                <form id="formCausa" action="#" method="post" aria-label="Formulario para nuevo expediente o edición">
+                    <input type="hidden" id="editId" />
+                    <div class="tabs-container">
+                        <div class="tabs-nav">
+                            <button type="button" class="tab-button active" data-tab="tab1">Datos Principales</button>
+                            <button type="button" class="tab-button" data-tab="tab2">Fechas</button>
+                            <button type="button" class="tab-button" data-tab="tab3">Audiencias</button>
+                            <button type="button" class="tab-button" data-tab="tab4">Vencimientos</button>
+                            <button type="button" class="tab-button" data-tab="tab5">Diligencias</button>
+                            <button type="button" class="tab-button" data-tab="tab6">Recursos</button>
+                            <button type="button" class="tab-button" data-tab="tab7">Observaciones</button>
+                        </div>
+                        <div id="tab1" class="tab-content active">
+                            <div class="field">
+                                <label for="numCausa">N° Expediente *</label>
+                                <input id="numCausa" required autocomplete="off" />
+                                <span class="error-message">Este campo es obligatorio.</span>
+                            </div>
+                            <div class="field">
+                                <label for="caratula" class="label-with-mic">
+                                    Carátula Completa *
+                                    <button type="button" class="btn-dictado" onclick="toggleDictado('caratula', this)" title="Dictar por voz"><i class="fas fa-microphone"></i></button>
+                                </label>
+                                <textarea id="caratula" rows="2" required></textarea>
+                                <span class="error-message">Este campo es obligatorio.</span>
+                            </div>
+                            <div class="field">
+                                <label for="tipoProceso">Tipo de Proceso *</label>
+                                <select id="tipoProceso" required></select>
+                                <span class="error-message">Este campo es obligatorio.</span>
+                            </div>
+                            <div class="field">
+                                <label for="juzgado">Juzgado *</label>
+                                <select id="juzgado" required></select>
+                                <span class="error-message">Este campo es obligatorio.</span>
+                            </div>
+                            <div class="field">
+                                <label for="prioridad">Prioridad *</label>
+                                <select id="prioridad" required>
+                                    <option value="Ninguna"><strong>Ninguna</strong> (gris)</option>
+                                    <option value="Baja"><strong>Baja</strong> (verde)</option>
+                                    <option value="Media"><strong>Media</strong> (naranja)</option>
+                                    <option value="Alta"><strong>Alta</strong> (roja)</option>
+                                </select>
+                                <span class="error-message">Este campo es obligatorio.</span>
+                            </div>
+                            <div class="field">
+                                <label for="usuarioAsignado">Usuario Asignado *</label>
+                                <select id="usuarioAsignado" required></select>
+                                <span class="error-message">Este campo es obligatorio.</span>
+                            </div>
+                            <div class="field">
+                                <label for="estado">Estado del Proceso</label>
+                                <select id="estado"><option>En trámite</option><option>Finalizado</option><option>Archivado</option><option>En Alzada</option></select>
+                            </div>
+                            <div class="field">
+                                <label for="intervencion">Intervención</label>
+                                <select id="intervencion">
+                                    <option>Defensor Oficial</option><option>Ministerio Principal</option><option>Ministerio Complementario</option><option>Patrocinante Actor</option>
+                                    <option>Patrocinante Demandado</option><option>Patrocinante Tercero</option><option value="Defensor de Ausente">Defensor de Ausente</option><option>Patrocinante presunto incapaz</option></option>
+                                    <option value="Defensor Oficial Asesor Letrado">Asistencia Letrada del incapaz</option><option>Ministerio Público del incapaz</option><option>Ministerio Público en turno Abril</option><option>Ministerio Público en turno Agosto</option><option>Ministerio Público en turno Diciembre</option><option>Tutor Ad Litem</option><option>Defensor Oficial Art 329 CPCC</option><option>Defensor Oficial Art 626 CPCC</option>   
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="datosNnya" class="label-with-mic">
+                                    Datos de NNyA (máx. 500 palabras)
+                                    <button type="button" class="btn-dictado" onclick="toggleDictado('datosNnya', this)" title="Dictar por voz"><i class="fas fa-microphone"></i></button>
+                                </label>
+                                <textarea id="datosNnya" disabled></textarea><div class="counter" id="counterNnya" style="display:none">0/500</div>
+                            </div>
+                        </div>
+                        <div id="tab2" class="tab-content">
+                            <div class="field"><label for="fechaInicio">Fecha de Inicio</label><input type="date" id="fechaInicio" /></div>
+                            <div class="field"><label for="fechaPase">Fecha de Pase</label><input type="datetime-local" id="fechaPase" /></div>
+                        </div>
+                        <div id="tab3" class="tab-content">
+                            <div class="field">
+                                <label for="audiencias">Audiencias señaladas</label>
+                                <div id="audiencias-container" class="audiencias-container"></div>
+                                <button type="button" id="btnAgregarAudiencia" class="btn-audiencia"><i class="fa fa-plus"></i> Agregar Audiencia</button>
+                            </div>
+                            <div class="field">
+                                <label for="audienciaGesell">Audiencia en Cámara Gesell</label>
+                                <div style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="habilitarAudienciaGesell" /><span>Habilitar</span></div>
+                                <input type="datetime-local" id="audienciaGesell" disabled />
+                            </div>
+                            <div class="field">
+                                <label for="nnyaGesell" class="label-with-mic">
+                                    NNyA en Gesell (máx. 400 palabras)
+                                    <button type="button" class="btn-dictado" onclick="toggleDictado('nnyaGesell', this)" title="Dictar por voz"><i class="fas fa-microphone"></i></button>
+                                </label>
+                                <textarea id="nnyaGesell" disabled></textarea><div class="counter" id="counterNnyaGesell" style="display:none">0/400</div>
+                            </div>
+                        </div>
+                        <div id="tab4" class="tab-content">
+                            <div class="field"><label for="vencimiento">Vencimiento</label><input type="datetime-local" id="vencimiento" /></div>
+                            <div class="field"><label for="vencimientoRecursos">Vencimiento de Recursos</label><input type="datetime-local" id="vencimientoRecursos" /></div>
+                        </div>
+                        <div id="tab5" class="tab-content">
+                            <div class="field">
+                                <label for="diligencias">Diligencias</label>
+                                <div id="diligencias-container" class="diligencias-container"></div>
+                                <button type="button" id="btnAgregarDiligencia" class="btn-diligencia"><i class="fa fa-plus"></i> Agregar Diligencia</button>
+                            </div>
+                        </div>
+                        <div id="tab6" class="tab-content">
+                            <div class="field">
+                                <label for="recursos">Recursos Interpuestos</label>
+                                <select id="recursos"><option value="">Seleccione un recurso</option><option>Apelación</option><option>Queja</option><option>Inconstitucionalidad</option><option>Nulidad</option><option>Reposición</option><option>Aclaratoria</option><option>Recurso Extraordinario</option><option>Recurso de Inaplicabilidad</option></select>
+                            </div>
+                            <div id="recursos-opcionales" style="display:none;">
+                                <div class="field">
+                                    <label for="recursosContestacion">Recursos Contestación</label>
+                                    <select id="recursosContestacion"><option value="">Seleccione un recurso</option><option>Apelación</option><option>Queja</option><option>Inconstitucionalidad</option><option>Nulidad</option><option>Reposición</option><option>Aclaratoria</option><option>Recurso Extraordinario</option><option>Recurso de Inaplicabilidad</option></select>
+                                </div>
+                                <div class="field">
+                                    <label for="estadoRecursos">Estado de Recursos</label>
+                                    <select id="estadoRecursos"><option value="">Seleccione un estado</option><option>Pendiente</option><option>En trámite</option><option>Resuelto</option><option>Rechazado</option></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab7" class="tab-content">
+                            <div class="field">
+                                <label for="observaciones">Observaciones (máx. 1000 palabras)</label>
+                                <div class="editor-toolbar">
+                                    <button type="button" id="btnBold" title="Negrita"><i class="fas fa-bold"></i></button>
+                                    <button type="button" id="btnColorAzul" class="color-button azul" title="Color Azul">A</button>
+                                    <button type="button" id="btnColorRojo" class="color-button rojo" title="Color Rojo">A</button>
+                                    <button type="button" id="btnColorVerde" class="color-button verde" title="Color Verde">A</button>
+                                    <button type="button" id="btnColorNormal" class="color-button normal" title="Color Normal">Normal</button>
+                                    <button type="button" id="btnTTSObservaciones" title="Leer Observaciones"><i id="iconTTSObservaciones" class="fas fa-volume-up"></i></button>
+                                    <button type="button" class="btn-dictado-editor" onclick="toggleDictado('observaciones-editor', this)" title="Dictar por voz"><i class="fas fa-microphone"></i></button>
+                                </div>
+                                <div id="observaciones-editor" contenteditable="true"></div>
+                                <input type="hidden" id="observaciones" name="observaciones">
+                                <div class="counter" id="counter">0/1000</div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="controls-form">
+                <button class="button button-success" type="button" id="btnGuardar"><i class="fa fa-save"></i>Guardar</button>
+            </div>
+        </div>
+    </div>
+    <div id="modalVer">
+        <div class="content">
+            <div class="modal-header">
+                <i class="fa-solid fa-eye"></i>
+                <h2 style="margin:0;">Detalle del Expediente</h2>
+            </div>
+            <div class="modal-body">
+                <div id="verContenido"></div>
+                <div id="agregarNota">
+                    <label for="notaBitacora" class="label-with-mic">
+                        Agregar Nota de Seguimiento:
+                        <button type="button" class="btn-dictado" onclick="toggleDictado('notaBitacora', this)" title="Dictar por voz"><i class="fas fa-microphone"></i></button>
+                    </label>
+                    <textarea id="notaBitacora" placeholder="Escribe aquí la nota..."></textarea>
+                    <button id="btnAgregarNota" class="button"><i class="fa fa-plus"></i> Guardar Nota</button>
+                </div>
+                <div class="notes-history">
+                    <h4>Historial de Notas</h4>
+                    <div id="historialNotas"></div>
+                </div>
+            </div>
+            <div class="controls-form" style="justify-content:flex-end;">
+                <button id="btnCerrarVer" class="button button-secondary"><i class="fa fa-xmark"></i>Cerrar</button>
+                <button id="btnPrintRegistro" class="button button-success"><i class="fa fa-print"></i>Imprimir Registro</button>
+            </div>
+        </div>
+    </div>
+    <div id="alertModal">
+        <div class="content">
+            <h3 id="alertTitle"></h3>
+            <p id="alertMessage"></p>
+            <div class="actions-row">
+                <button id="btnAlertOK" class="button alert-success"><i class="fa fa-check"></i> OK</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBt6X0u0BpiNPcV2SNPrN-spCmjl2AhZaA",
+            authDomain: "causas-defensoria.firebaseapp.com",
+            projectId: "causas-defensoria",
+            storageBucket: "causas-defensoria.appspot.com",
+            messagingSenderId: "186064671470",
+            appId: "1:186064671470:web:b58bae5eadbe6e469f19ff"
+        };
+        
+        let app;
+        let db;
+        
+        try {
+            if (firebase.apps && firebase.apps.length > 0) {
+                app = firebase.app();
+                console.log("Firebase ya está inicializado");
+            } else {
+                console.log("Inicializando Firebase...");
+                app = firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+            console.log("Firebase Firestore inicializado correctamente");
+            
+            // HABILITAR PERSISTENCIA DE FIREBASE
+            try {
+                db.enablePersistence()
+                    .then(() => {
+                        console.log("Persistencia habilitada. Los datos se almacenarán en caché en el navegador.");
+                    })
+                    .catch((err) => {
+                        console.warn("No se pudo habilitar la persistencia: ", err);
+                        if (err.code === 'failed-precondition') {
+                            console.warn("Múltiples pestañas abiertas. La persistencia solo se puede habilitar en una pestaña a la vez.");
+                        } else if (err.code === 'unimplemented') {
+                            console.warn("El navegador no soporta persistencia. La aplicación funcionará sin caché local.");
+                        }
+                    });
+            } catch (e) {
+                console.warn("Error al habilitar persistencia: ", e);
+            }
+            
+        } catch (e) {
+            console.error("Error al inicializar Firebase:", e);
+            mostrarAlertaFlotante("Error al conectar con la base de datos. Por favor, recarga la página.", 'danger');
+        }
+
+        let modo = "nuevo";
+        let datosCache = [];
+        let paginaActual = 1;
+        let datosFiltrados = [];
+        let causaActualId = null;
+        let unsubCausas = null;
+        let usuariosCache = [];
+        let juzgadosPorTipoCache = {};
+        let filterTimeout = null; // Para debounce de búsqueda
+        
+        const recordsPerPage = 10;
+        const intervencionOptions = [
+            "Defensor Oficial","Ministerio Principal", "Ministerio Complementario", "Patrocinante Actor",
+            "Patrocinante Demandado", "Patrocinante Tercero", "Defensor de Ausente",
+            "Patrocinante presunto incapaz", "Asesor Letrado", "Ministerio Público del incapaz",
+            "Ministerio Público en turno Abril", "Ministerio Público en turno Agosto",
+            "Ministerio Público en turno Diciembre", "Asistencia Letrada del incapaz","Tutor Ad Litem","Defensor Oficial Art 329 CPCC", "Defensor Oficial Art 626 CPCC"   
+        ];
+        
+        const $ = (id) => document.getElementById(id);
+        const tbody = $("tbodyCausas");
+        const modal = $("modal");
+        const modalVer = $("modalVer");
+        const modalEventosHoy = $("modalEventosHoy");
+        const verContenido = $("verContenido");
+        const tituloForm = $("tituloForm");
+        const editId = $("editId");
+        const buscador = $("buscador");
+        const filtroEstado = $("filtroEstado");
+        const filtroUsuario = $("filtroUsuario");
+        const filtroPrioridad = $("filtroPrioridad");
+        const filtroIntervencion = $("filtroIntervencion");
+        const filtroTipoProceso = $("filtroTipoProceso");
+        const filtroEventos = $("filtroEventos");
+        const filtroFechaDesde = $("filtroFechaDesde");
+        const filtroFechaHasta = $("filtroFechaHasta");
+        const notaBitacora = $("notaBitacora");
+        const historialNotas = $("historialNotas");
+        const btnAgregarNota = $("btnAgregarNota");
+        const listAudHoy = $("listAudHoy");
+        const listGesellHoy = $("listGesellHoy");
+        const listVencHoy = $("listVencHoy");
+        const listRecursosHoy = $("listRecursosHoy");
+        const listDiligenciasHoy = $("listDiligenciasHoy");
+        const floatingAlert = $("floating-alert");
+        const floatingAlertText = $("floating-alert-text");
+        const audienciasContainer = $("audiencias-container");
+        const diligenciasContainer = $("diligencias-container");
+        const btnAgregarAudiencia = $("btnAgregarAudiencia");
+        const btnAgregarDiligencia = $("btnAgregarDiligencia");
+        const alertModal = $("alertModal");
+        const alertTitle = $("alertTitle");
+        const alertMessage = $("alertMessage");
+        const btnAlertOK = $("btnAlertOK");
+        
+        const selTipo = $("tipoProceso"), selJuz = $("juzgado"), selUsu = $("usuarioAsignado"), selPrioridad = $("prioridad");
+        const tabButtons = document.querySelectorAll(".tab-button");
+        const tabContents = document.querySelectorAll(".tab-content");
+        
+        const btnBold = $("btnBold");
+        const btnColorAzul = $("btnColorAzul");
+        const btnColorRojo = $("btnColorRojo");
+        const btnColorVerde = $("btnColorVerde");
+        const btnColorNormal = $("btnColorNormal");
+        const observacionesEditor = $("observaciones-editor");
+        const observacionesHidden = $("observaciones");
+        
+        const toDate = (v) => v?.toDate ? v.toDate() : (v?.seconds ? new Date(v.seconds*1000) : (v ? new Date(v) : null));
+        
+        function formatearFecha(d, conHora = false) {
+            const fecha = toDate(d);
+            if (!fecha || isNaN(fecha)) return "";
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const año = fecha.getFullYear();
+            if (!conHora) {
+                return `${dia}/${mes}/${año}`;
+            }
+            const horas = String(fecha.getHours()).padStart(2, '0');
+            const minutos = String(fecha.getMinutes()).padStart(2, '0');
+            return `${dia}/${mes}/${año} ${horas}:${minutos}`;
+        }
+        
+        function formatFechaParaInput(fecha, conHora = true) {
+            if (!fecha || isNaN(fecha)) return "";
+            
+            const año = fecha.getFullYear();
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            
+            if (!conHora) {
+                return `${año}-${mes}-${dia}`;
+            }
+            
+            const horas = String(fecha.getHours()).padStart(2, '0');
+            const minutos = String(fecha.getMinutes()).padStart(2, '0');
+            return `${año}-${mes}-${dia}T${horas}:${minutos}`;
+        }
+        
+        const prioridadClase = (p) => {
+            p = (p || "Ninguna").toLowerCase();
+            if(p === "alta") return "prioridad-alta";
+            if(p === "media") return "prioridad-media";
+            if(p === "baja") return "prioridad-baja";
+            return "prioridad-ninguna";
+        };
+        
+        const prioridadClaseTexto = (p) => {
+            p = (p || "Ninguna").toLowerCase();
+            if(p === "alta") return "alta";
+            if(p === "media") return "media";
+            if(p === "baja") return "baja";
+            return "ninguna";
+        };
+        
+        function mostrarAlertaFlotante(mensaje, tipo = 'danger') {
+            if (!floatingAlertText) {
+                console.error("Elemento floating-alert-text no encontrado");
+                return;
+            }
+            
+            floatingAlertText.textContent = mensaje;
+            floatingAlert.classList.remove('danger', 'success', 'show');
+            floatingAlert.classList.add(tipo);
+            
+            const icon = floatingAlert.querySelector('i');
+            if (icon) {
+                icon.style.display = 'block';
+            }
+            
+            setTimeout(() => {
+                floatingAlert.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                floatingAlert.classList.remove('show');
+            }, 5000);
+        }
+        
+        // FUNCIÓN PARA VALIDAR EXISTENCIA DE EXPEDIENTE
+        function validarExistenciaExpediente() {
+            const numCausaInput = $("numCausa");
+            const numCausa = numCausaInput.value.trim();
+            const numCausaField = numCausaInput.closest('.field');
+            const errorSpan = numCausaField.querySelector('.error-message');
+            
+            if (modo === "nuevo" && numCausa) {
+                // Buscar en datosCache si ya existe este número
+                const existe = datosCache.some(causa => causa.numCausa === numCausa);
+                
+                if (existe) {
+                    numCausaField.classList.add('error');
+                    errorSpan.textContent = "Este número de expediente ya está registrado";
+                    errorSpan.style.color = "#dc3545";
+                    errorSpan.style.fontWeight = "bold";
+                    
+                    // Mostrar alerta flotante
+                    mostrarAlertaFlotante("El número de expediente ya existe en el sistema. Verifique e intente con otro número.", 'danger');
+                    
+                    // Deshabilitar otros campos hasta que se corrija
+                    deshabilitarCamposFormulario(true);
+                } else {
+                    numCausaField.classList.remove('error');
+                    errorSpan.textContent = "Este campo es obligatorio.";
+                    errorSpan.style.color = "";
+                    errorSpan.style.fontWeight = "";
+                    
+                    // Habilitar campos si estaban deshabilitados
+                    deshabilitarCamposFormulario(false);
+                }
+            } else if (modo === "editar") {
+                // En modo edición, solo validar que no esté vacío
+                if (!numCausa) {
+                    numCausaField.classList.add('error');
+                    errorSpan.textContent = "Este campo es obligatorio.";
+                } else {
+                    numCausaField.classList.remove('error');
+                }
+                errorSpan.style.color = "";
+                errorSpan.style.fontWeight = "";
+            }
+        }
+
+        // FUNCIÓN PARA HABILITAR/DESHABILITAR CAMPOS DEL FORMULARIO
+        function deshabilitarCamposFormulario(deshabilitar) {
+            const campos = document.querySelectorAll('#formCausa input:not(#numCausa), #formCausa textarea, #formCausa select');
+            const btnGuardar = $("btnGuardar");
+            
+            campos.forEach(campo => {
+                campo.disabled = deshabilitar;
+            });
+            
+            if (btnGuardar) {
+                btnGuardar.disabled = deshabilitar;
+                btnGuardar.style.opacity = deshabilitar ? "0.5" : "1";
+                btnGuardar.style.cursor = deshabilitar ? "not-allowed" : "pointer";
+            }
+        }
+        
+        function obtenerTodosEventos(causa) {
+            const eventos = [];
+            
+            if (Array.isArray(causa.audiencias)) {
+                causa.audiencias.forEach(aud => {
+                    const fecha = toDate(aud);
+                    if (fecha) {
+                        eventos.push({ 
+                            tipo: "Audiencia", 
+                            fecha: fecha,
+                            clase: "audiencia"
+                        });
+                    }
+                });
+            }
+            
+            if (causa.audienciaGesell) {
+                const fecha = toDate(causa.audienciaGesell);
+                if (fecha) {
+                    eventos.push({ 
+                        tipo: "Gesell", 
+                        fecha: fecha,
+                        clase: "gesell"
+                    });
+                }
+            }
+            
+            if (causa.vencimiento) {
+                const fecha = toDate(causa.vencimiento);
+                if (fecha) {
+                    eventos.push({ 
+                        tipo: "Vencimiento", 
+                        fecha: fecha,
+                        clase: "vencimiento"
+                    });
+                }
+            }
+            
+            if (causa.vencimientoRecursos) {
+                const fecha = toDate(causa.vencimientoRecursos);
+                if (fecha) {
+                    eventos.push({ 
+                        tipo: "Recurso", 
+                        fecha: fecha,
+                        clase: "recurso"
+                    });
+                }
+            }
+            
+            if (Array.isArray(causa.diligencias)) {
+                causa.diligencias.forEach(dilig => {
+                    const fecha = toDate(dilig.fecha);
+                    if (fecha) {
+                        eventos.push({ 
+                            tipo: "Diligencia", 
+                            fecha: fecha,
+                            detalle: dilig.detalle || '',
+                            clase: "diligencia"
+                        });
+                    }
+                });
+            }
+            
+            eventos.sort((a, b) => b.fecha - a.fecha);
+            return eventos;
+        }
+        
+        async function cargarUsuarios() {
+            try {
+                if (!db) {
+                    console.error("Firestore no está inicializado");
+                    return;
+                }
+                console.log("Cargando usuarios...");
+                const snapshot = await db.collection("usuarios").get();
+                usuariosCache = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.nombreCompleto) {
+                        usuariosCache.push(data.nombreCompleto);
+                    }
+                });
+                usuariosCache.sort((a, b) => a.localeCompare(b));
+                console.log("Usuarios cargados:", usuariosCache.length);
+            } catch (e) {
+                console.error("Error al cargar usuarios:", e);
+                mostrarAlertaFlotante("Error al cargar usuarios: " + e.message, 'danger');
+            }
+        }
+        
+        async function cargarJuzgados() {
+            try {
+                if (!db) {
+                    console.error("Firestore no está inicializado");
+                    return;
+                }
+                console.log("Cargando juzgados...");
+                const snapshot = await db.collection("juzgados").get();
+                juzgadosPorTipoCache = {};
+                snapshot.forEach(doc => {
+                    const { tipo, nombre } = doc.data();
+                    if (tipo && nombre) {
+                        if (!juzgadosPorTipoCache[tipo]) {
+                            juzgadosPorTipoCache[tipo] = [];
+                        }
+                        juzgadosPorTipoCache[tipo].push(nombre);
+                    }
+                });
+                Object.keys(juzgadosPorTipoCache).forEach(tipo => {
+                    juzgadosPorTipoCache[tipo].sort((a, b) => a.localeCompare(b));
+                });
+                console.log("Juzgados cargados:", Object.keys(juzgadosPorTipoCache).length);
+            } catch (e) {
+                console.error("Error al cargar juzgados:", e);
+                mostrarAlertaFlotante("Error al cargar juzgados: " + e.message, 'danger');
+            }
+        }
+        
+        function poblarTiposProceso() {
+            const selTipo = $("tipoProceso");
+            const tipos = Object.keys(juzgadosPorTipoCache).sort((a, b) => a.localeCompare(b));
+            selTipo.innerHTML = '<option value="">Seleccione un tipo</option>' + 
+                tipos.map(t => `<option value="${t}">${t}</option>`).join('');
+        }
+        
+        function poblarFiltroTiposProceso() {
+            const current = filtroTipoProceso.value;
+            const tipos = Object.keys(juzgadosPorTipoCache).sort((a, b) => a.localeCompare(b));
+            filtroTipoProceso.innerHTML = '<option value="">Tipo de Proceso (todos)</option>' + 
+                tipos.map(t => `<option value="${t}">${t}</option>`).join('');
+            if (current) filtroTipoProceso.value = current;
+        }
+        
+        function poblarFiltroIntervencion() {
+            const current = filtroIntervencion.value;
+            filtroIntervencion.innerHTML = '<option value="">Intervención (todas)</option>' + 
+                intervencionOptions.map(i => `<option value="${i}">${i}</option>`).join('');
+            if (current) filtroIntervencion.value = current;
+        }
+        
+        function poblarJuzgadosPorTipo(tipoSeleccionado) {
+            const selJuz = $("juzgado");
+            const juzgados = juzgadosPorTipoCache[tipoSeleccionado] || [];
+            selJuz.innerHTML = '<option value="">Seleccione un juzgado</option>' + 
+                juzgados.map(j => `<option value="${j}">${j}</option>`).join('');
+        }
+        
+        function poblarSelectUsuarios() {
+            const selUsu = $("usuarioAsignado");
+            selUsu.innerHTML = '<option value="">Seleccione un usuario</option>' + 
+                usuariosCache.map(u => `<option value="${u}">${u}</option>`).join('');
+        }
+        
+        function poblarFiltroUsuarios() {
+            const current = filtroUsuario.value; 
+            filtroUsuario.innerHTML = '<option value="">Usuario (todos)</option>' + 
+                usuariosCache.map(u => `<option value="${u}">${u}</option>`).join('');
+            if (current) filtroUsuario.value = current;
+        }
+
+        // NUEVA FUNCIÓN DE SUSCRIPCIÓN OPTIMIZADA
+        function suscribirCausas(reset = true) {
+            if (reset) {
+                paginaActual = 1;
+            }
+            if (!db) {
+                console.error("Firestore no está inicializado");
+                tbody.innerHTML = "<tr><td colspan='10'>Error: Base de datos no disponible</td></tr>";
+                return;
+            }
+            
+            if (unsubCausas) {
+                console.log("Cancelando suscripción anterior...");
+                unsubCausas();
+            }
+            
+            console.log("Construyendo consulta optimizada...");
+            let query = db.collection("causas");
+            
+            // FILTROS DE SERVIDOR
+            const fEstado = filtroEstado.value;
+            const fUsuario = filtroUsuario.value;
+            const fPrioridad = filtroPrioridad.value;
+            const fIntervencion = filtroIntervencion.value;
+            const fTipoProceso = filtroTipoProceso.value;
+            const fEvento = filtroEventos.value;
+            const fDesde = filtroFechaDesde.value;
+            const fHasta = filtroFechaHasta.value;
+            const busqueda = buscador.value.trim();
+            
+            // Aplicar filtros de igualdad
+            if (fEstado) query = query.where("estado", "==", fEstado);
+            if (fUsuario) query = query.where("usuarioAsignado", "==", fUsuario);
+            if (fPrioridad) query = query.where("prioridad", "==", fPrioridad);
+            if (fIntervencion) query = query.where("intervencion", "==", fIntervencion);
+            if (fTipoProceso) query = query.where("tipoProceso", "==", fTipoProceso);
+            
+            // Filtro por evento
+            if (fEvento) {
+                switch(fEvento) {
+                    case 'audiencias': query = query.where("audiencias", "!=", null); break;
+                    case 'gesell': query = query.where("audienciaGesell", "!=", null); break;
+                    case 'vencimientos': query = query.where("vencimiento", "!=", null); break;
+                    case 'recursos': query = query.where("vencimientoRecursos", "!=", null); break;
+                    case 'diligencias': query = query.where("diligencias", "!=", null); break;
+                }
+            }
+            
+            // Búsqueda por keywords (optimizada)
+            if (busqueda) {
+                const palabras = busqueda.toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .split(/\s+/)
+                    .filter(p => p.length > 0);
+                
+                if (palabras.length > 0) {
+                    // Limitar a 10 palabras para no exceder límites de Firestore
+                    const palabrasLimitadas = palabras.slice(0, 10);
+                    query = query.where("keywords", "array-contains-any", palabrasLimitadas);
+                }
+            }
+            
+            // Filtro por fecha exacta (si desde y hasta son iguales)
+            if (fDesde && fHasta && fDesde === fHasta) {
+                query = query.where("fechasFiltro", "array-contains", fDesde);
+            }
+            
+            // Ordenar por fecha de registro (descendente)
+            query = query.orderBy("fechaRegistro", "desc");
+            
+            console.log("Suscribiendo a cambios optimizados...");
+            unsubCausas = query.onSnapshot(
+                snap => {
+                    console.log("Datos recibidos del servidor:", snap.size, "registros");
+                    datosCache = [];
+                    snap.forEach(d => {
+                        datosCache.push({ id: d.id, ...d.data() });
+                    });
+                    
+                    // FILTROS EN CLIENTE (solo para rango de fechas cuando son diferentes)
+                    datosFiltrados = datosCache.filter(d => {
+                        // Filtro por rango de fechas (si desde y hasta son diferentes)
+                        if (fDesde && fHasta && fDesde !== fHasta) {
+                            const fechasCausa = d.fechasFiltro || [];
+                            const tieneFechaEnRango = fechasCausa.some(fecha => {
+                                return fecha >= fDesde && fecha <= fHasta;
+                            });
+                            if (!tieneFechaEnRango) return false;
+                        }
+                        return true;
+                    });
+                    
+                    renderTablaPaginada();
+                },
+                err => {
+                    console.error("Error en onSnapshot optimizado:", err);
+                    if (err.message.includes("index")) {
+                        tbody.innerHTML = `<tr><td colspan='10' style='color:red;text-align:center;padding:20px'>
+                            <strong>Falta Índice en Firebase.</strong><br>
+                            <span style="font-size:0.9rem">Para solucionar, ejecuta en la consola del navegador (F12):</span><br>
+                            <code style="background:#eee;padding:5px;margin:5px 0;display:inline-block">window.migrarDatosParaBusqueda()</code>
+                        </td></tr>`;
+                    } else {
+                        tbody.innerHTML = `<tr><td colspan='10'>Error al cargar los datos: ${err.message}</td></tr>`;
+                    }
+                    mostrarAlertaFlotante("Error al cargar los expedientes: " + err.message, 'danger');
+                }
+            );
+        }
+
+        // Función para debounce de filtros
+        function actualizarFiltros() {
+            clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(() => {
+                suscribirCausas(true);
+            }, 500);
+        }
+        
+        function renderTablaPaginada() {
+            const startIndex = (paginaActual - 1) * recordsPerPage;
+            const endIndex = startIndex + recordsPerPage;
+            const dataToRender = datosFiltrados.slice(startIndex, endIndex);
+            renderTablas(dataToRender);
+            renderPaginacion(datosFiltrados.length, dataToRender.length);
+        }
+        
+        function accionesHTML(id){
+            return `<button class="button ver-detalles" data-id="${id}" title="Ver"><i class="fa fa-eye"></i></button>
+                    <button class="button button-secondary editar-detalles" data-id="${id}" title="Editar"><i class="fa fa-pen"></i></button>`;
+        }
+        
+        function renderTablas(data){
+            tbody.innerHTML = data.length ? "" : "<tr><td colspan='10'>No hay registros que coincidan con los filtros</td></tr>";
+            data.forEach(d=>{
+                const todosEventos = obtenerTodosEventos(d);
+                let eventosHTML = "—";
+                if (todosEventos.length > 0) {
+                    eventosHTML = `<div class="eventos-lista">`;
+                    todosEventos.forEach(evento => {
+                        let eventoTexto = `${evento.tipo}: ${formatearFecha(evento.fecha, true)}`;
+                        if (evento.tipo === "Diligencia" && evento.detalle) {
+                            eventoTexto += ` - ${evento.detalle}`;
+                        }
+                        eventosHTML += `<div class="evento-tabla ${evento.clase}">${eventoTexto}</div>`;
+                    });
+                    eventosHTML += `</div>`;
+                }
+                tbody.insertAdjacentHTML("beforeend", `
+                    <tr>
+                        <td>${d.numCausa||""}</td>
+                        <td>${d.caratula||""}</td>
+                        <td>${d.tipoProceso||""}</td>
+                        <td>${d.juzgado||""}</td>
+                        <td>${d.usuarioAsignado||""}</td>
+                        <td>${d.estado||""}</td>
+                        <td><span class="prioridad-pill ${prioridadClase(d.prioridad)}">${d.prioridad||"Ninguna"}</span></td>
+                        <td>${formatearFecha(d.fechaRegistro, false)}</td>
+                        <td>${eventosHTML}</td>
+                        <td class="actions">${accionesHTML(d.id)}</td>
+                    </tr>`);
+            });
+            document.querySelectorAll(".ver-detalles").forEach(b=>b.onclick=()=>abrirVer(b.dataset.id));
+            document.querySelectorAll(".editar-detalles").forEach(b=>b.onclick=()=>abrirEditar(b.dataset.id));
+        }
+        
+        function renderPaginacion(totalRecords, recordsOnPage) {
+            const container = $("paginacion-container");
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+            container.style.display = totalPages > 1 ? "flex" : "none";
+            container.innerHTML = `
+                <div class="page-info">
+                    Página ${paginaActual} de ${totalPages} | Mostrando ${recordsOnPage} de ${totalRecords} registros
+                </div>
+                <div class="nav-buttons">
+                    <button id="btnPrevPage" class="button" ${paginaActual === 1 ? 'disabled' : ''}><i class="fa fa-arrow-left"></i> Anterior</button>
+                    <button id="btnNextPage" class="button" ${paginaActual === totalPages ? 'disabled' : ''}>Siguiente <i class="fa fa-arrow-right"></i></button>
+                </div>
+            `;
+            if ($("btnPrevPage")) {
+                $("btnPrevPage").onclick = () => {
+                    paginaActual--;
+                    renderTablaPaginada();
+                };
+            }
+            if ($("btnNextPage")) {
+                $("btnNextPage").onclick = () => {
+                    paginaActual++;
+                    renderTablaPaginada();
+                };
+            }
+        }
+        
+        function renderEventosHoy() {
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            const manana = new Date(hoy);
+            manana.setDate(manana.getDate() + 1);
+            
+            const eventosHoy = {
+                audiencias: [],
+                gesell: [],
+                vencimientos: [],
+                recursos: [],
+                diligencias: []
+            };
+            
+            datosCache.forEach(d => {
+                const id = d.numCausa || d.id;
+                const causaId = d.id;
+                if (Array.isArray(d.audiencias)) {
+                    d.audiencias.forEach(aud => {
+                        const fechaAud = toDate(aud);
+                        if (fechaAud && fechaAud >= hoy && fechaAud < manana) {
+                            eventosHoy.audiencias.push({
+                                id: causaId,
+                                numCausa: id,
+                                fecha: fechaAud,
+                                tipo: 'Audiencia'
+                            });
+                        }
+                    });
+                }
+                const fechaGesell = toDate(d.audienciaGesell);
+                if (fechaGesell && fechaGesell >= hoy && fechaGesell < manana) {
+                    eventosHoy.gesell.push({
+                                id: causaId,
+                                numCausa: id,
+                                fecha: fechaGesell,
+                                tipo: 'Cámara Gesell'
+                            });
+                }
+                const fechaVenc = toDate(d.vencimiento);
+                if (fechaVenc && fechaVenc >= hoy && fechaVenc < manana) {
+                    eventosHoy.vencimientos.push({
+                                id: causaId,
+                                numCausa: id,
+                                fecha: fechaVenc,
+                                tipo: 'Vencimiento'
+                            });
+                }
+                const fechaVrec = toDate(d.vencimientoRecursos);
+                if (fechaVrec && fechaVrec >= hoy && fechaVrec < manana) {
+                    eventosHoy.recursos.push({
+                                id: causaId,
+                                numCausa: id,
+                                fecha: fechaVrec,
+                                tipo: 'Vencimiento de Recurso'
+                            });
+                }
+                if (Array.isArray(d.diligencias)) {
+                    d.diligencias.forEach(dilig => {
+                        const fechaDilig = toDate(dilig.fecha);
+                        if (fechaDilig && fechaDilig >= hoy && fechaDilig < manana) {
+                            eventosHoy.diligencias.push({
+                                id: causaId,
+                                numCausa: id,
+                                fecha: fechaDilig,
+                                tipo: 'Diligencia',
+                                detalle: dilig.detalle || ''
+                            });
+                        }
+                    });
+                }
+            });
+            
+            const renderListaEventos = (eventos, target, tipo) => {
+                target.innerHTML = "";
+                if (!eventos.length) {
+                    target.innerHTML = `<div class="evento-vacio">No hay eventos para hoy</div>`;
+                    return;
+                }
+                eventos.sort((a, b) => a.fecha - b.fecha);
+                eventos.forEach(evento => {
+                    const elemento = document.createElement('div');
+                    elemento.className = `evento-item evento-item-${tipo}`;
+                    let contenido = `
+                        <span class="evento-numero" data-id="${evento.id}">${evento.numCausa}</span>
+                        <span class="evento-hora">${formatearFecha(evento.fecha, true)}</span>
+                    `;
+                    if (tipo === 'diligencias' && evento.detalle) {
+                        contenido += `<span class="evento-detalle" style="font-size:0.8rem;color:var(--text-secondary);">${evento.detalle}</span>`;
+                    }
+                    elemento.innerHTML = contenido;
+                    target.appendChild(elemento);
+                    const numeroCausa = elemento.querySelector('.evento-numero');
+                    numeroCausa.onclick = (e) => {
+                        e.preventDefault();
+                        abrirVer(evento.id);
+                    };
+                });
+            };
+            
+            renderListaEventos(eventosHoy.audiencias, listAudHoy, 'audiencias');
+            renderListaEventos(eventosHoy.gesell, listGesellHoy, 'gesell');
+            renderListaEventos(eventosHoy.vencimientos, listVencHoy, 'vencimientos');
+            renderListaEventos(eventosHoy.recursos, listRecursosHoy, 'recursos');
+            renderListaEventos(eventosHoy.diligencias, listDiligenciasHoy, 'diligencias');
+        }
+        
+        function abrirNuevoExpediente() {
+            modo = "nuevo"; 
+            resetFormCausa(); 
+            editId.value = ""; 
+            tituloForm.textContent = "Nuevo Expediente"; 
+            
+            // Asegurarse de que los campos estén habilitados
+            deshabilitarCamposFormulario(false);
+            
+            modal.style.display = "flex"; 
+        }
+        
+        function validateForm() {
+            let isValid = true;
+            const requiredFields = ["numCausa", "caratula", "tipoProceso", "juzgado", "prioridad", "usuarioAsignado"];
+            
+            requiredFields.forEach(id => {
+                const field = $(id);
+                const parent = field.closest('.field');
+                if (field.value.trim() === "") {
+                    parent.classList.add('error');
+                    isValid = false;
+                } else {
+                    parent.classList.remove('error');
+                }
+            });
+            
+            if (!isValid) {
+                mostrarAlertaFlotante("Complete todos los campos obligatorios marcados con *", 'danger');
+                return false;
+            }
+            
+            return isValid;
+        }
+        
+        const mostrarAlertaPersonalizada = (titulo, mensaje) => {
+            alertTitle.textContent = titulo;
+            alertMessage.textContent = mensaje;
+            alertModal.style.display = "flex";
+        };
+        
+        btnAlertOK.onclick = () => {
+            alertModal.style.display = "none";
+        };
+        
+        // FUNCIÓN GUARDAR ACTUALIZADA CON INDEXING
+        const guardarExpediente = async () => {
+            if (!validateForm()) {
+                return;
+            }
+            
+            // Validar duplicado en modo nuevo
+            if (modo === "nuevo") {
+                const numCausa = $("numCausa").value.trim();
+                const existe = datosCache.some(causa => causa.numCausa === numCausa);
+                
+                if (existe) {
+                    mostrarAlertaFlotante("No se puede guardar: El número de expediente ya está registrado en el sistema.", 'danger');
+                    
+                    // Resaltar el campo en rojo
+                    const numCausaField = $("numCausa").closest('.field');
+                    numCausaField.classList.add('error');
+                    const errorSpan = numCausaField.querySelector('.error-message');
+                    errorSpan.textContent = "Este número de expediente ya está registrado";
+                    errorSpan.style.color = "#dc3545";
+                    errorSpan.style.fontWeight = "bold";
+                    
+                    // Hacer scroll al campo problemático
+                    $("numCausa").scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    $("numCausa").focus();
+                    
+                    return;
+                }
+            }
+            
+            if (!db) {
+                mostrarAlertaFlotante("Error: Base de datos no disponible", 'danger');
+                return;
+            }
+            
+            const datos = recolectarDatosForm();
+            const btnGuardar = $("btnGuardar");
+            btnGuardar.disabled = true;
+            btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+            
+            try {
+                // GENERAR CAMPOS DE INDEXING
+                // 1. Keywords para búsqueda eficiente
+                const textoParaKeywords = [datos.numCausa, datos.caratula, datos.usuarioAsignado]
+                    .join(' ')
+                    .toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[^\w\s]/gi, '')
+                    .split(/\s+/)
+                    .filter(palabra => palabra.length > 0);
+                datos.keywords = textoParaKeywords;
+                
+                // 2. fechasFiltro para filtrado por fechas
+                const fechasSet = new Set();
+                const agregarFecha = (fecha) => {
+                    if (!fecha) return;
+                    const d = toDate(fecha);
+                    if (d && !isNaN(d)) {
+                        fechasSet.add(formatFechaParaInput(d, false));
+                    }
+                };
+                
+                agregarFecha(datos.vencimiento);
+                agregarFecha(datos.vencimientoRecursos);
+                agregarFecha(datos.audienciaGesell);
+                if (Array.isArray(datos.audiencias)) {
+                    datos.audiencias.forEach(agregarFecha);
+                }
+                if (Array.isArray(datos.diligencias)) {
+                    datos.diligencias.forEach(dilig => agregarFecha(dilig.fecha));
+                }
+                
+                datos.fechasFiltro = Array.from(fechasSet);
+                
+                if (modo === "nuevo") {
+                    // Validar duplicado en servidor (doble verificación)
+                    const dupCheck = await db.collection("causas").where("numCausa", "==", $("numCausa").value.trim()).get();
+                    if (!dupCheck.empty) {
+                        mostrarAlertaFlotante("El N° Expediente ya existe en la base de datos.", 'danger');
+                        $("numCausa").closest('.field').classList.add('error');
+                        const errorSpan = $("numCausa").closest('.field').querySelector('.error-message');
+                        errorSpan.textContent = "Este número de expediente ya está registrado en el servidor";
+                        errorSpan.style.color = "#dc3545";
+                        errorSpan.style.fontWeight = "bold";
+                        return;
+                    }
+                    
+                    await db.collection("causas").add({
+                        ...datos, 
+                        fechaRegistro: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    mostrarAlertaFlotante("Se guardó correctamente el expediente.", 'success');
+                } else {
+                    await db.collection("causas").doc(editId.value).update(datos);
+                    mostrarAlertaFlotante("El registro fue correctamente actualizado.", 'success');
+                }
+                modal.style.display = "none";
+                resetFormCausa();
+                suscribirCausas(true);
+            } catch (e) {
+                console.error(e);
+                if (modo === "nuevo") {
+                    mostrarAlertaFlotante("Fallo al crear el registro: " + e.message, 'danger');
+                } else {
+                    mostrarAlertaFlotante("Fallo de actualización del registro: " + e.message, 'danger');
+                }
+            } finally {
+                btnGuardar.disabled = false;
+                btnGuardar.innerHTML = '<i class="fa fa-save"></i> Guardar';
+            }
+        };
+        
+        async function abrirEditar(id){
+            modo = "editar"; 
+            resetFormCausa();
+            editId.value = id; 
+            tituloForm.textContent = "Editar Expediente";
+            try{
+                const snap = await db.collection("causas").doc(id).get();
+                if (snap.exists){
+                    cargarDatosEnForm(snap.data());
+                    modal.style.display = "flex"; 
+                } else {
+                    mostrarAlertaPersonalizada("Error", "El expediente no fue encontrado.");
+                }
+            }catch(e){ 
+                console.error(e); 
+                mostrarAlertaPersonalizada("Error", "No se pudo abrir el registro: " + e.message); 
+            }
+        }
+        
+        // CORRECCIÓN MEJORADA: Función para text-to-speech (TTS)
+        let ttsEnProgreso = false;
+        let speechSynthesis = window.speechSynthesis;
+        
+        function toggleTTS(texto, buttonIconId) {
+            // Detener cualquier lectura en curso
+            stopTTS();
+            
+            if (!texto || texto.trim() === "") {
+                mostrarAlertaFlotante("No hay texto para leer", 'warning');
+                return;
+            }
+            
+            // Limpiar etiquetas HTML y espacios múltiples
+            const cleanText = texto.replace(/<[^>]*>/g, ' ')
+                                  .replace(/&nbsp;/g, ' ')
+                                  .replace(/\s+/g, ' ')
+                                  .trim();
+            
+            if (cleanText === '') {
+                mostrarAlertaFlotante("El texto está vacío", 'warning');
+                return;
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = 'es-ES';
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+            
+            const icon = document.getElementById(buttonIconId);
+            
+            utterance.onstart = function() {
+                ttsEnProgreso = true;
+                if (icon) {
+                    icon.className = "fas fa-stop";
+                    icon.style.color = "#dc3545";
+                }
+            };
+            
+            utterance.onend = function() {
+                ttsEnProgreso = false;
+                if (icon) {
+                    icon.className = "fas fa-volume-up";
+                    icon.style.color = "";
+                }
+            };
+            
+            utterance.onerror = function(event) {
+                ttsEnProgreso = false;
+                if (icon) {
+                    icon.className = "fas fa-volume-up";
+                    icon.style.color = "";
+                }
+                console.error('Error en TTS:', event);
+                mostrarAlertaFlotante("Error al leer el texto", 'danger');
+            };
+            
+            // Cancelar cualquier lectura anterior
+            speechSynthesis.cancel();
+            
+            // Pequeña pausa antes de iniciar nueva lectura
+            setTimeout(() => {
+                speechSynthesis.speak(utterance);
+            }, 50);
+        }
+        
+        function stopTTS() {
+            if (speechSynthesis.speaking || ttsEnProgreso) {
+                speechSynthesis.cancel();
+                ttsEnProgreso = false;
+                
+                // Resetear iconos
+                const icons = document.querySelectorAll('.fa-volume-up, .fa-stop');
+                icons.forEach(icon => {
+                    if (icon.classList.contains('fa-stop')) {
+                        icon.className = "fas fa-volume-up";
+                        icon.style.color = "";
+                    }
+                });
+            }
+        }
+
+        async function abrirVer(id){
+            causaActualId = id;
+            try{
+                const snap = await db.collection("causas").doc(id).get();
+                if (!snap.exists) {
+                    mostrarAlertaPersonalizada("Error", "El expediente no fue encontrado.");
+                    return;
+                }
+                const d = snap.data();
+                let contenidoHTML = "";
+                const prioridadClaseTextoVal = prioridadClaseTexto(d.prioridad);
+                const prioridadTexto = `<div class="prioridad-texto ${prioridadClaseTextoVal}"><strong>Prioridad: ${d.prioridad || "Ninguna"}</strong></div>`;
+                contenidoHTML += prioridadTexto;
+                const etiquetas = {
+                    numCausa: "N° Expediente", caratula: "Carátula", tipoProceso: "Tipo de Proceso", juzgado: "Juzgado",
+                    fechaInicio: "Fecha de Inicio", fechaPase: "Fecha de Pase", intervencion: "Intervención",
+                    datosNnya: "Datos de NNyA", vencimiento: "Vencimiento", usuarioAsignado: "Usuario Asignado",
+                    estado: "Estado", recursos: "Recursos Interpuestos",
+                    recursosContestacion: "Contestación de Recursos", estadoRecursos: "Estado de Recursos",
+                    vencimientoRecursos: "Vencimiento de Recursos", audienciaGesell: "Audiencia Gesell",
+                    nnyaGesell: "NNyA en Gesell", observaciones: "Observaciones", fechaRegistro: "Fecha de Registro"
+                };
+                const ordenClaves = [
+                    "numCausa", "caratula", "tipoProceso", "juzgado", "estado", "usuarioAsignado",
+                    "fechaRegistro", "fechaInicio", "fechaPase", "intervencion", "datosNnya", "vencimiento",
+                    "audiencias", "diligencias", "recursos", "recursosContestacion", "estadoRecursos", "vencimientoRecursos",
+                    "audienciaGesell", "nnyaGesell", "observaciones"
+                ];
+                ordenClaves.forEach(k => {
+                    const v = d[k];
+                    if (v !== null && v !== undefined && v !== "" && k !== "prioridad") {
+                        const etiqueta = etiquetas[k] || k;
+                        if (k === "audiencias" && Array.isArray(v) && v.length > 0) {
+                            contenidoHTML += `<p><strong>Audiencias:</strong></p>`;
+                            v.forEach(aud => {
+                                contenidoHTML += `<p style="margin-left: 20px;">${formatearFecha(aud, true)}</p>`;
+                            });
+                        } else if (k === "diligencias" && Array.isArray(v) && v.length > 0) {
+                            contenidoHTML += `<p><strong>Diligencias:</strong></p>`;
+                            v.forEach(dilig => {
+                                const fecha = formatearFecha(dilig.fecha, true);
+                                const detalle = dilig.detalle ? ` - ${dilig.detalle}` : '';
+                                contenidoHTML += `<p style="margin-left: 20px;">${fecha}${detalle}</p>`;
+                            });
+                        } else if (['fechaInicio', 'fechaRegistro'].includes(k)) {
+                            contenidoHTML += `<p><strong>${etiqueta}:</strong> ${formatearFecha(v, false)}</p>`;
+                        } else if (v.seconds) {
+                            contenidoHTML += `<p><strong>${etiqueta}:</strong> ${formatearFecha(v, true)}</p>`;
+                        } else if (k === "observaciones") {
+                            contenidoHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin: 10px 0;">
+                                                <strong>${etiqueta}:</strong>
+                                                <button class="button button-secondary" id="btnLeerObservacionesVer" style="padding: 4px 12px; font-size: 0.9rem;">
+                                                    <i id="iconLeerObservacionesVer" class="fas fa-volume-up"></i> Leer
+                                                </button>
+                                              </div>
+                                              <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px;">${v}</div>`;
+                        } else if (k !== "audiencias" && k !== "diligencias") {
+                            contenidoHTML += `<p><strong>${etiqueta}:</strong> ${v}</p>`;
+                        }
+                    }
+                });
+                verContenido.innerHTML = contenidoHTML;
+                
+                // Configurar evento de lectura en Modal Ver
+                const btnLeer = $("btnLeerObservacionesVer");
+                if(btnLeer && d.observaciones) {
+                    btnLeer.onclick = () => toggleTTS(d.observaciones, "iconLeerObservacionesVer");
+                }
+
+                await cargarNotas(id);
+                modalVer.style.display = "flex";
+            } catch(e) {
+                console.error(e);
+                mostrarAlertaPersonalizada("Error", "No se pudo abrir el detalle: " + e.message);
+            }
+        }
+        
+        async function cargarNotas(causaId) {
+            historialNotas.innerHTML = "Cargando notas...";
+            try {
+                const snapshot = await db.collection("causas").doc(causaId).collection("seguimiento").orderBy("fecha", "desc").get();
+                if (snapshot.empty) {
+                    historialNotas.innerHTML = `<p class="k">No hay notas de seguimiento.</p>`;
+                    return;
+                }
+                historialNotas.innerHTML = "";
+                snapshot.forEach(doc => {
+                    const nota = doc.data();
+                    const fecha = formatearFecha(nota.fecha, true);
+                    const notaHTML = `
+                        <div class="note-item">
+                        <div class="note-meta">
+                            <span>${fecha}</span>
+                            <span>por: ${nota.usuario || "Anónimo"}</span>
+                        </div>
+                        <div class="note-text">${nota.texto}</div>
+                        </div>
+                    `;
+                    historialNotas.insertAdjacentHTML("beforeend", notaHTML);
+                });
+            } catch(e) {
+                console.error("Error al cargar notas:", e);
+                historialNotas.innerHTML = `<p class="k">Error al cargar notas: ${e.message}</p>`;
+            }
+        }
+        
+        async function agregarNota() {
+            if (!causaActualId) return mostrarAlertaPersonalizada("Error", "No se ha seleccionado una causa.");
+            const notaTexto = notaBitacora.value.trim();
+            if (!notaTexto) return mostrarAlertaPersonalizada("Error", "Por favor, escribe un texto para la nota.");
+            const usuario = "Usuario Actual"; 
+            try {
+                await db.collection("causas").doc(causaActualId).collection("seguimiento").add({
+                    texto: notaTexto, fecha: firebase.firestore.FieldValue.serverTimestamp(), usuario: usuario
+                });
+                notaBitacora.value = "";
+                cargarNotas(causaActualId);
+                mostrarAlertaPersonalizada("¡Éxito!", "Nota guardada con éxito.");
+            } catch (e) {
+                console.error("Error al guardar la nota:", e);
+                mostrarAlertaPersonalizada("Error", "No se pudo guardar la nota: " + e.message);
+            }
+        }
+        
+        btnAgregarNota.onclick = agregarNota;
+        $("btnCerrarVer").onclick = ()=> { stopTTS(); modalVer.style.display = "none"; };
+        $("btnCerrarEventosHoy").onclick = ()=> modalEventosHoy.style.display = "none";
+        
+        const printSection = (html)=>{ 
+            const w = window.open("","_blank","width=900,height=700"); 
+            w.document.write(`
+                <html>
+                    <head>
+                        <title>Imprimir</title>
+                        <style>
+                            @media print {
+                                .button, .actions, .action-buttons, .controls-form,
+                                #btnNuevo, #btnPrintListado, #btnPrintFechas, #btnPrintForm,
+                                #btnPrintRegistro, #btnCerrarVer, #btnAgregarNota, #btnVerLineaTiempo,
+                                #btnPrintTodos, #btnPrintFiltrado, #btnEventosHoy,
+                                .fa-solid, .fas, .far, .fa, .fa-eye, .fa-pen, .fa-trash, .fa-plus,
+                                .fa-save, .fa-print, .fa-xmark, .fa-check, .fa-arrow-left, .fa-arrow-right,
+                                .fa-exclamation-triangle, .fa-timeline, .fa-file-pen, .fa-calendar-day,
+                                .btn-eliminar-audiencia, .btn-audiencia, .floating-alert,
+                                .prioridad-destacada, .tabs-nav, .tab-button, .editor-toolbar, .btn-dictado {
+                                    display: none !important;
+                                }
+                                .header, .filters-section, .sidebar, .pagination-container {
+                                    display: none !important;
+                                }
+                                body, .container, .main-layout, .main {
+                                    margin: 0 !important;
+                                    padding: 0 !important;
+                                    width: 100% !important;
+                                    max-width: 100% !important;
+                                }
+                                .table-section, .kpi-section, .modal .content, #modalVer .content {
+                                    box-shadow: none !important;
+                                    border: 1px solid #ddd !important;
+                                    page-break-inside: avoid;
+                                }
+                                .data-table {
+                                    min-width: 100% !important;
+                                }
+                                .kpi-cards {
+                                    display: grid !important;
+                                    grid-template-columns: repeat(3, 1fr) !important;
+                                    gap: 10px !important;
+                                }
+                                .prioridad-pill {
+                                    color: #000 !important;
+                                    background-color: transparent !important;
+                                    border: 1px solid #000 !important;
+                                }
+                                .actions {
+                                    display: none !important;
+                                }
+                                .tab-content {
+                                    display: block !important;
+                                }
+                                #formCausa .grid {
+                                    display: table !important;
+                                    width: 100% !important;
+                                }
+                                .field {
+                                    display: table-row !important;
+                                    margin-bottom: 0 !important;
+                                }
+                                .field label {
+                                    display: table-cell !important;
+                                    padding: 8px !important;
+                                    font-weight: bold !important;
+                                    width: 40% !important;
+                                    border-bottom: 1px solid #ddd !important;
+                                }
+                                .field input, .field textarea, .field select {
+                                    display: table-cell !important;
+                                    width: 100% !important;
+                                    padding: 8px !important;
+                                    border: none !important;
+                                    border-bottom: 1px solid #ddd !important;
+                                    background: transparent !important;
+                                }
+                                .field textarea {
+                                    height: auto !important;
+                                    min-height: 60px !important;
+                                }
+                                .prioridad-texto {
+                                    color: #000 !important;
+                                    background-color: transparent !important;
+                                    border: 1px solid #000 !important;
+                                    font-weight: bold !important;
+                                }
+                                #verContenido p {
+                                    margin: 8px 0 !important;
+                                    font-size: 14px !important;
+                                    line-height: 1.4 !important;
+                                }
+                                #verContenido strong {
+                                    color: #000 !important;
+                                    font-weight: bold !important;
+                                }
+                                .notes-history {
+                                    margin-top: 20px !important;
+                                    padding-top: 20px !important;
+                                    border-top: 1px solid #ddd !important;
+                                }
+                                .notes-history h4 {
+                                    margin: 0 0 10px !important;
+                                    color: #000 !important;
+                                    font-size: 16px !important;
+                                    border-bottom: 2px solid #000 !important;
+                                    padding-bottom: 5px !important;
+                                }
+                                .note-item {
+                                    background: #f8f8f8 !important;
+                                    border-left: 4px solid #007bff !important;
+                                    padding: 10px !important;
+                                    margin-bottom: 10px !important;
+                                    border-radius: 8px !important;
+                                }
+                                .note-meta {
+                                    display: flex !important;
+                                    justify-content: space-between !important;
+                                    font-size: 12px !important;
+                                    color: #6c757d !important;
+                                    margin-bottom: 5px !important;
+                                }
+                                .note-text {
+                                    font-size: 14px !important;
+                                    line-height: 1.4 !important;
+                                }
+                                #observaciones-editor {
+                                    border: none !important;
+                                    padding: 0 !important;
+                                    min-height: auto !important;
+                                    max-height: none !important;
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body>${html}</body>
+                </html>
+            `); 
+            w.document.close(); 
+            w.focus(); 
+            w.print(); 
+        };
+        
+        function generarTablaImpresion(data, titulo) {
+            let tableHTML = `
+                <table border="1" style="width:100%; border-collapse:collapse; margin-top:20px;">
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Carátula</th>
+                            <th>Tipo</th>
+                            <th>Juzgado</th>
+                            <th>Usuario</th>
+                            <th>Estado</th>
+                            <th>Prioridad</th>
+                            <th>Registro</th>
+                            <th>Eventos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            data.forEach(d => {
+                const todosEventos = obtenerTodosEventos(d);
+                let eventosTexto = "—";
+                if (todosEventos.length > 0) {
+                    eventosTexto = todosEventos.map(evento => {
+                        let texto = `${evento.tipo}: ${formatearFecha(evento.fecha, true)}`;
+                        if (evento.tipo === "Diligencia" && evento.detalle) {
+                            texto += ` - ${evento.detalle}`;
+                        }
+                        return texto;
+                    }).join('; ');
+                }
+                tableHTML += `
+                    <tr>
+                        <td>${d.numCausa||""}</td>
+                        <td>${d.caratula||""}</td>
+                        <td>${d.tipoProceso||""}</td>
+                        <td>${d.juzgado||""}</td>
+                        <td>${d.usuarioAsignado||""}</td>
+                        <td>${d.estado||""}</td>
+                        <td>${d.prioridad||"Ninguna"}</td>
+                        <td>${formatearFecha(d.fechaRegistro, false)}</td>
+                        <td>${eventosTexto}</td>
+                    </tr>
+                `;
+            });
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            return `<h2>${titulo}</h2>${tableHTML}`;
+        }
+                
+        $("btnPrintFiltrado").onclick = ()=> { 
+            const html = generarTablaImpresion(datosFiltrados, "Listado Filtrado de Expedientes Judiciales");
+            printSection(html); 
+        };
+        $("btnPrintRegistro").onclick = ()=> {
+            const contenido = `
+                <div style="padding: 20px; font-family: Arial, sans-serif;">
+                    <h2 style="text-align: center; margin-bottom: 20px; color: #007bff;">Detalle del Expediente</h2>
+                    <div style="margin-bottom: 20px;">
+                        ${verContenido.innerHTML}
+                    </div>
+                    <div class="notes-history">
+                        <h4 style="color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px;">Historial de Notas</h4>
+                        ${historialNotas.innerHTML}
+                    </div>
+                </div>
+            `;
+            printSection(contenido);
+        };
+        
+        tabButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                tabButtons.forEach(btn => btn.classList.remove("active"));
+                tabContents.forEach(content => content.classList.remove("active"));
+                button.classList.add("active");
+                const tabId = button.dataset.tab;
+                $(tabId).classList.add("active");
+            });
+        });
+        
+        function initEditor() {
+            if (btnBold) {
+                btnBold.addEventListener('click', function() {
+                    document.execCommand('bold', false, null);
+                    observacionesEditor.focus();
+                });
+            }
+            
+            if (btnColorAzul) {
+                btnColorAzul.addEventListener('click', function() {
+                    document.execCommand('styleWithCSS', false, true);
+                    document.execCommand('foreColor', false, '#007bff');
+                    observacionesEditor.focus();
+                });
+            }
+            
+            if (btnColorRojo) {
+                btnColorRojo.addEventListener('click', function() {
+                    document.execCommand('styleWithCSS', false, true);
+                    document.execCommand('foreColor', false, '#dc3545');
+                    observacionesEditor.focus();
+                });
+            }
+            
+            if (btnColorVerde) {
+                btnColorVerde.addEventListener('click', function() {
+                    document.execCommand('styleWithCSS', false, true);
+                    document.execCommand('foreColor', false, '#28a745');
+                    observacionesEditor.focus();
+                });
+            }
+            
+            if (btnColorNormal) {
+                btnColorNormal.addEventListener('click', function() {
+                    document.execCommand('styleWithCSS', false, true);
+                    document.execCommand('foreColor', false, '#212529');
+                    observacionesEditor.focus();
+                });
+            }
+            
+            if (observacionesEditor) {
+                observacionesEditor.addEventListener('input', function() {
+                    const text = this.innerText || this.textContent;
+                    const words = text.trim().split(/\s+/).filter(Boolean);
+                    $("counter").textContent = `${words.length}/1000`;
+                    
+                    observacionesHidden.value = this.innerHTML;
+                });
+                
+                observacionesEditor.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+                    document.execCommand('insertText', false, text);
+                });
+            }
+
+            // Inicializar botón TTS en Editor
+            const btnTTS = $("btnTTSObservaciones");
+            if (btnTTS) {
+                btnTTS.addEventListener('click', function() {
+                    const text = observacionesEditor.innerText || observacionesEditor.textContent;
+                    if (text && text.trim() !== "") {
+                        toggleTTS(text, "iconTTSObservaciones");
+                    } else {
+                        mostrarAlertaFlotante("No hay texto para leer en las observaciones", 'warning');
+                    }
+                });
+            }
+        }
+        
+        function initFormEventListeners(){
+            if (selTipo) {
+                selTipo.addEventListener("change", function() {
+                    poblarJuzgadosPorTipo(this.value);
+                });
+            }
+            
+            // Agregar evento de validación en tiempo real para número de expediente
+            if ($("numCausa")) {
+                let timeoutId;
+                $("numCausa").addEventListener("input", function() {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(validarExistenciaExpediente, 500); // Debounce de 500ms
+                });
+                
+                // También validar al perder el foco
+                $("numCausa").addEventListener("blur", validarExistenciaExpediente);
+            }
+            
+            if ($("recursos")) {
+                $("recursos").addEventListener("change", function(){
+                    const recursosOpcionales = $("recursos-opcionales");
+                    recursosOpcionales.style.display = this.value ? "block" : "none";
+                });
+            }
+            
+            if ($("intervencion")) {
+                $("intervencion").addEventListener("change", function(){
+                    const datosNnya = $("datosNnya"), contadorNnya = $("counterNnya");
+                    if (this.value === "Ministerio Complementario") { 
+                        datosNnya.removeAttribute("disabled"); 
+                        contadorNnya.style.display='block'; 
+                    } else { 
+                        datosNnya.value = ""; 
+                        datosNnya.setAttribute("disabled","true"); 
+                        contadorNnya.style.display='none'; 
+                    }
+                });
+            }
+            
+            const limitWords = (text, max)=>{ 
+                const words = text.trim().split(/\s+/).filter(Boolean); 
+                return words.length > max ? words.slice(0,max).join(" ") : text; 
+            };
+            
+            if ($("datosNnya")) {
+                $("datosNnya").addEventListener("input", function(){ 
+                    this.value = limitWords(this.value, 500); 
+                    $("counterNnya").textContent = `${this.value.trim().split(/\s+/).filter(Boolean).length}/500`; 
+                });
+            }
+            
+            if ($("nnyaGesell")) {
+                $("nnyaGesell").addEventListener("input", function(){ 
+                    this.value = limitWords(this.value, 400); 
+                    $("counterNnyaGesell").textContent = `${this.value.trim().split(/\s+/).filter(Boolean).length}/400`; 
+                });
+            }
+            
+            if ($("habilitarAudienciaGesell")) {
+                $("habilitarAudienciaGesell").addEventListener("change", function(){ 
+                    toggleGesell(this.checked); 
+                });
+            }
+            
+            initEditor();
+        }
+        
+        function toggleGesell(enabled){ 
+            const ag = $("audienciaGesell"), ng = $("nnyaGesell"); 
+            if (enabled){ 
+                ag.removeAttribute("disabled"); 
+                ng.removeAttribute("disabled"); 
+                $("counterNnyaGesell").style.display='block'; 
+            } else { 
+                ag.value = ""; 
+                ng.value = ""; 
+                ag.setAttribute("disabled","true"); 
+                ng.setAttribute("disabled","true"); 
+                $("counterNnyaGesell").style.display='none'; 
+            } 
+        }
+        
+        function resetFormCausa(){ 
+            $("formCausa").reset(); 
+            $("counter").textContent = "0/1000"; 
+            $("counterNnya").textContent = "0/500"; 
+            $("counterNnyaGesell").textContent = "0/400"; 
+            selPrioridad.value = "Ninguna"; 
+            audienciasContainer.innerHTML = ""; 
+            diligenciasContainer.innerHTML = "";
+            agregarAudiencia();
+            agregarDiligencia();
+            stopTTS(); // Detener lectura al resetear form
+            
+            // Resetear errores
+            document.querySelectorAll('.field.error').forEach(el => el.classList.remove('error'));
+            const errorSpans = document.querySelectorAll('.error-message');
+            errorSpans.forEach(span => {
+                span.textContent = "Este campo es obligatorio.";
+                span.style.color = "";
+                span.style.fontWeight = "";
+            });
+            
+            tabButtons.forEach(btn => btn.classList.remove("active"));
+            tabContents.forEach(content => content.classList.remove("active"));
+            tabButtons[0].classList.add("active");
+            tabContents[0].classList.add("active");
+            $("recursos-opcionales").style.display = "none";
+            toggleGesell(false);
+            $("habilitarAudienciaGesell").checked = false;
+            
+            // Habilitar todos los campos
+            deshabilitarCamposFormulario(false);
+            
+            observacionesEditor.innerHTML = "";
+            observacionesHidden.value = "";
+        }
+        
+        function recolectarDatosForm(){
+            const fields = ["numCausa","caratula","tipoProceso","juzgado","fechaInicio","fechaPase","intervencion","datosNnya","vencimiento","usuarioAsignado","estado","prioridad","recursos","recursosContestacion","estadoRecursos","vencimientoRecursos","audienciaGesell","nnyaGesell","observaciones"];
+            const datos = {};
+            fields.forEach(id=>{ 
+                const el = $(id); 
+                if(!el) return; 
+                if (["date","datetime-local"].includes(el.type)) { 
+                    let fecha = el.value ? new Date(el.value) : null;
+                    datos[id] = fecha;
+                } else { 
+                    datos[id] = el.value || ""; 
+                } 
+            });
+            
+            // Observaciones del editor
+            datos.observaciones = observacionesEditor.innerHTML;
+            
+            const audiencias = [];
+            audienciasContainer.querySelectorAll('input[type="datetime-local"]').forEach(input => { 
+                if (input.value) {
+                    let fecha = new Date(input.value);
+                    audiencias.push(fecha);
+                }
+            });
+            datos.audiencias = audiencias.length > 0 ? audiencias : null;
+            
+            const diligencias = [];
+            diligenciasContainer.querySelectorAll('.diligencia-item').forEach(item => {
+                const fechaInput = item.querySelector('input[type="datetime-local"]');
+                const detalleInput = item.querySelector('input[type="text"]');
+                if (fechaInput.value) {
+                    let fecha = new Date(fechaInput.value);
+                    diligencias.push({
+                        fecha: fecha,
+                        detalle: detalleInput.value || ''
+                    });
+                }
+            });
+            datos.diligencias = diligencias.length > 0 ? diligencias : null;
+            
+            return datos;
+        }
+        
+        function cargarDatosEnForm(d) {
+            const setVal = (id, val) => {
+                const el = $(id);
+                if (!el) return;
+                if (val?.seconds) {
+                    const fecha = toDate(val);
+                    if (el.type === "date") {
+                        el.value = formatFechaParaInput(fecha, false);
+                    } else if (el.type === "datetime-local") {
+                        el.value = formatFechaParaInput(fecha, true);
+                    } else {
+                        el.value = val ?? "";
+                    }
+                } else if (val && (el.type === "date" || el.type === "datetime-local")) {
+                    const fecha = toDate(val);
+                    el.value = formatFechaParaInput(fecha, el.type === "datetime-local");
+                }
+                else {
+                    el.value = val ?? "";
+                }
+            };
+            
+            if (d.tipoProceso) {
+                selTipo.value = d.tipoProceso;
+                poblarJuzgadosPorTipo(d.tipoProceso);
+            }
+            ["numCausa", "caratula", "tipoProceso", "juzgado", "intervencion", "datosNnya", "usuarioAsignado", "estado", "prioridad", "recursos", "recursosContestacion", "estadoRecursos", "nnyaGesell"].forEach(k => setVal(k, d[k]));
+            ["fechaInicio", "fechaPase", "vencimiento", "vencimientoRecursos", "audienciaGesell"].forEach(k => setVal(k, d[k]));
+            
+            if (d.observaciones) {
+                observacionesEditor.innerHTML = d.observaciones;
+                observacionesHidden.value = d.observaciones;
+                const text = observacionesEditor.innerText || observacionesEditor.textContent;
+                const words = text.trim().split(/\s+/).filter(Boolean);
+                $("counter").textContent = `${words.length}/1000`;
+            }
+            
+            const hayRecursos = !!d.recursos;
+            $("recursos-opcionales").style.display = hayRecursos ? "block" : "none";
+            audienciasContainer.innerHTML = "";
+            if (Array.isArray(d.audiencias) && d.audiencias.length > 0) {
+                d.audiencias.forEach(aud => {
+                    const fecha = toDate(aud);
+                    if (fecha) {
+                        audienciasContainer.appendChild(crearAudienciaItem(formatFechaParaInput(fecha, true)));
+                    }
+                });
+            } else {
+                agregarAudiencia();
+            }
+            diligenciasContainer.innerHTML = "";
+            if (Array.isArray(d.diligencias) && d.diligencias.length > 0) {
+                d.diligencias.forEach(dilig => {
+                    const fecha = toDate(dilig.fecha);
+                    if (fecha) {
+                        diligenciasContainer.appendChild(crearDiligenciaItem(formatFechaParaInput(fecha, true), dilig.detalle || ''));
+                    }
+                });
+            } else {
+                agregarDiligencia();
+            }
+            const habilitar = !!(d.audienciaGesell || d.nnyaGesell);
+            $("habilitarAudienciaGesell").checked = habilitar;
+            toggleGesell(habilitar);
+        }
+        
+        function crearAudienciaItem(value = "") {
+            const item = document.createElement('div');
+            item.className = 'audiencia-item';
+            item.innerHTML = `<input type="datetime-local" value="${value}"><button type="button" class="btn-eliminar-audiencia"><i class="fa fa-trash"></i></button>`;
+            const eliminarBtn = item.querySelector('.btn-eliminar-audiencia');
+            
+            eliminarBtn.onclick = function() { 
+                if (audienciasContainer.children.length > 1) {
+                    item.remove(); 
+                } else {
+                    mostrarAlertaPersonalizada("Error", "Debe haber al menos una audiencia"); 
+                }
+            };
+            return item;
+        }
+        
+        function agregarAudiencia() { 
+            audienciasContainer.appendChild(crearAudienciaItem()); 
+        }
+        
+        function crearDiligenciaItem(fechaValue = "", detalleValue = "") {
+            const item = document.createElement('div');
+            item.className = 'diligencia-item';
+            item.innerHTML = `
+                <input type="datetime-local" value="${fechaValue}">
+                <input type="text" placeholder="Detalle de la diligencia" value="${detalleValue}">
+                <button type="button" class="btn-eliminar-diligencia"><i class="fa fa-trash"></i></button>
+            `;
+            const eliminarBtn = item.querySelector('.btn-eliminar-diligencia');
+            
+            eliminarBtn.onclick = function() { 
+                if (diligenciasContainer.children.length > 1) {
+                    item.remove(); 
+                } else {
+                    mostrarAlertaPersonalizada("Error", "Debe haber al menos una diligencia"); 
+                }
+            };
+            return item;
+        }
+        
+        function agregarDiligencia() { 
+            diligenciasContainer.appendChild(crearDiligenciaItem()); 
+        }
+        
+        if (btnAgregarAudiencia) {
+            btnAgregarAudiencia.onclick = agregarAudiencia;
+        }
+        if (btnAgregarDiligencia) {
+            btnAgregarDiligencia.onclick = agregarDiligencia;
+        }
+        
+        window.addEventListener("click", e=>{ 
+            if (e.target === modal) { modal.style.display="none"; stopTTS(); } 
+            if (e.target === modalVer) { modalVer.style.display="none"; stopTTS(); }
+            if (e.target === alertModal) alertModal.style.display="none";
+            if (e.target === modalEventosHoy) modalEventosHoy.style.display="none";
+        });
+        
+        // Event listeners para filtros OPTIMIZADOS
+        buscador.oninput = actualizarFiltros;
+        filtroEstado.onchange = actualizarFiltros;
+        filtroUsuario.onchange = actualizarFiltros;
+        filtroPrioridad.onchange = actualizarFiltros;
+        filtroIntervencion.onchange = actualizarFiltros;
+        filtroTipoProceso.onchange = actualizarFiltros;
+        filtroEventos.onchange = actualizarFiltros;
+        filtroFechaDesde.onchange = actualizarFiltros;
+        filtroFechaHasta.onchange = actualizarFiltros;
+        
+        $("btnEventosHoy").onclick = function() {
+            renderEventosHoy();
+            modalEventosHoy.style.display = "flex";
+        };
+        
+        // --- FUNCIONALIDAD DE DICTADO POR VOZ CORREGIDA ---
+        let recognition;
+        let dictadoActivo = false;
+        let campoDictadoActual = null;
+        
+        function toggleDictado(elementId, btnElement) {
+            // Verificar compatibilidad del navegador
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                mostrarAlertaFlotante("Tu navegador no soporta dictado por voz. Intenta usar Chrome o Edge.", 'danger');
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+            // Si ya hay dictado activo, detenerlo
+            if (dictadoActivo && recognition) {
+                recognition.stop();
+                dictadoActivo = false;
+                btnElement.classList.remove('grabando');
+                campoDictadoActual = null;
+                return;
+            }
+
+            // Crear nueva instancia
+            recognition = new SpeechRecognition();
+            recognition.lang = 'es-ES'; // Español general (compatible con más navegadores)
+            recognition.continuous = true; // Continuar escuchando
+            recognition.interimResults = true; // Resultados intermedios
+            recognition.maxAlternatives = 1;
+
+            // Feedback visual: activar
+            btnElement.classList.add('grabando');
+            dictadoActivo = true;
+            campoDictadoActual = elementId;
+
+            recognition.onstart = () => {
+                console.log("Dictado iniciado para campo:", elementId);
+                mostrarAlertaFlotante("Dictado activo. Habla ahora...", 'success');
+            };
+
+            recognition.onresult = (event) => {
+                let textoTranscrito = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) {
+                        textoTranscrito += event.results[i][0].transcript;
+                    }
+                }
+                
+                if (textoTranscrito) {
+                    const inputField = document.getElementById(elementId);
+                    
+                    if (inputField) {
+                        // Verificar si es un div contenteditable
+                        if (inputField.isContentEditable) {
+                            // Insertar texto en el editor
+                            inputField.focus();
+                            const textoActual = inputField.innerText || inputField.textContent;
+                            const espacio = (textoActual.length > 0 && !textoActual.endsWith(' ')) ? ' ' : '';
+                            
+                            document.execCommand('insertText', false, espacio + textoTranscrito);
+                            inputField.dispatchEvent(new Event('input'));
+                        } else {
+                            // Es un input o textarea normal
+                            const textoActual = inputField.value;
+                            const espacio = (textoActual.length > 0 && !textoActual.endsWith(' ')) ? ' ' : '';
+                            inputField.value = textoActual + espacio + textoTranscrito;
+                            inputField.dispatchEvent(new Event('input'));
+                        }
+                    }
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Error de reconocimiento:", event.error);
+                dictadoActivo = false;
+                btnElement.classList.remove('grabando');
+                campoDictadoActual = null;
+                
+                if (event.error === 'not-allowed') {
+                    mostrarAlertaFlotante("Permiso de micrófono denegado. Habilítalo en tu navegador.", 'danger');
+                } else if (event.error === 'no-speech') {
+                    mostrarAlertaFlotante("No se detectó voz. Intenta de nuevo.", 'warning');
+                } else if (event.error === 'audio-capture') {
+                    mostrarAlertaFlotante("No se pudo acceder al micrófono.", 'danger');
+                }
+            };
+
+            recognition.onend = () => {
+                dictadoActivo = false;
+                btnElement.classList.remove('grabando');
+                campoDictadoActual = null;
+                console.log("Dictado finalizado.");
+            };
+
+            try {
+                recognition.start();
+            } catch (error) {
+                console.error("Error al iniciar reconocimiento:", error);
+                mostrarAlertaFlotante("Error al iniciar el dictado por voz.", 'danger');
+                dictadoActivo = false;
+                btnElement.classList.remove('grabando');
+                campoDictadoActual = null;
+            }
+        }
+        // --- FIN DICTADO POR VOZ CORREGIDO ---
+
+        async function initApp() {
+            try {
+                console.log("Inicializando aplicación optimizada...");
+                
+                if (!app || !db) {
+                    mostrarAlertaFlotante("Error: No se pudo conectar con la base de datos", 'danger');
+                    tbody.innerHTML = "<tr><td colspan='10'>Error: Base de datos no disponible</td></tr>";
+                    return;
+                }
+                
+                await Promise.all([cargarUsuarios(), cargarJuzgados()]);
+                
+                poblarFiltroUsuarios();
+                poblarTiposProceso();
+                poblarFiltroTiposProceso();
+                poblarFiltroIntervencion();
+                poblarSelectUsuarios();
+                
+                initFormEventListeners();
+                
+                suscribirCausas();
+                
+                if ($("btnNuevo")) {
+                    $("btnNuevo").onclick = abrirNuevoExpediente;
+                }
+                if ($("btnGuardar")) {
+                    $("btnGuardar").onclick = guardarExpediente;
+                }
+                
+                console.log("Aplicación optimizada inicializada correctamente");
+            } catch (error) {
+                console.error("Error durante la inicialización:", error);
+                mostrarAlertaFlotante("Error al cargar los datos iniciales: " + error.message, 'danger');
+                tbody.innerHTML = `<tr><td colspan='10'>Error al inicializar la aplicación: ${error.message}</td></tr>`;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const set24HourFormat = () => {
+                const inputs = document.querySelectorAll('input[type="datetime-local"]');
+                inputs.forEach(input => {
+                    input.setAttribute('step', '3600');
+                });
+            };
+            
+            set24HourFormat();
+            
+            const observer = new MutationObserver(set24HourFormat);
+            observer.observe(document.body, { childList: true, subtree: true });
+        });
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+
+        // FUNCIÓN DE MIGRACIÓN (COPIADA DE REDUCE.html)
+        window.migrarDatosParaBusqueda = async function() {
+            if (!confirm("¿Migrar todos los datos para búsqueda optimizada? Esto actualizará todos los expedientes con campos keywords y fechasFiltro. Puede tardar varios minutos.")) return;
+            
+            const btn = document.createElement("button");
+            btn.textContent = "Migrando...";
+            btn.disabled = true;
+            document.body.appendChild(btn);
+
+            try {
+                const snapshot = await db.collection("causas").get();
+                const batch = db.batch();
+                let count = 0;
+                snapshot.forEach(doc => {
+                    const d = doc.data();
+                    // Generar keywords
+                    const texto = [d.numCausa, d.caratula, d.usuarioAsignado].join(' ');
+                    const keywords = texto.toLowerCase()
+                        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                        .replace(/[^\w\s]/gi, '')
+                        .split(/\s+/)
+                        .filter(palabra => palabra.length > 0);
+
+                    // Generar fechasFiltro
+                    const fechasSet = new Set();
+                    const agregarFecha = (fecha) => {
+                        if (!fecha) return;
+                        const date = toDate(fecha);
+                        if (date && !isNaN(date)) {
+                            fechasSet.add(formatFechaParaInput(date, false));
+                        }
+                    };
+                    agregarFecha(d.vencimiento);
+                    agregarFecha(d.vencimientoRecursos);
+                    agregarFecha(d.audienciaGesell);
+                    if (Array.isArray(d.audiencias)) d.audiencias.forEach(agregarFecha);
+                    if (Array.isArray(d.diligencias)) d.diligencias.forEach(dilig => agregarFecha(dilig.fecha));
+
+                    batch.update(doc.ref, {
+                        keywords: keywords,
+                        fechasFiltro: Array.from(fechasSet)
+                    });
+                    count++;
+                    if (count % 500 === 0) {
+                        console.log(`Procesados ${count} documentos`);
+                    }
+                });
+                await batch.commit();
+                alert(`Migración completada. ${count} documentos actualizados.`);
+                // Recargar datos después de migración
+                suscribirCausas(true);
+            } catch (e) {
+                console.error("Error en migración:", e);
+                alert("Error en migración: " + e.message);
+            } finally {
+                btn.remove();
+            }
+        };
+    </script>
+</body>
+</html>
