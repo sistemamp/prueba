@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Causas - Con Dictado por Voz</title>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
     <style>
-        /* MANTENGO TODO EL CSS ORIGINAL SIN CAMBIOS */
+        /* MANTENGO TODO EL CSS ORIGINAL CON MEJORAS RESPONSIVAS */
         :root {
             --primary-blue: #007bff;
             --primary-light-blue: #e7f4ff;
@@ -63,6 +63,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
         body {
             font-family: var(--font-family);
@@ -70,6 +71,8 @@
             color: var(--text-primary);
             line-height: 1.5;
             min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
         }
         
         /* ESTILOS PARA DICTADO POR VOZ */
@@ -83,6 +86,11 @@
             border-radius: 4px;
             transition: all 0.2s ease;
             font-size: 1rem;
+            min-width: 36px;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-dictado:hover {
             color: var(--primary-blue);
@@ -108,6 +116,7 @@
             top: 0;
             z-index: 100;
             box-shadow: var(--shadow-subtle);
+            width: 100%;
         }
         .header-content {
             display: flex;
@@ -116,6 +125,7 @@
             max-width: 1800px;
             margin: 0 auto;
             gap: var(--spacing-s);
+            width: 100%;
         }
         .logo {
             font-size: var(--h1-size);
@@ -126,6 +136,8 @@
             max-width: 1800px;
             margin: 0 auto;
             padding: var(--spacing-m) var(--spacing-gutter);
+            width: 100%;
+            overflow-x: hidden;
         }
         .filters-section {
             background-color: var(--background-card);
@@ -134,16 +146,19 @@
             border: 1px solid var(--border-default);
             margin-bottom: var(--spacing-xl);
             box-shadow: var(--shadow-subtle);
+            width: 100%;
         }
         .filters-title {
             font-size: var(--h2-size);
             font-weight: var(--font-weight-semibold);
             margin-bottom: var(--spacing-m);
+            word-break: break-word;
         }
         .filter-row {
             display: flex;
             flex-wrap: wrap;
             gap: var(--spacing-m);
+            width: 100%;
         }
         .filter-row-1, .filter-row-2 {
             display: flex;
@@ -154,12 +169,14 @@
         .filter-group {
             flex: 1;
             min-width: 150px;
+            width: 100%;
         }
         .filter-label {
             display: block;
             font-size: var(--body-regular-size);
             margin-bottom: var(--spacing-xs);
             font-weight: var(--font-weight-semibold);
+            word-break: break-word;
         }
         .input, .dropdown {
             border: 1px solid var(--border-default);
@@ -170,6 +187,7 @@
             font-size: var(--body-regular-size);
             width: 100%;
             transition: border-color 0.2s;
+            min-height: 44px;
         }
         .input:focus, .dropdown:focus {
             outline: none;
@@ -180,6 +198,7 @@
             gap: var(--spacing-s);
             margin-top: var(--spacing-m);
             flex-wrap: wrap;
+            width: 100%;
         }
         .button {
             background-color: var(--primary-blue);
@@ -193,6 +212,10 @@
             display: inline-flex;
             align-items: center;
             gap: var(--spacing-xs);
+            min-height: 44px;
+            min-width: 44px;
+            justify-content: center;
+            flex-shrink: 0;
         }
         .button:hover {
             opacity: 0.9;
@@ -212,6 +235,7 @@
             border: 1px solid var(--border-default);
             overflow: hidden;
             box-shadow: var(--shadow-subtle);
+            width: 100%;
         }
         .table-title {
             font-size: var(--h2-size);
@@ -219,10 +243,12 @@
             padding: var(--spacing-m);
             background-color: var(--background-table-header);
             border-bottom: 1px solid var(--border-default);
+            word-break: break-word;
         }
         .table-wrap {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            width: 100%;
         }
         .data-table {
             width: 100%;
@@ -237,12 +263,14 @@
             color: var(--text-primary);
             font-size: var(--caption-size);
             text-transform: uppercase;
+            white-space: nowrap;
         }
         .data-table td {
             border-bottom: 1px solid var(--border-default);
             padding: var(--spacing-m);
             color: var(--text-primary);
             font-size: var(--body-regular-size);
+            word-break: break-word;
         }
         .data-table tr:last-child td {
             border-bottom: none;
@@ -258,6 +286,7 @@
             font-weight: bold;
             color: #fff;
             text-transform: uppercase;
+            word-break: normal;
         }
         .prioridad-baja { background-color: var(--status-success); }
         .prioridad-media { background-color: var(--status-warning); }
@@ -270,6 +299,7 @@
             border-radius: 8px;
             margin-bottom: 15px;
             display: inline-block;
+            word-break: break-word;
         }
         .prioridad-texto.alta { 
             background-color: rgba(220, 53, 69, 0.1); 
@@ -300,15 +330,20 @@
             background: var(--background-card);
             border-radius: var(--border-radius-default);
             box-shadow: var(--shadow-subtle);
+            width: 100%;
+            flex-wrap: wrap;
+            gap: var(--spacing-s);
         }
         #paginacion-container .page-info {
             font-size: var(--body-regular-size);
             color: var(--text-secondary);
             font-weight: var(--font-weight-semibold);
+            word-break: break-word;
         }
         #paginacion-container .nav-buttons {
             display: flex;
             gap: var(--spacing-s);
+            flex-wrap: wrap;
         }
         #modal, #modalVer, #alertModal, #modalEventosHoy {
             display: none;
@@ -319,6 +354,8 @@
             align-items: center;
             padding: 20px;
             z-index: 1000;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         #modal .content, #modalVer .content, #alertModal .content, #modalEventosHoy .content {
             background: #fff;
@@ -330,6 +367,7 @@
             flex-direction: column;
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
             animation: fadeIn .25s ease;
+            overflow: hidden;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
@@ -349,10 +387,14 @@
             align-items: center;
             gap: 10px;
             justify-content: center;
+            min-height: 60px;
+            flex-shrink: 0;
         }
         .modal-body {
             padding: 16px 16px 0;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            flex: 1;
         }
         .controls-form {
             position: sticky;
@@ -365,6 +407,7 @@
             gap: 10px;
             justify-content: flex-end;
             z-index: 5;
+            flex-shrink: 0;
         }
         #formCausa .grid {
             display: grid;
@@ -382,12 +425,15 @@
             font-size: 0.9rem;
             margin-bottom: 4px;
             display: block;
+            word-break: break-word;
         }
         /* Ajuste para alinear botón de microfono con el label */
         .label-with-mic {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         #formCausa input, #formCausa textarea, #formCausa select {
@@ -398,6 +444,7 @@
             font-size: 0.9rem;
             background: #fafafa;
             transition: .2s;
+            min-height: 44px;
         }
         #formCausa input:focus, #formCausa textarea:focus, #formCausa select:focus {
             outline: none;
@@ -415,12 +462,14 @@
             background: #f0f4f9;
             border: 1px solid #ddd;
             border-radius: 10px;
+            width: 100%;
         }
         #agregarNota label {
             font-weight: 600;
             color: var(--primary-blue);
             display: block;
             margin-bottom: 8px;
+            word-break: break-word;
         }
         #agregarNota textarea {
             width: 100%;
@@ -428,6 +477,7 @@
             border-radius: 8px;
             border: 1px solid #ccc;
             resize: vertical;
+            min-height: 100px;
         }
         #agregarNota button {
             background: var(--primary-blue);
@@ -437,10 +487,13 @@
             border-radius: 8px;
             cursor: pointer;
             margin-top: 10px;
+            min-height: 44px;
+            min-width: 44px;
         }
         #verContenido p {
             margin: .35rem 0;
             font-size: .92rem;
+            word-break: break-word;
         }
         #verContenido strong {
             color: var(--primary-blue);
@@ -451,11 +504,13 @@
             margin: 6px 0;
             background: #f9fbff;
             border-radius: 6px;
+            word-break: break-word;
         }
         .actions {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            justify-content: center;
         }
         #alertModal .content {
             max-width: 400px;
@@ -467,20 +522,24 @@
             margin: 0;
             color: var(--primary-blue);
             font-size: 1.5rem;
+            word-break: break-word;
         }
         #alertModal p {
             margin: 0;
             color: var(--secondary-dark-gray);
             font-size: 0.95rem;
+            word-break: break-word;
         }
         #alertModal .actions-row {
             display: flex;
             justify-content: space-around;
             gap: 12px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
         #alertModal .actions-row .btn {
             flex-grow: 1;
+            min-width: 100px;
         }
         .alert-danger { background: var(--status-danger); color: white; }
         .alert-success { background: var(--status-success); color: white; }
@@ -507,6 +566,7 @@
             justify-content: center;
             gap: 12px;
             border: 2px solid rgba(255, 255, 255, 0.2);
+            word-break: break-word;
         }
         .floating-alert.success {
             background-color: var(--status-success);
@@ -522,15 +582,19 @@
         }
         .audiencias-container {
             margin-bottom: 10px;
+            width: 100%;
         }
         .audiencia-item {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 8px;
+            width: 100%;
+            flex-wrap: wrap;
         }
         .audiencia-item input {
             flex: 1;
+            min-width: 200px;
         }
         .btn-eliminar-audiencia {
             background: var(--status-danger);
@@ -539,6 +603,8 @@
             border-radius: 6px;
             padding: 8px 12px;
             cursor: pointer;
+            min-height: 44px;
+            min-width: 44px;
         }
         .btn-audiencia {
             background: var(--status-success);
@@ -548,21 +614,28 @@
             padding: 8px 12px;
             cursor: pointer;
             margin-top: 8px;
+            min-height: 44px;
+            min-width: 44px;
         }
         .diligencias-container {
             margin-bottom: 10px;
+            width: 100%;
         }
         .diligencia-item {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 8px;
+            width: 100%;
+            flex-wrap: wrap;
         }
         .diligencia-item input[type="datetime-local"] {
             flex: 1;
+            min-width: 200px;
         }
         .diligencia-item input[type="text"] {
             flex: 2;
+            min-width: 150px;
         }
         .btn-eliminar-diligencia {
             background: var(--status-danger);
@@ -571,6 +644,8 @@
             border-radius: 6px;
             padding: 8px 12px;
             cursor: pointer;
+            min-height: 44px;
+            min-width: 44px;
         }
         .btn-diligencia {
             background: var(--color-diligencias);
@@ -580,15 +655,24 @@
             padding: 8px 12px;
             cursor: pointer;
             margin-top: 8px;
+            min-height: 44px;
+            min-width: 44px;
         }
         .tabs-container {
             margin-bottom: 15px;
+            width: 100%;
         }
         .tabs-nav {
             display: flex;
             border-bottom: 2px solid #ddd;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            width: 100%;
+        }
+        .tabs-nav::-webkit-scrollbar {
+            display: none;
         }
         .tab-button {
             background: #f0f0f0;
@@ -601,6 +685,9 @@
             transition: all 0.2s ease;
             font-size: 0.9rem;
             white-space: nowrap;
+            flex-shrink: 0;
+            min-height: 44px;
+            min-width: 60px;
         }
         .tab-button.active {
             background: var(--primary-blue);
@@ -612,6 +699,7 @@
         .tab-content {
             padding: 15px 0;
             display: none;
+            width: 100%;
         }
         .tab-content.active {
             display: block;
@@ -630,12 +718,14 @@
             font-size: 0.8rem;
             margin-top: 4px;
             display: none;
+            word-break: break-word;
         }
         .field.error .error-message {
             display: block;
         }
         .field {
             margin-bottom: 15px;
+            width: 100%;
         }
         #verContenido .prioridad-destacada {
             display: flex;
@@ -645,6 +735,7 @@
             padding: 12px;
             border-radius: 12px;
             color: #fff;
+            word-break: break-word;
         }
         .prioridad-destacada h4 {
             margin: 0;
@@ -662,6 +753,7 @@
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid #ddd;
+            width: 100%;
         }
         .notes-history h4 {
             margin: 0 0 10px;
@@ -669,6 +761,7 @@
             font-size: 1rem;
             border-bottom: 2px solid var(--primary-blue);
             padding-bottom: 5px;
+            word-break: break-word;
         }
         .note-item {
             background: #f8f8f8;
@@ -676,6 +769,7 @@
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 8px;
+            word-break: break-word;
         }
         .note-meta {
             display: flex;
@@ -683,6 +777,8 @@
             font-size: 0.8rem;
             color: var(--secondary-dark-gray);
             margin-bottom: 5px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .note-text {
             font-size: 0.9rem;
@@ -696,6 +792,8 @@
             background: #f8f9fa;
             border-radius: 8px;
             border: 1px solid #ddd;
+            flex-wrap: wrap;
+            width: 100%;
         }
         .editor-toolbar button {
             background: #fff;
@@ -707,6 +805,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            min-height: 36px;
+            min-width: 36px;
+            flex-shrink: 0;
         }
         .editor-toolbar button:hover {
             background: #e9ecef;
@@ -745,6 +846,8 @@
             padding: 12px;
             background: #fff;
             line-height: 1.5;
+            width: 100%;
+            word-break: break-word;
         }
         #observaciones-editor:focus {
             outline: none;
@@ -850,6 +953,7 @@
         }
         .eventos-hoy-modal {
             padding: 10px;
+            width: 100%;
         }
         .evento-titulo {
             font-weight: bold;
@@ -857,6 +961,7 @@
             padding-bottom: 4px;
             border-bottom: 2px solid;
             font-size: 1rem;
+            word-break: break-word;
         }
         .evento-audiencias { color: var(--color-audiencias); border-color: var(--color-audiencias); }
         .evento-vencimientos { color: var(--color-vencimientos); border-color: var(--color-vencimientos); }
@@ -873,6 +978,8 @@
             border-radius: 6px;
             border-left: 3px solid;
             transition: all 0.2s;
+            flex-wrap: wrap;
+            width: 100%;
         }
         .evento-item-audiencias { border-left-color: var(--color-audiencias); }
         .evento-item-vencimientos { border-left-color: var(--color-vencimientos); }
@@ -887,6 +994,7 @@
             color: var(--primary-blue);
             cursor: pointer;
             text-decoration: underline;
+            word-break: break-word;
         }
         .evento-numero:hover {
             color: var(--primary-dark-blue);
@@ -894,16 +1002,19 @@
         .evento-hora {
             font-size: 0.85rem;
             color: var(--text-secondary);
+            word-break: break-word;
         }
         .evento-vacio {
             font-style: italic;
             color: var(--text-secondary);
             padding: 6px 8px;
+            word-break: break-word;
         }
         .eventos-lista {
             max-height: 150px;
             overflow-y: auto;
             font-size: 0.8rem;
+            width: 100%;
         }
         .evento-tabla {
             padding: 4px 6px;
@@ -911,12 +1022,15 @@
             border-left: 3px solid;
             background: #f8f9fa;
             border-radius: 4px;
+            word-break: break-word;
         }
         .evento-tabla.audiencia { border-left-color: var(--color-audiencias); }
         .evento-tabla.gesell { border-left-color: var(--color-gesell); }
         .evento-tabla.vencimiento { border-left-color: var(--color-vencimientos); }
         .evento-tabla.recurso { border-left-color: var(--color-recursos); }
         .evento-tabla.diligencia { border-left-color: var(--color-diligencias); }
+        
+        /* MEJORAS ESPECÍFICAS PARA MÓVIL */
         @media (max-width: 1024px) {
             .container {
                 max-width: 100%;
@@ -924,6 +1038,7 @@
             }
             #modal .content, #modalVer .content, #modalEventosHoy .content {
                 max-width: 95%;
+                max-height: 85vh;
             }
             .filter-row-1, .filter-row-2 {
                 flex-wrap: wrap;
@@ -931,152 +1046,405 @@
             .filter-group {
                 min-width: 120px;
             }
+            .header-content {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .button {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
         }
+        
         @media (max-width: 768px) {
             .header-content {
-                flex-direction: column;
-                gap: var(--spacing-s);
-                text-align: center;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
             }
+            
             .filter-row {
                 flex-direction: column;
             }
+            
             .filter-group {
                 min-width: auto;
+                width: 100%;
             }
+            
             #paginacion-container {
                 flex-direction: column;
                 gap: var(--spacing-m);
                 text-align: center;
+                padding: 12px;
             }
+            
             .table-title {
                 padding: var(--spacing-s);
+                text-align: center;
             }
+            
             .data-table th, 
             .data-table td {
-                padding: var(--spacing-s);
+                padding: 10px 8px;
+                font-size: 13px;
             }
+            
             .action-buttons {
-                flex-direction: column;
+                flex-direction: row;
+                justify-content: center;
             }
+            
             .controls-form {
-                flex-direction: column;
+                flex-direction: row;
+                justify-content: center;
+                padding: 10px;
             }
+            
             #formCausa .grid {
                 grid-template-columns: 1fr;
+                gap: 12px;
             }
+            
             .tabs-nav {
                 flex-wrap: nowrap;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
+                padding-bottom: 5px;
             }
+            
             .tab-button {
                 padding: 10px 14px;
-                font-size: 0.85rem;
+                font-size: 13px;
+                min-height: 40px;
             }
+            
             .data-table {
-                min-width: 600px;
+                min-width: 700px;
             }
+            
             .actions {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 4px;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 6px;
             }
+            
             .editor-toolbar {
                 flex-wrap: wrap;
+                justify-content: center;
             }
+            
             .filter-row-1, .filter-row-2 {
                 flex-direction: column;
+                gap: 12px;
+            }
+            
+            .modal-header {
+                padding: 10px;
+                font-size: 16px;
+                text-align: center;
+                flex-wrap: wrap;
+            }
+            
+            .modal-body {
+                padding: 12px;
+            }
+            
+            .audiencia-item, .diligencia-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            
+            .audiencia-item input,
+            .diligencia-item input[type="datetime-local"],
+            .diligencia-item input[type="text"] {
+                width: 100%;
+                min-width: 100%;
+            }
+            
+            .btn-eliminar-audiencia,
+            .btn-eliminar-diligencia {
+                width: 100%;
+                margin-top: 5px;
+            }
+            
+            .evento-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .notes-history h4 {
+                font-size: 16px;
+            }
+            
+            .note-meta {
+                flex-direction: column;
+                gap: 3px;
             }
         }
+        
         @media (max-width: 576px) {
+            body {
+                font-size: 14px;
+            }
+            
             .container {
-                padding: var(--spacing-xs);
+                padding: 8px;
                 width: 100%;
             }
+            
             .filters-section,
             .table-section {
-                padding: var(--spacing-s);
+                padding: 12px;
+                margin-bottom: 16px;
             }
+            
             .filters-title,
             .table-title {
-                font-size: var(--body-large-size);
+                font-size: 16px;
+                text-align: center;
             }
+            
             #modal .content, #modalVer .content, #modalEventosHoy .content {
                 max-width: 100%;
                 max-height: 100vh;
                 border-radius: 0;
                 margin: 0;
+                width: 100%;
+                height: 100vh;
             }
+            
             .modal-header,
             .modal-body,
             .controls-form {
-                padding: var(--spacing-s);
+                padding: 12px;
             }
+            
             .filter-group {
                 width: 100%;
             }
+            
             .button {
                 width: 100%;
                 justify-content: center;
+                margin-bottom: 5px;
             }
+            
             .tab-button {
                 padding: 8px 12px;
-                font-size: 0.8rem;
+                font-size: 12px;
+                min-height: 38px;
+                min-width: 70px;
             }
+            
             .table-wrap {
-                margin: 0 -8px;
-                padding: 0 8px;
+                margin: 0;
+                padding: 0;
             }
+            
             .data-table {
                 min-width: 100%;
             }
+            
             .prioridad-pill {
-                font-size: 0.7rem;
+                font-size: 11px;
                 padding: 3px 6px;
             }
+            
             .actions {
                 flex-direction: column;
-                gap: 4px;
+                gap: 6px;
+                width: 100%;
             }
+            
             .actions .button {
                 width: 100%;
-                font-size: 0.85rem;
+                font-size: 13px;
             }
+            
             .floating-alert {
                 max-width: 90%;
-                font-size: 0.9rem;
+                font-size: 14px;
                 padding: 10px 15px;
+                left: 5%;
+                transform: translateX(0);
             }
+            
             .editor-toolbar {
                 padding: 6px;
+                justify-content: center;
             }
+            
             .editor-toolbar button {
-                padding: 4px 8px;
-                font-size: 0.8rem;
+                padding: 5px 8px;
+                font-size: 12px;
+                min-height: 34px;
+                min-width: 34px;
             }
-        }
-        @media (max-width: 360px) {
-            .container {
-                padding: 4px;
+            
+            #formCausa input, #formCausa textarea, #formCausa select {
+                font-size: 16px; /* Previene zoom en iOS */
+                padding: 12px;
             }
-            .filters-section,
-            .table-section {
+            
+            .label-with-mic {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .btn-dictado {
+                align-self: flex-start;
+                margin-left: 0;
+                margin-top: 5px;
+            }
+            
+            #paginacion-container .nav-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            #paginacion-container .nav-buttons .button {
+                flex: 1;
+                min-width: 120px;
+            }
+            
+            .eventos-hoy-modal {
                 padding: 8px;
             }
+            
+            .evento-titulo {
+                font-size: 14px;
+            }
+            
+            .evento-item {
+                padding: 8px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .container {
+                padding: 6px;
+            }
+            
+            .filters-section,
+            .table-section {
+                padding: 10px;
+            }
+            
             .tab-button {
                 padding: 6px 8px;
-                font-size: 0.75rem;
+                font-size: 11px;
+                min-width: 60px;
             }
+            
             .data-table th, 
             .data-table td {
-                padding: 6px;
-                font-size: 0.8rem;
+                padding: 8px 6px;
+                font-size: 12px;
             }
+            
             .button {
-                padding: 8px 12px;
-                font-size: 0.85rem;
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+            
+            .modal-header {
+                font-size: 15px;
+                padding: 8px;
+            }
+            
+            .modal-body {
+                padding: 10px;
+            }
+            
+            .controls-form {
+                padding: 10px;
+            }
+            
+            .action-buttons {
+                gap: 6px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .tabs-nav {
+                gap: 2px;
+            }
+            
+            .tab-button {
+                padding: 6px 8px;
+                font-size: 11px;
+            }
+            
+            .filter-label {
+                font-size: 13px;
+            }
+            
+            .input, .dropdown {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+        
+        /* Ajustes específicos para iOS */
+        @supports (-webkit-touch-callout: none) {
+            .modal-body {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            
+            .header {
+                padding-top: max(var(--spacing-s), env(safe-area-inset-top));
+            }
+            
+            .button, .input, .dropdown, .tab-button {
+                cursor: pointer;
+            }
+        }
+        
+        /* Asegurar que los botones sean tappables en móvil */
+        @media (hover: none) and (pointer: coarse) {
+            .button, .btn-dictado, .tab-button, .editor-toolbar button,
+            .btn-eliminar-audiencia, .btn-eliminar-diligencia,
+            .btn-audiencia, .btn-diligencia {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            input, select, textarea {
+                font-size: 16px !important; /* Previene zoom en iOS */
+            }
+            
+            .data-table td, .data-table th {
+                padding: 12px 8px;
+            }
+        }
+        
+        /* Prevenir desbordamientos */
+        .word-break {
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        /* Scroll suave en móvil */
+        .modal-body, .table-wrap, .tabs-nav {
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Ajustes para teclado virtual */
+        @media (max-height: 600px) {
+            .modal .content {
+                max-height: 80vh;
+            }
+            
+            .modal-body {
+                max-height: 60vh;
             }
         }
     </style>
@@ -1090,10 +1458,10 @@
     <header class="header">
         <div class="header-content">
             <button id="btnNuevo" class="button">
-                <i class="fas fa-plus"></i> Nuevo Expediente
+                <i class="fas fa-plus"></i> <span class="button-text">Nuevo Expediente</span>
             </button>
             <button id="btnEventosHoy" class="button">
-                <i class="fas fa-calendar-day"></i> Eventos Hoy
+                <i class="fas fa-calendar-day"></i> <span class="button-text">Eventos Hoy</span>
             </button>
         </div>
     </header>
@@ -1166,7 +1534,7 @@
             </div>
             <div class="action-buttons">
                 <button id="btnPrintFiltrado" class="button button-success">
-                    <i class="fas fa-print"></i> Imprimir Filtrado
+                    <i class="fas fa-print"></i> <span class="button-text">Imprimir Filtrado</span>
                 </button>
             </div>
         </section>
@@ -1246,13 +1614,13 @@
                     <input type="hidden" id="editId" />
                     <div class="tabs-container">
                         <div class="tabs-nav">
-                            <button type="button" class="tab-button active" data-tab="tab1">Datos Principales</button>
+                            <button type="button" class="tab-button active" data-tab="tab1">Datos</button>
                             <button type="button" class="tab-button" data-tab="tab2">Fechas</button>
                             <button type="button" class="tab-button" data-tab="tab3">Audiencias</button>
                             <button type="button" class="tab-button" data-tab="tab4">Vencimientos</button>
                             <button type="button" class="tab-button" data-tab="tab5">Diligencias</button>
                             <button type="button" class="tab-button" data-tab="tab6">Recursos</button>
-                            <button type="button" class="tab-button" data-tab="tab7">Observaciones</button>
+                            <button type="button" class="tab-button" data-tab="tab7">Observ.</button>
                         </div>
                         <div id="tab1" class="tab-content active">
                             <div class="field">
@@ -2139,6 +2507,11 @@
             deshabilitarCamposFormulario(false);
             
             modal.style.display = "flex"; 
+            // En móvil, asegurar que el modal ocupe toda la pantalla
+            if (window.innerWidth <= 768) {
+                document.querySelector('#modal .content').style.maxHeight = '90vh';
+                document.querySelector('#modal .content').style.width = '95%';
+            }
         }
         
         function validateForm() {
@@ -2296,6 +2669,11 @@
                 if (snap.exists){
                     cargarDatosEnForm(snap.data());
                     modal.style.display = "flex"; 
+                    // En móvil, asegurar que el modal ocupe toda la pantalla
+                    if (window.innerWidth <= 768) {
+                        document.querySelector('#modal .content').style.maxHeight = '90vh';
+                        document.querySelector('#modal .content').style.width = '95%';
+                    }
                 } else {
                     mostrarAlertaPersonalizada("Error", "El expediente no fue encontrado.");
                 }
@@ -2459,6 +2837,11 @@
 
                 await cargarNotas(id);
                 modalVer.style.display = "flex";
+                // En móvil, asegurar que el modal ocupe toda la pantalla
+                if (window.innerWidth <= 768) {
+                    document.querySelector('#modalVer .content').style.maxHeight = '90vh';
+                    document.querySelector('#modalVer .content').style.width = '95%';
+                }
             } catch(e) {
                 console.error(e);
                 mostrarAlertaPersonalizada("Error", "No se pudo abrir el detalle: " + e.message);
@@ -3108,12 +3491,19 @@
         $("btnEventosHoy").onclick = function() {
             renderEventosHoy();
             modalEventosHoy.style.display = "flex";
+            // En móvil, asegurar que el modal ocupe toda la pantalla
+            if (window.innerWidth <= 768) {
+                document.querySelector('#modalEventosHoy .content').style.maxHeight = '90vh';
+                document.querySelector('#modalEventosHoy .content').style.width = '95%';
+            }
         };
         
-        // --- FUNCIONALIDAD DE DICTADO POR VOZ CORREGIDA ---
+        // --- FUNCIONALIDAD DE DICTADO POR VOZ MEJORADA ---
         let recognition;
         let dictadoActivo = false;
         let campoDictadoActual = null;
+        let ultimaTranscripcion = '';
+        let tiempoUltimaTranscripcion = 0;
         
         function toggleDictado(elementId, btnElement) {
             // Verificar compatibilidad del navegador
@@ -3135,15 +3525,17 @@
 
             // Crear nueva instancia
             recognition = new SpeechRecognition();
-            recognition.lang = 'es-ES'; // Español general (compatible con más navegadores)
-            recognition.continuous = true; // Continuar escuchando
-            recognition.interimResults = true; // Resultados intermedios
+            recognition.lang = 'es-ES';
+            recognition.continuous = true;
+            recognition.interimResults = true;
             recognition.maxAlternatives = 1;
 
             // Feedback visual: activar
             btnElement.classList.add('grabando');
             dictadoActivo = true;
             campoDictadoActual = elementId;
+            ultimaTranscripcion = '';
+            tiempoUltimaTranscripcion = Date.now();
 
             recognition.onstart = () => {
                 console.log("Dictado iniciado para campo:", elementId);
@@ -3152,31 +3544,41 @@
 
             recognition.onresult = (event) => {
                 let textoTranscrito = '';
+                let esFinal = false;
+                
                 for (let i = event.resultIndex; i < event.results.length; i++) {
                     if (event.results[i].isFinal) {
                         textoTranscrito += event.results[i][0].transcript;
+                        esFinal = true;
                     }
                 }
                 
-                if (textoTranscrito) {
-                    const inputField = document.getElementById(elementId);
-                    
-                    if (inputField) {
-                        // Verificar si es un div contenteditable
-                        if (inputField.isContentEditable) {
-                            // Insertar texto en el editor
-                            inputField.focus();
-                            const textoActual = inputField.innerText || inputField.textContent;
-                            const espacio = (textoActual.length > 0 && !textoActual.endsWith(' ')) ? ' ' : '';
-                            
-                            document.execCommand('insertText', false, espacio + textoTranscrito);
-                            inputField.dispatchEvent(new Event('input'));
-                        } else {
-                            // Es un input o textarea normal
-                            const textoActual = inputField.value;
-                            const espacio = (textoActual.length > 0 && !textoActual.endsWith(' ')) ? ' ' : '';
-                            inputField.value = textoActual + espacio + textoTranscrito;
-                            inputField.dispatchEvent(new Event('input'));
+                // Solo procesar si es resultado final y ha pasado suficiente tiempo
+                if (esFinal && textoTranscrito && textoTranscrito !== ultimaTranscripcion) {
+                    const ahora = Date.now();
+                    if (ahora - tiempoUltimaTranscripcion > 500) { // Evitar repeticiones rápidas
+                        ultimaTranscripcion = textoTranscrito;
+                        tiempoUltimaTranscripcion = ahora;
+                        
+                        const inputField = document.getElementById(elementId);
+                        
+                        if (inputField) {
+                            // Verificar si es un div contenteditable
+                            if (inputField.isContentEditable) {
+                                // Insertar texto en el editor
+                                inputField.focus();
+                                const textoActual = inputField.innerText || inputField.textContent;
+                                const espacio = (textoActual.length > 0 && !textoActual.endsWith(' ')) ? ' ' : '';
+                                
+                                document.execCommand('insertText', false, espacio + textoTranscrito);
+                                inputField.dispatchEvent(new Event('input'));
+                            } else {
+                                // Es un input o textarea normal
+                                const textoActual = inputField.value;
+                                const espacio = (textoActual.length > 0 && !textoActual.endsWith(' ')) ? ' ' : '';
+                                inputField.value = textoActual + espacio + textoTranscrito;
+                                inputField.dispatchEvent(new Event('input'));
+                            }
                         }
                     }
                 }
@@ -3201,6 +3603,7 @@
                 dictadoActivo = false;
                 btnElement.classList.remove('grabando');
                 campoDictadoActual = null;
+                ultimaTranscripcion = '';
                 console.log("Dictado finalizado.");
             };
 
@@ -3214,7 +3617,63 @@
                 campoDictadoActual = null;
             }
         }
-        // --- FIN DICTADO POR VOZ CORREGIDO ---
+        // --- FIN DICTADO POR VOZ MEJORADO ---
+
+        // MEJORAS RESPONSIVAS ADICIONALES
+        function ajustarInterfazMovil() {
+            const esMovil = window.innerWidth <= 768;
+            
+            // Ajustar texto de botones en móvil
+            const botones = document.querySelectorAll('.button');
+            botones.forEach(boton => {
+                const texto = boton.querySelector('.button-text');
+                if (esMovil && texto) {
+                    // En móvil, ocultar texto largo pero mantener accesibilidad
+                    if (window.innerWidth <= 480) {
+                        texto.style.display = 'none';
+                        boton.setAttribute('aria-label', boton.textContent);
+                    } else {
+                        texto.style.display = 'inline';
+                    }
+                } else if (texto) {
+                    texto.style.display = 'inline';
+                }
+            });
+            
+            // Ajustar tabs en móvil
+            const tabs = document.querySelectorAll('.tab-button');
+            if (esMovil) {
+                tabs.forEach(tab => {
+                    tab.style.padding = '10px 12px';
+                    tab.style.fontSize = '12px';
+                });
+            } else {
+                tabs.forEach(tab => {
+                    tab.style.padding = '12px 18px';
+                    tab.style.fontSize = '0.9rem';
+                });
+            }
+            
+            // Ajustar modales en móvil
+            const modales = document.querySelectorAll('#modal .content, #modalVer .content, #modalEventosHoy .content');
+            if (esMovil) {
+                modales.forEach(modal => {
+                    modal.style.width = '95%';
+                    modal.style.maxHeight = '90vh';
+                });
+            } else {
+                modales.forEach(modal => {
+                    modal.style.width = '';
+                    modal.style.maxHeight = '90vh';
+                });
+            }
+        }
+        
+        // Ajustar interfaz al cambiar tamaño de ventana
+        window.addEventListener('resize', ajustarInterfazMovil);
+        
+        // Ajustar al cargar
+        window.addEventListener('load', ajustarInterfazMovil);
 
         async function initApp() {
             try {
@@ -3244,6 +3703,9 @@
                 if ($("btnGuardar")) {
                     $("btnGuardar").onclick = guardarExpediente;
                 }
+                
+                // Ajustar interfaz inicial
+                ajustarInterfazMovil();
                 
                 console.log("Aplicación optimizada inicializada correctamente");
             } catch (error) {
