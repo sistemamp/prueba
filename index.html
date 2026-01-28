@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
     <style>
-        /* MANTENGO TODO EL CSS ORIGINAL SIN CAMBIOS */
+        /* MANTENGO TODO EL CSS ORIGINAL SIN CAMBIOS, AÑADIENDO SÓLO LO NUEVO */
         :root {
             --primary-blue: #007bff;
             --primary-light-blue: #e7f4ff;
@@ -610,14 +610,6 @@
             border-radius: 12px;
             color: #fff;
         }
-        .prioridad-destacada h4 {
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-        .prioridad-destacada .fa-exclamation-triangle {
-            font-size: 1.5rem;
-        }
         .prioridad-destacada.prioridad-baja { background-color: var(--status-success); }
         .prioridad-destacada.prioridad-media { background-color: var(--status-warning); }
         .prioridad-destacada.prioridad-alta { background-color: var(--status-danger); }
@@ -819,37 +811,93 @@
             color: var(--primary-dark-blue);
         }
         
-        /* ESTILOS PARA ASISTENTE IA */
-        #modalIA .content {
-            max-width: 700px;
-            max-height: 85vh;
+        /* ================================================================ */
+        /* NUEVOS ESTILOS PARA ASISTENTE IA - PANTALLA COMPLETA */
+        /* ================================================================ */
+        #modalIA {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
         }
         
-        .ia-modal-body {
-            padding: 16px;
+        #modalIA .content {
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            box-shadow: none;
+            animation: none;
             display: flex;
             flex-direction: column;
-            height: 60vh;
+        }
+        
+        #modalIA .modal-header {
+            border-radius: 0;
+            justify-content: space-between;
+            padding: 12px 24px;
+            flex-shrink: 0;
+        }
+        
+        #modalIA .modal-header h2 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+        
+        #modalIA .modal-body {
+            flex: 1;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .ia-pantalla-completa-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .ia-header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+        
+        .ia-conversacion-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
         
         .ia-conversacion {
-            flex: 1;
-            overflow-y: auto;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 12px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
         }
         
         .ia-mensaje {
-            padding: 12px 16px;
-            border-radius: 12px;
+            padding: 16px 20px;
+            border-radius: 16px;
             max-width: 85%;
             word-wrap: break-word;
-            line-height: 1.5;
+            line-height: 1.6;
+            position: relative;
         }
         
         .ia-mensaje.usuario {
@@ -864,61 +912,202 @@
             border: 1px solid #dee2e6;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         
-        .ia-carga {
+        .ia-mensaje-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .ia-mensaje-header strong {
+            font-size: 0.95rem;
+        }
+        
+        .ia-mensaje-acciones {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .ia-btn-voz {
+            background: transparent;
+            border: none;
+            color: var(--primary-blue);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        
+        .ia-btn-voz:hover {
+            background: rgba(0, 123, 255, 0.1);
+        }
+        
+        .ia-btn-voz.speaking {
+            background: rgba(0, 123, 255, 0.2);
+            color: var(--primary-dark-blue);
+        }
+        
+        .ia-input-container-pantalla {
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+            padding: 16px 0;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .ia-input-wrapper {
+            flex: 1;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 8px 16px;
+            border: 2px solid transparent;
+            transition: border 0.2s;
+        }
+        
+        .ia-input-wrapper:focus-within {
+            border-color: var(--primary-blue);
+        }
+        
+        .ia-input-wrapper input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 10px 0;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .ia-btn-microfono {
+            background: transparent;
+            border: none;
+            color: var(--primary-blue);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .ia-btn-microfono:hover {
+            background: rgba(0, 123, 255, 0.1);
+        }
+        
+        .ia-btn-microfono.listening {
+            background: var(--status-danger);
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .ia-btn-enviar {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            color: var(--secondary-dark-gray);
-            font-style: italic;
+            transition: background 0.2s;
         }
         
-        .ia-input-container {
+        .ia-btn-enviar:hover {
+            background: var(--primary-dark-blue);
+        }
+        
+        .ia-botones-control {
             display: flex;
-            gap: 8px;
+            gap: 12px;
         }
         
-        .ia-input-container input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+        .ia-botones-control .button {
+            padding: 10px 20px;
+        }
+        
+        .ia-resultado-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary-blue);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .ia-resultado-card:hover {
+            transform: translateX(5px);
+            background: #f8f9fa;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .ia-card-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        
+        .ia-card-title {
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 6px;
+            display: block;
             font-size: 1rem;
         }
         
-        .ia-input-container button {
-            padding: 12px 24px;
-            white-space: nowrap;
+        .ia-card-body {
+            font-size: 0.9rem;
+            color: var(--text-primary);
         }
         
-        .ia-info {
-            font-size: 0.85rem;
-            color: var(--secondary-dark-gray);
-            text-align: center;
-            margin-top: 8px;
+        .ia-highlight {
+            background-color: #fff3cd;
+            font-weight: bold;
+            padding: 2px 4px;
+            border-radius: 4px;
         }
         
         .ia-analisis-detallado {
             background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
             border-left: 4px solid var(--primary-blue);
         }
         
         .ia-analisis-detallado h4 {
             color: var(--primary-blue);
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
+            padding-bottom: 8px;
+            font-size: 1.1rem;
         }
         
         .ia-estadistica-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
-            padding: 4px 0;
+            margin-bottom: 8px;
+            padding: 6px 0;
             border-bottom: 1px dashed #eee;
         }
         
@@ -940,14 +1129,14 @@
             max-height: 200px;
             overflow-y: auto;
             background: white;
-            border-radius: 6px;
-            padding: 10px;
-            margin-top: 10px;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
             border: 1px solid #dee2e6;
         }
         
         .ia-expediente-item {
-            padding: 6px;
+            padding: 8px;
             border-bottom: 1px solid #f0f0f0;
             font-size: 0.9rem;
         }
@@ -959,11 +1148,86 @@
         .ia-expediente-numero {
             font-weight: bold;
             color: var(--primary-blue);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        .ia-expediente-numero:hover {
+            color: var(--primary-dark-blue);
         }
         
         .ia-expediente-datos {
             color: var(--text-secondary);
             font-size: 0.85rem;
+        }
+        
+        /* NUEVOS ESTILOS PARA CHIPS DE SUGERENCIAS */
+        .ia-chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .ia-chip {
+            background: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .ia-chip:hover {
+            background: #dee2e6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .ia-chip.prioridad-alta {
+            background: rgba(220, 53, 69, 0.1);
+            border-color: var(--status-danger);
+            color: var(--status-danger);
+        }
+        
+        .ia-chip.vencimientos {
+            background: rgba(255, 140, 0, 0.1);
+            border-color: var(--color-vencimientos);
+            color: var(--color-vencimientos);
+        }
+        
+        .ia-chip.estadisticas {
+            background: rgba(23, 162, 184, 0.1);
+            border-color: var(--status-info);
+            color: var(--status-info);
+        }
+        
+        /* ANIMACIÓN DE PUNTOS PARA PENSAR */
+        @keyframes dots {
+            0%, 20% { content: "."; }
+            40% { content: ".."; }
+            60%, 100% { content: "..."; }
+        }
+        
+        .ia-pensando::after {
+            content: "...";
+            animation: dots 1.5s steps(1, end) infinite;
+        }
+        
+        .ia-mensaje-carga {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 16px;
+            padding: 16px 20px;
+            align-self: flex-start;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--secondary-dark-gray);
         }
         
         @media print {
@@ -1047,6 +1311,9 @@
                 padding: 0 !important;
                 min-height: auto !important;
                 max-height: none !important;
+            }
+            #modalIA {
+                display: none !important;
             }
         }
         /* Estilos para el modal de eventos de hoy */
@@ -1136,6 +1403,9 @@
             .filter-group {
                 min-width: 120px;
             }
+            .ia-pantalla-completa-container {
+                padding: 15px;
+            }
         }
         @media (max-width: 768px) {
             .header-content {
@@ -1205,8 +1475,22 @@
                 margin-top: 10px;
                 align-self: flex-end;
             }
-            .ia-input-container {
+            .ia-input-container-pantalla {
                 flex-direction: column;
+            }
+            .ia-botones-control {
+                flex-direction: column;
+                width: 100%;
+            }
+            .ia-botones-control .button {
+                width: 100%;
+            }
+            .ia-conversacion-wrapper {
+                padding: 15px;
+            }
+            .ia-mensaje {
+                max-width: 90%;
+                padding: 14px 16px;
             }
         }
         @media (max-width: 576px) {
@@ -1279,6 +1563,19 @@
                 width: 100%;
                 justify-content: center;
             }
+            .ia-header-controls {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            .ia-mensaje-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            .ia-mensaje-acciones {
+                align-self: flex-end;
+            }
         }
         @media (max-width: 360px) {
             .container {
@@ -1301,6 +1598,9 @@
                 padding: 8px 12px;
                 font-size: 0.85rem;
             }
+            .ia-pantalla-completa-container {
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -1319,7 +1619,7 @@
                 <i class="fas fa-calendar-day"></i> Eventos Hoy
             </button>
             <button id="btnAsistenteIA" class="button">
-                <i class="fas fa-robot"></i> Asistente IA
+                Asistente IA
             </button>
         </div>
     </header>
@@ -1430,39 +1730,47 @@
         <div id="paginacion-container"></div>
     </main>
 
-    <!-- MODAL ASISTENTE IA -->
+    <!-- MODAL ASISTENTE IA - PANTALLA COMPLETA -->
     <div id="modalIA">
         <div class="content">
             <div class="modal-header">
-                <i class="fas fa-robot"></i>
                 <h2 style="margin:0;">Asistente IA - Análisis Inteligente</h2>
             </div>
-            <div class="modal-body ia-modal-body">
-                <div class="ia-conversacion" id="iaConversacion">
-                    <div class="ia-mensaje asistente">
-                        <strong>🤖 Asistente IA de Expedientes Judiciales</strong><br><br>
-                        Puedo analizar tus datos de forma detallada. Puedes preguntarme:<br><br>
-                        • <strong>Por usuario:</strong> "Expedientes del usuario Juan Pérez"<br>
-                        • <strong>Por tipo:</strong> "Expedientes de tipo Penal"<br>
-                        • <strong>Por estado:</strong> "Expedientes en trámite"<br>
-                        • <strong>Por prioridad:</strong> "Expedientes con prioridad alta"<br>
-                        • <strong>Por juzgado:</strong> "Expedientes del Juzgado N°1"<br>
-                        • <strong>Estadísticas:</strong> "Estadísticas completas"<br>
-                        • <strong>Vencimientos:</strong> "Expedientes próximos a vencer"
+            <div class="modal-body">
+                <div class="ia-pantalla-completa-container">
+                    <div class="ia-header-controls">
+                        <div class="ia-botones-control">
+                            <button id="btnNuevaConsultaIA" class="button button-secondary">
+                                <i class="fas fa-plus-circle"></i> Nueva Consulta
+                            </button>
+                            <button id="btnSalirIA" class="button button-danger">
+                                <i class="fas fa-sign-out-alt"></i> Salir
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="ia-conversacion-wrapper">
+                        <div class="ia-conversacion" id="iaConversacion">
+                            <!-- La conversación se insertará aquí dinámicamente -->
+                        </div>
+                    </div>
+                    
+                    <div class="ia-input-container-pantalla">
+                        <div class="ia-input-wrapper">
+                            <input type="text" id="iaPregunta" placeholder="Escribe tu pregunta o usa el micrófono..." autocomplete="off">
+                            <button id="btnVoiceIA" class="ia-btn-microfono" title="Usar voz para consultar">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                        </div>
+                        <button id="iaEnviar" class="ia-btn-enviar">
+                            <i class="fas fa-paper-plane"></i> Enviar
+                        </button>
+                    </div>
+                    
+                    <div class="ia-chips-container" id="iaChipsContainer">
+                        <!-- Los chips se generarán dinámicamente -->
                     </div>
                 </div>
-                <div class="ia-input-container">
-                    <input type="text" id="iaPregunta" placeholder="Ej: Estadísticas por usuario, Expedientes de tipo Penal..." autocomplete="off">
-                    <button id="iaEnviar" class="button button-success">Analizar</button>
-                </div>
-                <div class="ia-info">
-                    Análisis en tiempo real de tus datos de Firebase
-                </div>
-            </div>
-            <div class="controls-form">
-                <button id="btnCerrarIA" class="button button-secondary">
-                    <i class="fa fa-xmark"></i> Cerrar
-                </button>
             </div>
         </div>
     </div>
@@ -1767,6 +2075,10 @@
         let juzgadosPorTipoCache = {};
         let filterTimeout = null;
         
+        // VARIABLES PARA EL ASISTENTE IA (MEMORIA DE CONTEXTO)
+        let ultimoResultadoIA = []; // Memoria de contexto
+        let contextoActivo = false; // Indica si hay un contexto activo para refinar
+        
         const recordsPerPage = 10;
         const intervencionOptions = [
             "Defensor Oficial","Ministerio Principal", "Ministerio Complementario", "Patrocinante Actor",
@@ -1816,7 +2128,10 @@
         const iaPregunta = $("iaPregunta");
         const iaEnviar = $("iaEnviar");
         const btnAsistenteIA = $("btnAsistenteIA");
-        const btnCerrarIA = $("btnCerrarIA");
+        const btnNuevaConsultaIA = $("btnNuevaConsultaIA");
+        const btnSalirIA = $("btnSalirIA");
+        const btnVoiceIA = $("btnVoiceIA");
+        const iaChipsContainer = $("iaChipsContainer");
         
         const selTipo = $("tipoProceso"), selJuz = $("juzgado"), selUsu = $("usuarioAsignado"), selPrioridad = $("prioridad");
         const tabButtons = document.querySelectorAll(".tab-button");
@@ -2831,29 +3146,80 @@
         btnAgregarNota.onclick = agregarNota;
         $("btnCerrarVer").onclick = ()=> modalVer.style.display = "none";
         $("btnCerrarEventosHoy").onclick = ()=> modalEventosHoy.style.display = "none";
-        btnCerrarIA.onclick = ()=> modalIA.style.display = "none";
         
         // ======================================================================
-        // ASISTENTE IA CORREGIDO
+        // NUEVO ASISTENTE IA - PANTALLA COMPLETA CON VOZ
         // ======================================================================
         
         let conversacionIA = [];
+        let vozReconocimiento = null;
+        let vozReconocimientoActivo = false;
+        let textToSpeechActivo = false;
         
         function abrirAsistenteIA() {
             modalIA.style.display = "flex";
             iaPregunta.focus();
-            if (conversacionIA.length === 0) {
-                agregarMensajeIA("asistente", 
-                    `<strong>🤖 Asistente IA de Expedientes Judiciales</strong><br><br>
-                    Puedo analizar tus datos de forma detallada. Puedes preguntarme:<br><br>
-                    • <strong>Por usuario:</strong> "Expedientes del usuario Juan Pérez"<br>
-                    • <strong>Por tipo:</strong> "Expedientes de tipo Penal"<br>
-                    • <strong>Por estado:</strong> "Expedientes en trámite"<br>
-                    • <strong>Por prioridad:</strong> "Expedientes con prioridad alta"<br>
-                    • <strong>Por juzgado:</strong> "Expedientes del Juzgado N°1"<br>
-                    • <strong>Estadísticas:</strong> "Estadísticas completas"<br>
-                    • <strong>Vencimientos:</strong> "Expedientes próximos a vencer"`);
+            
+            // Limpiar conversación inicial (sin mensaje de bienvenida)
+            iaConversacion.innerHTML = "";
+            
+            // Agregar un mensaje inicial simple
+            agregarMensajeIA("asistente", 
+                `<strong>Asistente IA de Expedientes</strong><br>
+                Puedo ayudarte a buscar y analizar expedientes judiciales. ¿En qué puedo asistirte?`);
+            
+            generarChipsSugerencias();
+        }
+        
+        function cerrarAsistenteIA() {
+            modalIA.style.display = "none";
+            // Detener reconocimiento de voz si está activo
+            if (vozReconocimientoActivo) {
+                detenerVozReconocimiento();
             }
+            // Detener síntesis de voz
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+            }
+        }
+        
+        function nuevaConsultaIA() {
+            iaConversacion.innerHTML = "";
+            iaPregunta.value = "";
+            ultimoResultadoIA = [];
+            contextoActivo = false;
+            
+            agregarMensajeIA("asistente", 
+                `<strong>Consulta Nueva</strong><br>
+                ¿Qué deseas buscar o analizar en los expedientes?`);
+                
+            generarChipsSugerencias();
+            iaPregunta.focus();
+        }
+        
+        function generarChipsSugerencias() {
+            const chips = [
+                { texto: "📅 Vencimientos esta semana", query: "vencimientos esta semana", clase: "vencimientos" },
+                { texto: "🚨 Prioridad Alta", query: "prioridad alta", clase: "prioridad-alta" },
+                { texto: "📊 Estadísticas completas", query: "estadísticas completas", clase: "estadisticas" },
+                { texto: "⚖️ En trámite", query: "expedientes en trámite", clase: "" },
+                { texto: "👤 Mis expedientes", query: "mis expedientes", clase: "" },
+                { texto: "📁 Por tipo penal", query: "expedientes de tipo penal", clase: "" }
+            ];
+            
+            iaChipsContainer.innerHTML = chips.map(chip => `
+                <button class="ia-chip ${chip.clase}" data-query="${chip.query}">
+                    <i class="fas fa-${chip.texto.includes('Estadísticas') ? 'chart-bar' : chip.texto.includes('Prioridad') ? 'exclamation-triangle' : chip.texto.includes('Vencimientos') ? 'calendar' : chip.texto.includes('Mis') ? 'folder' : chip.texto.includes('trámite') ? 'balance-scale' : 'user'}"></i>
+                    ${chip.texto}
+                </button>
+            `).join('');
+            
+            document.querySelectorAll('.ia-chip').forEach(chip => {
+                chip.onclick = function() {
+                    iaPregunta.value = this.dataset.query;
+                    enviarPreguntaIA();
+                };
+            });
         }
         
         async function enviarPreguntaIA() {
@@ -2861,521 +3227,571 @@
             if (!pregunta) return;
             
             iaPregunta.value = "";
-            
             agregarMensajeIA("usuario", pregunta);
             
+            // Simular "pensando"
             const mensajeCarga = agregarMensajeCarga();
             
-            try {
-                const respuesta = await analizarPreguntaIA(pregunta);
-                
+            // Pequeño delay para UX
+            setTimeout(() => {
                 mensajeCarga.remove();
-                agregarMensajeIA("asistente", respuesta);
-                
-                conversacionIA.push({ rol: "usuario", contenido: pregunta });
-                conversacionIA.push({ rol: "asistente", contenido: respuesta });
-                
-            } catch (error) {
-                console.error("Error en Asistente IA:", error);
-                mensajeCarga.remove();
-                agregarMensajeIA("asistente", "Lo siento, hubo un error al procesar tu pregunta. Por favor, inténtalo de nuevo.");
-            }
+                procesarConsultaInteligente(pregunta);
+            }, 800);
         }
         
-        function analizarPreguntaIA(pregunta) {
-            const preguntaLower = pregunta.toLowerCase();
-            const datosAnalisis = generarEstadisticasDetalladas();
-            
-            // 1. ANÁLISIS POR USUARIO
-            if (preguntaLower.includes("usuario") || preguntaLower.includes("abogado") || preguntaLower.includes("asignado")) {
-                return generarAnalisisPorUsuario(pregunta, datosAnalisis);
+        // FUNCIÓN PARA SINTETIZAR VOZ (TEXT-TO-SPEECH) MEJORADA
+        function sintetizarVoz(texto, elementoBtn = null) {
+            if (!('speechSynthesis' in window)) {
+                console.warn("Text-to-speech no soportado en este navegador");
+                return;
             }
             
-            // 2. ANÁLISIS POR TIPO DE PROCESO
-            if (preguntaLower.includes("tipo") || preguntaLower.includes("proceso") || preguntaLower.includes("categoría")) {
-                return generarAnalisisPorTipo(pregunta, datosAnalisis);
+            // Cancelar cualquier síntesis en curso
+            speechSynthesis.cancel();
+            textToSpeechActivo = true;
+            
+            // Si hay un botón, marcarlo como activo
+            if (elementoBtn) {
+                elementoBtn.classList.add('speaking');
             }
             
-            // 3. ANÁLISIS POR ESTADO
-            if (preguntaLower.includes("estado") || preguntaLower.includes("trámite") || preguntaLower.includes("finalizado")) {
-                return generarAnalisisPorEstado(pregunta, datosAnalisis);
+            const utterance = new SpeechSynthesisUtterance(texto);
+            utterance.lang = 'es-ES';
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+            utterance.volume = 0.8;
+            
+            // Seleccionar voz
+            const voces = speechSynthesis.getVoices();
+            const vozFemenina = voces.find(voz => voz.lang === 'es-ES' && voz.name.includes('Female'));
+            const vozEspanol = voces.find(voz => voz.lang === 'es-ES');
+            
+            if (vozFemenina) {
+                utterance.voice = vozFemenina;
+            } else if (vozEspanol) {
+                utterance.voice = vozEspanol;
             }
             
-            // 4. ANÁLISIS POR PRIORIDAD
-            if (preguntaLower.includes("prioridad") || preguntaLower.includes("alta") || preguntaLower.includes("media") || preguntaLower.includes("baja")) {
-                return generarAnalisisPorPrioridad(pregunta, datosAnalisis);
-            }
-            
-            // 5. ANÁLISIS POR JUZGADO
-            if (preguntaLower.includes("juzgado") || preguntaLower.includes("tribunal")) {
-                return generarAnalisisPorJuzgado(pregunta, datosAnalisis);
-            }
-            
-            // 6. ANÁLISIS DE VENCIMIENTOS
-            if (preguntaLower.includes("venc") || preguntaLower.includes("próximo") || preguntaLower.includes("fecha límite")) {
-                return generarAnalisisVencimientos(pregunta, datosAnalisis);
-            }
-            
-            // 7. ESTADÍSTICAS COMPLETAS
-            if (preguntaLower.includes("estadística") || preguntaLower.includes("resumen") || preguntaLower.includes("total") || preguntaLower.includes("cuántos")) {
-                return generarEstadisticasCompletas(datosAnalisis);
-            }
-            
-            // 8. ANÁLISIS GENERAL
-            return generarAnalisisGeneral(datosAnalisis);
-        }
-        
-        function generarEstadisticasDetalladas() {
-            const hoy = new Date();
-            const estadisticas = {
-                total: datosCache.length,
-                porUsuario: {},
-                porTipo: {},
-                porEstado: {},
-                porPrioridad: {
-                    alta: 0, media: 0, baja: 0, ninguna: 0
-                },
-                porJuzgado: {},
-                porIntervencion: {},
-                vencimientosProximos: [],
-                expedientesRecientes: [],
-                usuariosActivos: [],
-                tiposFrecuentes: []
+            utterance.onstart = function() {
+                console.log("Comenzando síntesis de voz...");
             };
             
-            datosCache.forEach(causa => {
-                const usuario = causa.usuarioAsignado || "Sin usuario";
-                const tipo = causa.tipoProceso || "Sin tipo";
-                const estado = causa.estado || "Sin estado";
-                const prioridad = causa.prioridad || "Ninguna";
-                const juzgado = causa.juzgado || "Sin juzgado";
-                const intervencion = causa.intervencion || "Sin intervención";
+            utterance.onend = function() {
+                console.log("Síntesis de voz finalizada");
+                textToSpeechActivo = false;
+                if (elementoBtn) {
+                    elementoBtn.classList.remove('speaking');
+                }
+            };
+            
+            utterance.onerror = function(event) {
+                console.error("Error en síntesis de voz:", event);
+                textToSpeechActivo = false;
+                if (elementoBtn) {
+                    elementoBtn.classList.remove('speaking');
+                }
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+        
+        // FUNCIÓN PARA RECONOCIMIENTO DE VOZ (VOZ A TEXTO)
+        function iniciarVozReconocimiento() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                mostrarAlertaFlotante("El reconocimiento de voz no es compatible con este navegador.", 'danger');
+                return;
+            }
+            
+            if (vozReconocimientoActivo) {
+                detenerVozReconocimiento();
+                return;
+            }
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            vozReconocimiento = new SpeechRecognition();
+            vozReconocimiento.lang = 'es-ES';
+            vozReconocimiento.interimResults = false;
+            vozReconocimiento.continuous = false;
+            vozReconocimiento.maxAlternatives = 1;
+            
+            vozReconocimiento.onstart = function() {
+                vozReconocimientoActivo = true;
+                btnVoiceIA.classList.add('listening');
+                mostrarAlertaFlotante("Escuchando... Habla ahora", 'info');
+            };
+            
+            vozReconocimiento.onresult = function(event) {
+                const transcripcion = event.results[0][0].transcript;
+                iaPregunta.value = transcripcion;
+                // Opcional: enviar automáticamente
+                // enviarPreguntaIA();
+            };
+            
+            vozReconocimiento.onerror = function(event) {
+                console.error("Error en reconocimiento de voz:", event.error);
+                if (event.error === 'no-speech') {
+                    mostrarAlertaFlotante("No se detectó voz. Intenta nuevamente.", 'warning');
+                } else if (event.error === 'audio-capture') {
+                    mostrarAlertaFlotante("No se pudo acceder al micrófono.", 'danger');
+                } else if (event.error === 'not-allowed') {
+                    mostrarAlertaFlotante("Permiso para micrófono denegado.", 'danger');
+                }
+                vozReconocimientoActivo = false;
+                btnVoiceIA.classList.remove('listening');
+            };
+            
+            vozReconocimiento.onend = function() {
+                vozReconocimientoActivo = false;
+                btnVoiceIA.classList.remove('listening');
+            };
+            
+            vozReconocimiento.start();
+        }
+        
+        function detenerVozReconocimiento() {
+            if (vozReconocimiento) {
+                vozReconocimiento.stop();
+            }
+            vozReconocimientoActivo = false;
+            btnVoiceIA.classList.remove('listening');
+        }
+        
+        // FUNCIÓN MEJORADA PARA FECHAS RELATIVAS
+        function obtenerRangoFechasRelativas(expresion) {
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            
+            const manana = new Date(hoy);
+            manana.setDate(manana.getDate() + 1);
+            
+            const semanaPasadaInicio = new Date(hoy);
+            semanaPasadaInicio.setDate(semanaPasadaInicio.getDate() - 7);
+            
+            const semanaProximaFin = new Date(hoy);
+            semanaProximaFin.setDate(semanaProximaFin.getDate() + 7);
+            
+            const mesPasadoInicio = new Date(hoy);
+            mesPasadoInicio.setMonth(mesPasadoInicio.getMonth() - 1);
+            
+            const mesProximoFin = new Date(hoy);
+            mesProximoFin.setMonth(mesProximoFin.getMonth() + 1);
+            
+            const expresionLower = expresion.toLowerCase();
+            
+            if (expresionLower.includes("hoy")) {
+                return { desde: formatFechaParaInput(hoy, false), hasta: formatFechaParaInput(hoy, false) };
+            }
+            if (expresionLower.includes("mañana")) {
+                return { desde: formatFechaParaInput(manana, false), hasta: formatFechaParaInput(manana, false) };
+            }
+            if (expresionLower.includes("semana") && expresionLower.includes("pasada")) {
+                return { desde: formatFechaParaInput(semanaPasadaInicio, false), hasta: formatFechaParaInput(hoy, false) };
+            }
+            if (expresionLower.includes("semana") && (expresionLower.includes("próxima") || expresionLower.includes("proxima") || expresionLower.includes("esta"))) {
+                return { desde: formatFechaParaInput(hoy, false), hasta: formatFechaParaInput(semanaProximaFin, false) };
+            }
+            if (expresionLower.includes("mes") && expresionLower.includes("pasado")) {
+                return { desde: formatFechaParaInput(mesPasadoInicio, false), hasta: formatFechaParaInput(hoy, false) };
+            }
+            if (expresionLower.includes("mes") && (expresionLower.includes("próximo") || expresionLower.includes("proximo") || expresionLower.includes("este"))) {
+                return { desde: formatFechaParaInput(hoy, false), hasta: formatFechaParaInput(mesProximoFin, false) };
+            }
+            
+            return null;
+        }
+        
+        // FUNCIÓN MEJORADA PARA BUSCAR EN REGISTROS
+        function buscarEnRegistrosMejorado(tokens, contextoAnterior = null, tieneNegacion = false, rangoFechas = null) {
+            const datosABuscar = contextoAnterior && contextoAnterior.length > 0 ? contextoAnterior : datosCache;
+            const resultadosConPuntaje = [];
+            
+            datosABuscar.forEach(causa => {
+                let score = 0;
+                let coincidencias = [];
+                let penalizacion = 0;
                 
-                estadisticas.porUsuario[usuario] = (estadisticas.porUsuario[usuario] || 0) + 1;
-                estadisticas.porTipo[tipo] = (estadisticas.porTipo[tipo] || 0) + 1;
-                estadisticas.porEstado[estado] = (estadisticas.porEstado[estado] || 0) + 1;
-                estadisticas.porJuzgado[juzgado] = (estadisticas.porJuzgado[juzgado] || 0) + 1;
-                estadisticas.porIntervencion[intervencion] = (estadisticas.porIntervencion[intervencion] || 0) + 1;
+                // Normalizar textos para búsqueda
+                const campos = {
+                    numCausa: (causa.numCausa || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+                    caratula: (causa.caratula || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+                    usuario: (causa.usuarioAsignado || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+                    tipo: (causa.tipoProceso || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+                    juzgado: (causa.juzgado || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+                    estado: (causa.estado || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+                    prioridad: (causa.prioridad || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+                    intervencion: (causa.intervencion || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                };
                 
-                if (prioridad === "Alta") estadisticas.porPrioridad.alta++;
-                else if (prioridad === "Media") estadisticas.porPrioridad.media++;
-                else if (prioridad === "Baja") estadisticas.porPrioridad.baja++;
-                else estadisticas.porPrioridad.ninguna++;
-                
-                if (causa.vencimiento) {
-                    const fechaVenc = toDate(causa.vencimiento);
-                    if (fechaVenc) {
-                        const diferenciaDias = Math.ceil((fechaVenc - hoy) / (1000 * 60 * 60 * 24));
-                        if (diferenciaDias >= 0 && diferenciaDias <= 7) {
-                            estadisticas.vencimientosProximos.push({
-                                numero: causa.numCausa || "Sin número",
-                                caratula: causa.caratula || "Sin carátula",
-                                usuario: usuario,
-                                fechaVencimiento: formatearFecha(fechaVenc, true),
-                                diasRestantes: diferenciaDias,
-                                prioridad: prioridad
-                            });
-                        }
+                // Verificar filtro por fechas relativas
+                if (rangoFechas) {
+                    const fechasCausa = causa.fechasFiltro || [];
+                    const tieneFechaEnRango = fechasCausa.some(fecha => {
+                        return fecha >= rangoFechas.desde && fecha <= rangoFechas.hasta;
+                    });
+                    if (!tieneFechaEnRango) {
+                        score -= 100;
+                    } else {
+                        score += 20;
                     }
                 }
                 
-                if (causa.fechaRegistro) {
-                    const fechaReg = toDate(causa.fechaRegistro);
-                    if (fechaReg) {
-                        const diferenciaDiasReg = Math.ceil((hoy - fechaReg) / (1000 * 60 * 60 * 24));
-                        if (diferenciaDiasReg <= 30) {
-                            estadisticas.expedientesRecientes.push({
-                                numero: causa.numCausa || "Sin número",
-                                caratula: causa.caratula || "Sin carátula",
-                                fechaRegistro: formatearFecha(fechaReg, false),
-                                usuario: usuario,
-                                tipo: tipo
-                            });
+                tokens.forEach(token => {
+                    const esNegacion = token.startsWith("no_") || token.startsWith("sin_");
+                    const tokenLimpio = esNegacion ? token.substring(3) : token;
+                    
+                    // Puntos por campo
+                    if (campos.numCausa.includes(tokenLimpio)) {
+                        if (esNegacion) {
+                            penalizacion += 50;
+                        } else {
+                            score += 10;
+                            coincidencias.push(`N°: ${causa.numCausa}`);
                         }
                     }
+                    
+                    if (campos.caratula.includes(tokenLimpio)) {
+                        if (esNegacion) {
+                            penalizacion += 30;
+                        } else {
+                            score += 8;
+                            coincidencias.push(`Carátula: ${causa.caratula.substring(0, 50)}...`);
+                        }
+                    }
+                    
+                    if (campos.usuario.includes(tokenLimpio)) {
+                        if (esNegacion) {
+                            penalizacion += 25;
+                        } else {
+                            score += 7;
+                            coincidencias.push(`Usuario: ${causa.usuarioAsignado}`);
+                        }
+                    }
+                    
+                    if (campos.tipo.includes(tokenLimpio)) {
+                        if (esNegacion) {
+                            penalizacion += 20;
+                        } else {
+                            score += 5;
+                            coincidencias.push(`Tipo: ${causa.tipoProceso}`);
+                        }
+                    }
+                    
+                    if (campos.juzgado.includes(tokenLimpio)) {
+                        if (esNegacion) {
+                            penalizacion += 20;
+                        } else {
+                            score += 5;
+                            coincidencias.push(`Juzgado: ${causa.juzgado}`);
+                        }
+                    }
+                    
+                    if (campos.estado.includes(tokenLimpio)) {
+                        if (esNegacion) {
+                            penalizacion += 15;
+                        } else {
+                            score += 4;
+                            coincidencias.push(`Estado: ${causa.estado}`);
+                        }
+                    }
+                    
+                    if (campos.prioridad.includes(tokenLimpio)) {
+                        if (esNegacion) {
+                            penalizacion += 15;
+                        } else {
+                            score += 6;
+                            coincidencias.push(`Prioridad: ${causa.prioridad}`);
+                        }
+                    }
+                    
+                    if (campos.intervencion.includes(tokenLimpio)) {
+                        if (esNegacion) {
+                            penalizacion += 10;
+                        } else {
+                            score += 3;
+                            coincidencias.push(`Intervención: ${causa.intervencion}`);
+                        }
+                    }
+                    
+                    // Búsqueda en observaciones
+                    if (causa.observaciones && causa.observaciones.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(tokenLimpio)) {
+                        if (esNegacion) {
+                            penalizacion += 5;
+                        } else {
+                            score += 2;
+                            coincidencias.push(`Observaciones: contiene "${tokenLimpio}"`);
+                        }
+                    }
+                    
+                    // Detección especial para "Vencimientos"
+                    if (tokenLimpio === "vencimiento" || tokenLimpio === "vencimientos" || tokenLimpio === "vencer") {
+                        if (causa.vencimiento) {
+                            const hoy = new Date();
+                            const fechaVenc = toDate(causa.vencimiento);
+                            if (fechaVenc > hoy) {
+                                score += 15;
+                                coincidencias.push("Tiene vencimiento futuro");
+                            } else if (fechaVenc < hoy) {
+                                score += 5;
+                                coincidencias.push("Tiene vencimiento pasado");
+                            }
+                        }
+                    }
+                });
+                
+                // Aplicar penalización por negación
+                if (tieneNegacion) {
+                    score -= penalizacion;
+                }
+                
+                // Penalizar si no hay suficientes coincidencias
+                if (coincidencias.length < tokens.length * 0.3) {
+                    score -= 10;
+                }
+                
+                // Bonus por prioridad alta
+                if (causa.prioridad === "Alta") {
+                    score += 3;
+                }
+                
+                if (score > 0) {
+                    resultadosConPuntaje.push({
+                        causa,
+                        score,
+                        coincidencias: [...new Set(coincidencias)].slice(0, 3)
+                    });
                 }
             });
             
-            estadisticas.usuariosActivos = Object.entries(estadisticas.porUsuario)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 10);
-            
-            estadisticas.tiposFrecuentes = Object.entries(estadisticas.porTipo)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 10);
-            
-            estadisticas.vencimientosProximos.sort((a, b) => a.diasRestantes - b.diasRestantes);
-            
-            estadisticas.expedientesRecientes.sort((a, b) => new Date(b.fechaRegistro.split('/').reverse().join('-')) - 
-                new Date(a.fechaRegistro.split('/').reverse().join('-')));
-            
-            return estadisticas;
+            // Ordenar por puntaje
+            return resultadosConPuntaje
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 15)
+                .map(item => item.causa);
         }
         
-        function generarAnalisisPorUsuario(pregunta, datosAnalisis) {
-            let respuesta = `<strong>📊 ANÁLISIS POR USUARIO</strong><br><br>`;
+        function procesarConsultaInteligente(pregunta) {
+            const texto = pregunta.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             
-            const palabras = pregunta.toLowerCase().split(' ');
-            let usuarioBuscado = null;
-            for (const palabra of palabras) {
-                if (palabra !== "usuario" && palabra !== "del" && palabra !== "de" && palabra.length > 2) {
-                    const usuarios = Object.keys(datosAnalisis.porUsuario);
-                    for (const usuario of usuarios) {
-                        if (usuario.toLowerCase().includes(palabra)) {
-                            usuarioBuscado = usuario;
-                            break;
-                        }
-                    }
-                    if (usuarioBuscado) break;
+            // DETECCIÓN DE REFINAMIENTO
+            const palabrasRefinamiento = ["filtrar", "solo", "solamente", "únicamente", "unicamente", "de estos", "entre estos", "dentro de"];
+            const esRefinamiento = palabrasRefinamiento.some(p => texto.includes(p)) && ultimoResultadoIA.length > 0;
+            
+            // DETECCIÓN DE NEGACIÓN
+            const tieneNegacion = texto.includes(" no ") || texto.includes(" sin ") || texto.startsWith("no ") || texto.startsWith("sin ");
+            
+            // DETECCIÓN DE FECHAS RELATIVAS
+            const rangoFechas = obtenerRangoFechasRelativas(texto);
+            
+            // PROCESAR TOKENS
+            const stopWords = ["de", "el", "la", "los", "las", "en", "y", "o", "que", "un", "una", "expediente", "expedientes", "causa", "causas", "buscar", "muestrame", "dime", "quiero", "ver", "mostrar"];
+            let tokens = texto.split(/\s+/).filter(w => w.length > 2 && !stopWords.includes(w));
+            
+            // Procesar negaciones
+            tokens = tokens.map(token => {
+                if (token.startsWith("no") && token.length > 4) {
+                    return `no_${token.substring(2)}`;
                 }
+                if (token.startsWith("sin") && token.length > 4) {
+                    return `sin_${token.substring(3)}`;
+                }
+                return token;
+            });
+            
+            if (tokens.length === 0 && !rangoFechas) {
+                agregarMensajeIA("asistente", "Por favor, sé un poco más específico con tu búsqueda.");
+                return;
             }
             
-            if (usuarioBuscado) {
-                const cantidad = datosAnalisis.porUsuario[usuarioBuscado];
-                respuesta += `<strong>Usuario: ${usuarioBuscado}</strong><br>`;
-                respuesta += `• Expedientes asignados: ${cantidad}<br>`;
-                respuesta += `• Porcentaje del total: ${((cantidad / datosAnalisis.total) * 100).toFixed(1)}%<br><br>`;
+            // DETECCIÓN DE ESTADÍSTICAS
+            const palabrasEstadistica = ["estadistica", "estadísticas", "resumen", "total", "cuantos", "cuántos", "cuantas", "cuántas", "grafico", "gráfico", "analisis", "análisis", "conteo"];
+            const esEstadistica = palabrasEstadistica.some(p => texto.includes(p));
+            
+            if (esEstadistica && !esRefinamiento) {
+                const respuesta = generarEstadisticasIA();
+                agregarMensajeIA("asistente", respuesta);
+                // Sintetizar voz para estadísticas
+                sintetizarVoz(`Encontré ${datosCache.length} expedientes en total. ${generarResumenEstadistico()}`);
+                return;
+            }
+            
+            // REALIZAR BÚSQUEDA
+            const datosABuscar = esRefinamiento ? ultimoResultadoIA : datosCache;
+            const resultados = buscarEnRegistrosMejorado(tokens, datosABuscar, tieneNegacion, rangoFechas);
+            
+            // Guardar en memoria de contexto si no es refinamiento
+            if (!esRefinamiento) {
+                ultimoResultadoIA = resultados;
+                contextoActivo = true;
+            }
+            
+            if (resultados.length > 0) {
+                const respuestaHTML = generarHTMLResultados(resultados, tokens, esRefinamiento, tieneNegacion, rangoFechas);
+                agregarMensajeIA("asistente", `Encontré <strong>${resultados.length}</strong> expedientes que coinciden con tu búsqueda:<br><br>${respuestaHTML}`);
                 
-                respuesta += `<div class="ia-analisis-detallado">`;
-                respuesta += `<h4>📈 Top 5 Usuarios con más expedientes</h4>`;
-                datosAnalisis.usuariosActivos.slice(0, 5).forEach(([usuario, count], index) => {
-                    const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
-                    respuesta += `<div class="ia-estadistica-item">
-                        <span class="ia-estadistica-label">${index + 1}. ${usuario}</span>
-                        <span class="ia-estadistica-valor">${count} (${porcentaje}%)</span>
-                    </div>`;
-                });
-                respuesta += `</div>`;
+                // Sintetizar voz para anunciar resultados
+                sintetizarVoz(`Encontré ${resultados.length} expedientes que coinciden con tu búsqueda.`);
+                
+                // Reactivar listeners para los botones "Ver" y "Voz"
+                setTimeout(() => {
+                    document.querySelectorAll('.ia-ver-causa').forEach(btn => {
+                        btn.onclick = (e) => {
+                            const id = e.currentTarget.dataset.id;
+                            modalIA.style.display = "none";
+                            abrirVer(id);
+                        };
+                    });
+                }, 100);
             } else {
-                respuesta += `<strong>Total de expedientes: ${datosAnalisis.total}</strong><br><br>`;
-                respuesta += `<div class="ia-analisis-detallado">`;
-                respuesta += `<h4>👥 Distribución por Usuario</h4>`;
-                datosAnalisis.usuariosActivos.forEach(([usuario, count], index) => {
-                    if (index < 8) {
-                        const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
-                        respuesta += `<div class="ia-estadistica-item">
-                            <span class="ia-estadistica-label">${usuario}</span>
-                            <span class="ia-estadistica-valor">${count} (${porcentaje}%)</span>
-                        </div>`;
-                    }
-                });
-                respuesta += `</div>`;
+                agregarMensajeIA("asistente", `No encontré expedientes que coincidan con "<em>${pregunta}</em>". Intenta con otros términos o verifica la ortografía.`);
+                sintetizarVoz("No encontré expedientes que coincidan con tu búsqueda.");
+                ultimoResultadoIA = [];
+                contextoActivo = false;
+            }
+        }
+        
+        function generarHTMLResultados(listaCausas, tokensResaltar, esRefinamiento = false, tieneNegacion = false, rangoFechas = null) {
+            let html = "";
+            
+            if (esRefinamiento) {
+                html += `<p><small><i class="fas fa-filter"></i> Filtrado sobre resultados anteriores</small></p>`;
+            }
+            if (tieneNegacion) {
+                html += `<p><small><i class="fas fa-ban"></i> Excluyendo términos específicos</small></p>`;
+            }
+            if (rangoFechas) {
+                html += `<p><small><i class="fas fa-calendar"></i> Período: ${rangoFechas.desde} a ${rangoFechas.hasta}</small></p>`;
+            }
+            
+            listaCausas.forEach(causa => {
+                const icono = causa.prioridad === "Alta" ? "🔴" : (causa.prioridad === "Media" ? "🟠" : "🔵");
                 
-                respuesta += `<div class="ia-analisis-detallado">`;
-                respuesta += `<h4>🏆 Usuarios más activos</h4>`;
-                datosAnalisis.usuariosActivos.slice(0, 3).forEach(([usuario, count], index) => {
-                    const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
-                    const medalla = index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉";
-                    respuesta += `<div class="ia-estadistica-item">
-                        <span class="ia-estadistica-label">${medalla} ${usuario}</span>
-                        <span class="ia-estadistica-valor">${count} expedientes</span>
-                    </div>`;
-                });
-                respuesta += `</div>`;
-            }
-            
-            return respuesta;
-        }
-        
-        function generarAnalisisPorTipo(pregunta, datosAnalisis) {
-            let respuesta = `<strong>⚖️ ANÁLISIS POR TIPO DE PROCESO</strong><br><br>`;
-            
-            const palabras = pregunta.toLowerCase().split(' ');
-            let tipoBuscado = null;
-            for (const palabra of palabras) {
-                if (palabra !== "tipo" && palabra !== "de" && palabra !== "proceso" && palabra.length > 2) {
-                    const tipos = Object.keys(datosAnalisis.porTipo);
-                    for (const tipo of tipos) {
-                        if (tipo.toLowerCase().includes(palabra)) {
-                            tipoBuscado = tipo;
-                            break;
-                        }
-                    }
-                    if (tipoBuscado) break;
+                // Resaltar coincidencias en carátula
+                let caratulaHTML = causa.caratula || "Sin carátula";
+                if (tokensResaltar && tokensResaltar.length > 0) {
+                    tokensResaltar.forEach(token => {
+                        const tokenLimpio = token.replace(/^(no_|sin_)/, '');
+                        const regex = new RegExp(`(${tokenLimpio})`, 'gi');
+                        caratulaHTML = caratulaHTML.replace(regex, '<span class="ia-highlight">$1</span>');
+                    });
                 }
-            }
-            
-            if (tipoBuscado) {
-                const cantidad = datosAnalisis.porTipo[tipoBuscado];
-                respuesta += `<strong>Tipo: ${tipoBuscado}</strong><br>`;
-                respuesta += `• Cantidad de expedientes: ${cantidad}<br>`;
-                respuesta += `• Porcentaje del total: ${((cantidad / datosAnalisis.total) * 100).toFixed(1)}%<br><br>`;
-            }
-            
-            respuesta += `<div class="ia-analisis-detallado">`;
-            respuesta += `<h4>📊 Distribución por Tipo de Proceso</h4>`;
-            datosAnalisis.tiposFrecuentes.forEach(([tipo, count], index) => {
-                if (index < 10) {
-                    const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
-                    respuesta += `<div class="ia-estadistica-item">
-                        <span class="ia-estadistica-label">${tipo}</span>
-                        <span class="ia-estadistica-valor">${count} (${porcentaje}%)</span>
-                    </div>`;
-                }
-            });
-            respuesta += `</div>`;
-            
-            respuesta += `<div class="ia-analisis-detallado">`;
-            respuesta += `<h4>🏆 Tipos más frecuentes</h4>`;
-            datosAnalisis.tiposFrecuentes.slice(0, 3).forEach(([tipo, count], index) => {
-                const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
-                const medalla = index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉";
-                respuesta += `<div class="ia-estadistica-item">
-                    <span class="ia-estadistica-label">${medalla} ${tipo}</span>
-                    <span class="ia-estadistica-valor">${count} expedientes</span>
+                
+                html += `
+                <div class="ia-resultado-card ia-ver-causa" data-id="${causa.id}">
+                    <div class="ia-card-header">
+                        <span>${icono} ${causa.numCausa}</span>
+                        <span>${causa.estado}</span>
+                    </div>
+                    <div class="ia-card-title">${caratulaHTML}</div>
+                    <div class="ia-card-body">
+                        <small>👤 ${causa.usuarioAsignado || "Sin asignar"} | 🏛️ ${causa.juzgado || ""} | 📅 ${formatearFecha(causa.fechaRegistro, false)}</small>
+                    </div>
                 </div>`;
             });
-            respuesta += `</div>`;
-            
-            return respuesta;
+            return html;
         }
         
-        function generarAnalisisPorEstado(pregunta, datosAnalisis) {
-            let respuesta = `<strong>📋 ANÁLISIS POR ESTADO</strong><br><br>`;
+        function generarEstadisticasIA() {
+            const total = datosCache.length;
+            const porEstado = {};
+            const porUsuario = {};
+            const porPrioridad = { Alta: 0, Media: 0, Baja: 0, Ninguna: 0 };
+            const porTipo = {};
             
-            respuesta += `<div class="ia-analisis-detallado">`;
-            respuesta += `<h4>📊 Distribución por Estado</h4>`;
-            
-            const estadosOrdenados = Object.entries(datosAnalisis.porEstado)
-                .sort((a, b) => b[1] - a[1]);
-            
-            estadosOrdenados.forEach(([estado, count]) => {
-                const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
-                let icono = "📄";
-                if (estado.toLowerCase().includes("trámite")) icono = "⏳";
-                else if (estado.toLowerCase().includes("finalizado")) icono = "✅";
-                else if (estado.toLowerCase().includes("archivado")) icono = "📁";
-                else if (estado.toLowerCase().includes("alzada")) icono = "⚖️";
-                respuesta += `<div class="ia-estadistica-item">
-                    <span class="ia-estadistica-label">${icono} ${estado}</span>
-                    <span class="ia-estadistica-valor">${count} (${porcentaje}%)</span>
-                </div>`;
+            datosCache.forEach(c => {
+                porEstado[c.estado] = (porEstado[c.estado] || 0) + 1;
+                porUsuario[c.usuarioAsignado] = (porUsuario[c.usuarioAsignado] || 0) + 1;
+                porPrioridad[c.prioridad] = (porPrioridad[c.prioridad] || 0) + 1;
+                porTipo[c.tipoProceso] = (porTipo[c.tipoProceso] || 0) + 1;
             });
-            respuesta += `</div>`;
+
+            // Ordenar usuarios
+            const topUsuarios = Object.entries(porUsuario).sort((a,b) => b[1] - a[1]).slice(0,5);
+            let usuariosHTML = topUsuarios.map(u => `<li>${u[0]}: <strong>${u[1]}</strong></li>`).join("");
             
-            return respuesta;
+            // Ordenar tipos
+            const topTipos = Object.entries(porTipo).sort((a,b) => b[1] - a[1]).slice(0,5);
+            let tiposHTML = topTipos.map(t => `<li>${t[0]}: <strong>${t[1]}</strong></li>`).join("");
+
+            return `
+                <div class="ia-analisis-detallado">
+                    <h4>📊 Resumen Estadístico</h4>
+                    <p>Total expedientes: <strong>${total}</strong></p>
+                    
+                    <strong>Por Prioridad:</strong>
+                    <ul>
+                        <li>Alta: <strong>${porPrioridad.Alta}</strong></li>
+                        <li>Media: <strong>${porPrioridad.Media}</strong></li>
+                        <li>Baja: <strong>${porPrioridad.Baja}</strong></li>
+                        <li>Ninguna: <strong>${porPrioridad.Ninguna}</strong></li>
+                    </ul>
+                    
+                    <strong>Por Estado:</strong>
+                    <ul>
+                        ${Object.keys(porEstado).map(k => `<li>${k}: <strong>${porEstado[k]}</strong></li>`).join("")}
+                    </ul>
+                    
+                    <strong>Top 5 Usuarios:</strong>
+                    <ul>${usuariosHTML}</ul>
+                    
+                    <strong>Top 5 Tipos:</strong>
+                    <ul>${tiposHTML}</ul>
+                </div>
+            `;
         }
         
-        function generarAnalisisPorPrioridad(pregunta, datosAnalisis) {
-            let respuesta = `<strong>🚨 ANÁLISIS POR PRIORIDAD</strong><br><br>`;
+        function generarResumenEstadistico() {
+            const total = datosCache.length;
+            const alta = datosCache.filter(c => c.prioridad === "Alta").length;
+            const enTramite = datosCache.filter(c => c.estado === "En trámite").length;
             
-            const total = datosAnalisis.total;
-            const prioridades = datosAnalisis.porPrioridad;
-            
-            respuesta += `<div class="ia-analisis-detallado">`;
-            respuesta += `<h4>📊 Distribución por Prioridad</h4>`;
-            
-            let porcentajeAlta = ((prioridades.alta / total) * 100).toFixed(1);
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">🔴 Alta</span>
-                <span class="ia-estadistica-valor">${prioridades.alta} (${porcentajeAlta}%)</span>
-            </div>`;
-            
-            let porcentajeMedia = ((prioridades.media / total) * 100).toFixed(1);
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">🟡 Media</span>
-                <span class="ia-estadistica-valor">${prioridades.media} (${porcentajeMedia}%)</span>
-            </div>`;
-            
-            let porcentajeBaja = ((prioridades.baja / total) * 100).toFixed(1);
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">🟢 Baja</span>
-                <span class="ia-estadistica-valor">${prioridades.baja} (${porcentajeBaja}%)</span>
-            </div>`;
-            
-            let porcentajeNinguna = ((prioridades.ninguna / total) * 100).toFixed(1);
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">⚫ Ninguna</span>
-                <span class="ia-estadistica-valor">${prioridades.ninguna} (${porcentajeNinguna}%)</span>
-            </div>`;
-            
-            respuesta += `</div>`;
-            
-            if (prioridades.alta > 0) {
-                respuesta += `<div class="ia-analisis-detallado">`;
-                respuesta += `<h4>⚠️ Expedientes con Prioridad Alta</h4>`;
-                let contador = 0;
-                datosCache.forEach(causa => {
-                    if (causa.prioridad === "Alta" && contador < 5) {
-                        respuesta += `<div class="ia-expediente-item">
-                            <span class="ia-expediente-numero">${causa.numCausa || "Sin número"}</span><br>
-                            <span class="ia-expediente-datos">${causa.caratula || "Sin carátula"} - ${causa.usuarioAsignado || "Sin usuario"}</span>
-                        </div>`;
-                        contador++;
-                    }
-                });
-                respuesta += `</div>`;
-            }
-            
-            return respuesta;
-        }
-        
-        function generarAnalisisPorJuzgado(pregunta, datosAnalisis) {
-            let respuesta = `<strong>🏛️ ANÁLISIS POR JUZGADO</strong><br><br>`;
-            
-            respuesta += `<div class="ia-analisis-detallado">`;
-            respuesta += `<h4>📊 Top 10 Juzgados con más expedientes</h4>`;
-            
-            const juzgadosOrdenados = Object.entries(datosAnalisis.porJuzgado)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 10);
-            
-            juzgadosOrdenados.forEach(([juzgado, count], index) => {
-                const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
-                respuesta += `<div class="ia-estadistica-item">
-                    <span class="ia-estadistica-label">${index + 1}. ${juzgado}</span>
-                    <span class="ia-estadistica-valor">${count} (${porcentaje}%)</span>
-                </div>`;
-            });
-            respuesta += `</div>`;
-            
-            return respuesta;
-        }
-        
-        function generarAnalisisVencimientos(pregunta, datosAnalisis) {
-            let respuesta = `<strong>⏰ ANÁLISIS DE VENCIMIENTOS</strong><br><br>`;
-            
-            const vencimientos = datosAnalisis.vencimientosProximos;
-            
-            if (vencimientos.length === 0) {
-                respuesta += `<p>No hay vencimientos próximos (en los próximos 7 días).</p>`;
-            } else {
-                respuesta += `<p>Se encontraron <strong>${vencimientos.length}</strong> expedientes con vencimientos en los próximos 7 días.</p>`;
-                respuesta += `<div class="ia-analisis-detallado">`;
-                respuesta += `<h4>📅 Vencimientos más próximos</h4>`;
-                vencimientos.slice(0, 10).forEach(venc => {
-                    let icono = "⏰";
-                    if (venc.diasRestantes <= 1) icono = "🚨";
-                    else if (venc.diasRestantes <= 3) icono = "⚠️";
-                    respuesta += `<div class="ia-expediente-item">
-                        <span class="ia-expediente-numero">${icono} ${venc.numero}</span><br>
-                        <span class="ia-expediente-datos">${venc.caratula}<br>
-                        <strong>Usuario:</strong> ${venc.usuario} | <strong>Vence:</strong> ${venc.fechaVencimiento} (en ${venc.diasRestantes} días) | <strong>Prioridad:</strong> ${venc.prioridad}</span>
-                    </div>`;
-                });
-                respuesta += `</div>`;
-            }
-            
-            return respuesta;
-        }
-        
-        function generarEstadisticasCompletas(datosAnalisis) {
-            let respuesta = `<strong>📈 ESTADÍSTICAS COMPLETAS</strong><br><br>`;
-            
-            respuesta += `<div class="ia-analisis-detallado">`;
-            respuesta += `<h4>📊 Resumen General</h4>`;
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">Total de Expedientes</span>
-                <span class="ia-estadistica-valor">${datosAnalisis.total}</span>
-            </div>`;
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">Expedientes en Trámite</span>
-                <span class="ia-estadistica-valor">${datosAnalisis.porEstado["En trámite"] || 0}</span>
-            </div>`;
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">Expedientes Finalizados</span>
-                <span class="ia-estadistica-valor">${datosAnalisis.porEstado["Finalizado"] || 0}</span>
-            </div>`;
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">Expedientes con Prioridad Alta</span>
-                <span class="ia-estadistica-valor">${datosAnalisis.porPrioridad.alta}</span>
-            </div>`;
-            respuesta += `</div>`;
-            
-            respuesta += `<div class="ia-analisis-detallado">`;
-            respuesta += `<h4>👥 Top 3 Usuarios</h4>`;
-            datosAnalisis.usuariosActivos.slice(0, 3).forEach(([usuario, count], index) => {
-                const medalla = index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉";
-                respuesta += `<div class="ia-estadistica-item">
-                    <span class="ia-estadistica-label">${medalla} ${usuario}</span>
-                    <span class="ia-estadistica-valor">${count} expedientes</span>
-                </div>`;
-            });
-            respuesta += `</div>`;
-            
-            respuesta += `<div class="ia-analisis-detallado">`;
-            respuesta += `<h4>⚖️ Top 3 Tipos de Proceso</h4>`;
-            datosAnalisis.tiposFrecuentes.slice(0, 3).forEach(([tipo, count], index) => {
-                const medalla = index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉";
-                respuesta += `<div class="ia-estadistica-item">
-                    <span class="ia-estadistica-label">${medalla} ${tipo}</span>
-                    <span class="ia-estadistica-valor">${count} expedientes</span>
-                </div>`;
-            });
-            respuesta += `</div>`;
-            
-            if (datosAnalisis.vencimientosProximos.length > 0) {
-                respuesta += `<div class="ia-analisis-detallado">`;
-                respuesta += `<h4>⏰ Vencimientos Próximos (7 días)</h4>`;
-                respuesta += `<div class="ia-estadistica-item">
-                    <span class="ia-estadistica-label">Expedientes por vencer</span>
-                    <span class="ia-estadistica-valor">${datosAnalisis.vencimientosProximos.length}</span>
-                </div>`;
-                respuesta += `</div>`;
-            }
-            
-            return respuesta;
-        }
-        
-        function generarAnalisisGeneral(datosAnalisis) {
-            let respuesta = `<strong>🤖 ANÁLISIS GENERAL DEL SISTEMA</strong><br><br>`;
-            
-            respuesta += `<p>Bienvenido al Asistente IA. He analizado todos los expedientes y he encontrado la siguiente información:</p>`;
-            
-            respuesta += `<div class="ia-analisis-detallado">`;
-            respuesta += `<h4>📈 Datos Generales</h4>`;
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">Total de Expedientes</span>
-                <span class="ia-estadistica-valor">${datosAnalisis.total}</span>
-            </div>`;
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">Usuarios Activos</span>
-                <span class="ia-estadistica-valor">${Object.keys(datosAnalisis.porUsuario).length}</span>
-            </div>`;
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">Tipos de Proceso</span>
-                <span class="ia-estadistica-valor">${Object.keys(datosAnalisis.porTipo).length}</span>
-            </div>`;
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">Juzgados</span>
-                <span class="ia-estadistica-valor">${Object.keys(datosAnalisis.porJuzgado).length}</span>
-            </div>`;
-            respuesta += `</div>`;
-            
-            respuesta += `<div class="ia-analisis-detallado">`;
-            respuesta += `<h4>🚨 Resumen de Prioridades</h4>`;
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">Alta</span>
-                <span class="ia-estadistica-valor">${datosAnalisis.porPrioridad.alta} expedientes</span>
-            </div>`;
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">Media</span>
-                <span class="ia-estadistica-valor">${datosAnalisis.porPrioridad.media} expedientes</span>
-            </div>`;
-            respuesta += `<div class="ia-estadistica-item">
-                <span class="ia-estadistica-label">Baja</span>
-                <span class="ia-estadistica-valor">${datosAnalisis.porPrioridad.baja} expedientes</span>
-            </div>`;
-            respuesta += `</div>`;
-            
-            respuesta += `<div class="ia-analisis-detallado">`;
-            respuesta += `<h4>💡 Recomendaciones</h4>`;
-            if (datosAnalisis.porPrioridad.alta > 0) {
-                respuesta += `<p>• Tienes <strong>${datosAnalisis.porPrioridad.alta}</strong> expedientes con prioridad alta. Revisa la sección de vencimientos para asegurar que no se pasen las fechas límite.</p>`;
-            }
-            if (datosAnalisis.vencimientosProximos.length > 0) {
-                respuesta += `<p>• Hay <strong>${datosAnalisis.vencimientosProximos.length}</strong> expedientes con vencimientos en los próximos 7 días. Utiliza el filtro de vencimientos para revisarlos.</p>`;
-            }
-            respuesta += `<p>• Para un análisis detallado, puedes preguntar por usuarios, tipos de proceso, estados, prioridades, juzgados o vencimientos.</p>`;
-            respuesta += `</div>`;
-            
-            return respuesta;
+            return `Hay ${alta} expedientes con prioridad alta y ${enTramite} en trámite.`;
         }
         
         function agregarMensajeIA(rol, contenido) {
             const div = document.createElement('div');
             div.className = `ia-mensaje ${rol}`;
-            div.innerHTML = contenido;
+            
+            if (rol === 'asistente') {
+                // Generar un ID único para este mensaje
+                const mensajeId = 'msg-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                
+                div.innerHTML = `
+                    <div class="ia-mensaje-header">
+                        <strong>🤖 Asistente IA</strong>
+                        <div class="ia-mensaje-acciones">
+                            <button class="ia-btn-voz" data-mensaje-id="${mensajeId}" title="Escuchar respuesta">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="${mensajeId}" class="ia-mensaje-contenido">
+                        ${contenido}
+                    </div>
+                `;
+                
+                // Añadir evento al botón de voz
+                setTimeout(() => {
+                    const btnVoz = div.querySelector('.ia-btn-voz');
+                    if (btnVoz) {
+                        btnVoz.onclick = function() {
+                            const mensajeId = this.getAttribute('data-mensaje-id');
+                            const contenidoDiv = document.getElementById(mensajeId);
+                            if (contenidoDiv) {
+                                const texto = contenidoDiv.innerText || contenidoDiv.textContent;
+                                sintetizarVoz(texto, this);
+                            }
+                        };
+                    }
+                }, 10);
+            } else {
+                div.innerHTML = `
+                    <div class="ia-mensaje-header">
+                        <strong>👤 Tú</strong>
+                    </div>
+                    <div>${contenido}</div>
+                `;
+            }
+            
             iaConversacion.appendChild(div);
             iaConversacion.scrollTop = iaConversacion.scrollHeight;
             return div;
@@ -3383,14 +3799,14 @@
         
         function agregarMensajeCarga() {
             const div = document.createElement('div');
-            div.className = 'ia-carga';
-            div.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analizando datos...';
+            div.className = 'ia-mensaje-carga ia-pensando';
+            div.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando consulta';
             iaConversacion.appendChild(div);
             iaConversacion.scrollTop = iaConversacion.scrollHeight;
             return div;
         }
 
-        // FUNCIONES DE VOZ
+        // FUNCIONES DE VOZ ORIGINALES
         function setupFuncionesVoz() {
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
                 console.warn("El navegador no soporta reconocimiento de voz");
@@ -3517,9 +3933,15 @@
             // Event Listeners
             $("btnNuevo").onclick = abrirNuevoExpediente;
             $("btnGuardar").onclick = guardarExpediente;
+            // Cerrar modal al hacer clic fuera del contenido
+modal.addEventListener('click', function(e) {
+    if (e.target === modal) {
+        modal.style.display = "none";
+        resetFormCausa();
+    }
+});
             $("btnCerrarVer").onclick = () => modalVer.style.display = "none";
             $("btnCerrarEventosHoy").onclick = () => modalEventosHoy.style.display = "none";
-            $("btnCerrarIA").onclick = () => modalIA.style.display = "none";
             $("btnEventosHoy").onclick = () => {
                 renderEventosHoy();
                 modalEventosHoy.style.display = "flex";
@@ -3527,6 +3949,17 @@
             $("btnAsistenteIA").onclick = abrirAsistenteIA;
             $("btnPrintFiltrado").onclick = () => window.print();
             $("btnPrintRegistro").onclick = () => window.print();
+            
+            // Asistente IA - Event Listeners
+            btnNuevaConsultaIA.onclick = nuevaConsultaIA;
+            btnSalirIA.onclick = cerrarAsistenteIA;
+            btnVoiceIA.onclick = iniciarVozReconocimiento;
+            iaEnviar.onclick = enviarPreguntaIA;
+            iaPregunta.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    enviarPreguntaIA();
+                }
+            });
             
             // Filtros
             buscador.addEventListener('input', actualizarFiltros);
@@ -3656,14 +4089,6 @@
             
             // Funciones de voz
             setupFuncionesVoz();
-            
-            // Asistente IA
-            iaEnviar.onclick = enviarPreguntaIA;
-            iaPregunta.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    enviarPreguntaIA();
-                }
-            });
             
             console.log("Aplicación inicializada correctamente.");
         });
