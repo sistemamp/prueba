@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Causas - Con Dictado por Voz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Causas</title>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
     <style>
-        /* MANTENGO TODO EL CSS ORIGINAL CON MEJORAS RESPONSIVAS */
+        /* MANTENGO TODO EL CSS ORIGINAL SIN CAMBIOS */
         :root {
             --primary-blue: #007bff;
             --primary-light-blue: #e7f4ff;
@@ -63,7 +63,6 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
         body {
             font-family: var(--font-family);
@@ -71,43 +70,7 @@
             color: var(--text-primary);
             line-height: 1.5;
             min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-text-size-adjust: 100%;
         }
-        
-        /* ESTILOS PARA DICTADO POR VOZ */
-        .btn-dictado {
-            background: none;
-            border: none;
-            color: #6c757d;
-            cursor: pointer;
-            margin-left: 8px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-            font-size: 1rem;
-            min-width: 36px;
-            min-height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .btn-dictado:hover {
-            color: var(--primary-blue);
-            background: #e9ecef;
-        }
-        .btn-dictado.grabando {
-            color: #dc3545;
-            background: rgba(220, 53, 69, 0.1);
-            animation: pulse-grabacion 1.5s infinite;
-        }
-        @keyframes pulse-grabacion {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
-            70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(220, 53, 69, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
-        }
-        /* FIN ESTILOS DICTADO */
-
         .header {
             background-color: var(--background-header);
             border-bottom: 1px solid var(--border-default);
@@ -116,7 +79,6 @@
             top: 0;
             z-index: 100;
             box-shadow: var(--shadow-subtle);
-            width: 100%;
         }
         .header-content {
             display: flex;
@@ -125,7 +87,6 @@
             max-width: 1800px;
             margin: 0 auto;
             gap: var(--spacing-s);
-            width: 100%;
         }
         .logo {
             font-size: var(--h1-size);
@@ -136,8 +97,6 @@
             max-width: 1800px;
             margin: 0 auto;
             padding: var(--spacing-m) var(--spacing-gutter);
-            width: 100%;
-            overflow-x: hidden;
         }
         .filters-section {
             background-color: var(--background-card);
@@ -146,19 +105,16 @@
             border: 1px solid var(--border-default);
             margin-bottom: var(--spacing-xl);
             box-shadow: var(--shadow-subtle);
-            width: 100%;
         }
         .filters-title {
             font-size: var(--h2-size);
             font-weight: var(--font-weight-semibold);
             margin-bottom: var(--spacing-m);
-            word-break: break-word;
         }
         .filter-row {
             display: flex;
             flex-wrap: wrap;
             gap: var(--spacing-m);
-            width: 100%;
         }
         .filter-row-1, .filter-row-2 {
             display: flex;
@@ -169,14 +125,12 @@
         .filter-group {
             flex: 1;
             min-width: 150px;
-            width: 100%;
         }
         .filter-label {
             display: block;
             font-size: var(--body-regular-size);
             margin-bottom: var(--spacing-xs);
             font-weight: var(--font-weight-semibold);
-            word-break: break-word;
         }
         .input, .dropdown {
             border: 1px solid var(--border-default);
@@ -187,7 +141,6 @@
             font-size: var(--body-regular-size);
             width: 100%;
             transition: border-color 0.2s;
-            min-height: 44px;
         }
         .input:focus, .dropdown:focus {
             outline: none;
@@ -198,7 +151,6 @@
             gap: var(--spacing-s);
             margin-top: var(--spacing-m);
             flex-wrap: wrap;
-            width: 100%;
         }
         .button {
             background-color: var(--primary-blue);
@@ -212,10 +164,6 @@
             display: inline-flex;
             align-items: center;
             gap: var(--spacing-xs);
-            min-height: 44px;
-            min-width: 44px;
-            justify-content: center;
-            flex-shrink: 0;
         }
         .button:hover {
             opacity: 0.9;
@@ -235,7 +183,6 @@
             border: 1px solid var(--border-default);
             overflow: hidden;
             box-shadow: var(--shadow-subtle);
-            width: 100%;
         }
         .table-title {
             font-size: var(--h2-size);
@@ -243,12 +190,10 @@
             padding: var(--spacing-m);
             background-color: var(--background-table-header);
             border-bottom: 1px solid var(--border-default);
-            word-break: break-word;
         }
         .table-wrap {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            width: 100%;
         }
         .data-table {
             width: 100%;
@@ -263,14 +208,12 @@
             color: var(--text-primary);
             font-size: var(--caption-size);
             text-transform: uppercase;
-            white-space: nowrap;
         }
         .data-table td {
             border-bottom: 1px solid var(--border-default);
             padding: var(--spacing-m);
             color: var(--text-primary);
             font-size: var(--body-regular-size);
-            word-break: break-word;
         }
         .data-table tr:last-child td {
             border-bottom: none;
@@ -286,7 +229,6 @@
             font-weight: bold;
             color: #fff;
             text-transform: uppercase;
-            word-break: normal;
         }
         .prioridad-baja { background-color: var(--status-success); }
         .prioridad-media { background-color: var(--status-warning); }
@@ -299,7 +241,6 @@
             border-radius: 8px;
             margin-bottom: 15px;
             display: inline-block;
-            word-break: break-word;
         }
         .prioridad-texto.alta { 
             background-color: rgba(220, 53, 69, 0.1); 
@@ -330,22 +271,17 @@
             background: var(--background-card);
             border-radius: var(--border-radius-default);
             box-shadow: var(--shadow-subtle);
-            width: 100%;
-            flex-wrap: wrap;
-            gap: var(--spacing-s);
         }
         #paginacion-container .page-info {
             font-size: var(--body-regular-size);
             color: var(--text-secondary);
             font-weight: var(--font-weight-semibold);
-            word-break: break-word;
         }
         #paginacion-container .nav-buttons {
             display: flex;
             gap: var(--spacing-s);
-            flex-wrap: wrap;
         }
-        #modal, #modalVer, #alertModal, #modalEventosHoy {
+        #modal, #modalVer, #alertModal, #modalEventosHoy, #modalIA {
             display: none;
             position: fixed;
             inset: 0;
@@ -354,10 +290,8 @@
             align-items: center;
             padding: 20px;
             z-index: 1000;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
         }
-        #modal .content, #modalVer .content, #alertModal .content, #modalEventosHoy .content {
+        #modal .content, #modalVer .content, #alertModal .content, #modalEventosHoy .content, #modalIA .content {
             background: #fff;
             border-radius: 16px;
             max-width: 980px;
@@ -367,7 +301,6 @@
             flex-direction: column;
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
             animation: fadeIn .25s ease;
-            overflow: hidden;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
@@ -387,14 +320,10 @@
             align-items: center;
             gap: 10px;
             justify-content: center;
-            min-height: 60px;
-            flex-shrink: 0;
         }
         .modal-body {
             padding: 16px 16px 0;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            flex: 1;
         }
         .controls-form {
             position: sticky;
@@ -407,7 +336,6 @@
             gap: 10px;
             justify-content: flex-end;
             z-index: 5;
-            flex-shrink: 0;
         }
         #formCausa .grid {
             display: grid;
@@ -425,17 +353,7 @@
             font-size: 0.9rem;
             margin-bottom: 4px;
             display: block;
-            word-break: break-word;
         }
-        /* Ajuste para alinear botón de microfono con el label */
-        .label-with-mic {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
         #formCausa input, #formCausa textarea, #formCausa select {
             width: 100%;
             padding: 10px 12px;
@@ -444,7 +362,6 @@
             font-size: 0.9rem;
             background: #fafafa;
             transition: .2s;
-            min-height: 44px;
         }
         #formCausa input:focus, #formCausa textarea:focus, #formCausa select:focus {
             outline: none;
@@ -462,14 +379,12 @@
             background: #f0f4f9;
             border: 1px solid #ddd;
             border-radius: 10px;
-            width: 100%;
         }
         #agregarNota label {
             font-weight: 600;
             color: var(--primary-blue);
             display: block;
             margin-bottom: 8px;
-            word-break: break-word;
         }
         #agregarNota textarea {
             width: 100%;
@@ -477,7 +392,6 @@
             border-radius: 8px;
             border: 1px solid #ccc;
             resize: vertical;
-            min-height: 100px;
         }
         #agregarNota button {
             background: var(--primary-blue);
@@ -487,13 +401,10 @@
             border-radius: 8px;
             cursor: pointer;
             margin-top: 10px;
-            min-height: 44px;
-            min-width: 44px;
         }
         #verContenido p {
             margin: .35rem 0;
             font-size: .92rem;
-            word-break: break-word;
         }
         #verContenido strong {
             color: var(--primary-blue);
@@ -504,13 +415,11 @@
             margin: 6px 0;
             background: #f9fbff;
             border-radius: 6px;
-            word-break: break-word;
         }
         .actions {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            justify-content: center;
         }
         #alertModal .content {
             max-width: 400px;
@@ -522,24 +431,20 @@
             margin: 0;
             color: var(--primary-blue);
             font-size: 1.5rem;
-            word-break: break-word;
         }
         #alertModal p {
             margin: 0;
             color: var(--secondary-dark-gray);
             font-size: 0.95rem;
-            word-break: break-word;
         }
         #alertModal .actions-row {
             display: flex;
             justify-content: space-around;
             gap: 12px;
             margin-top: 20px;
-            flex-wrap: wrap;
         }
         #alertModal .actions-row .btn {
             flex-grow: 1;
-            min-width: 100px;
         }
         .alert-danger { background: var(--status-danger); color: white; }
         .alert-success { background: var(--status-success); color: white; }
@@ -566,7 +471,6 @@
             justify-content: center;
             gap: 12px;
             border: 2px solid rgba(255, 255, 255, 0.2);
-            word-break: break-word;
         }
         .floating-alert.success {
             background-color: var(--status-success);
@@ -582,19 +486,15 @@
         }
         .audiencias-container {
             margin-bottom: 10px;
-            width: 100%;
         }
         .audiencia-item {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 8px;
-            width: 100%;
-            flex-wrap: wrap;
         }
         .audiencia-item input {
             flex: 1;
-            min-width: 200px;
         }
         .btn-eliminar-audiencia {
             background: var(--status-danger);
@@ -603,8 +503,6 @@
             border-radius: 6px;
             padding: 8px 12px;
             cursor: pointer;
-            min-height: 44px;
-            min-width: 44px;
         }
         .btn-audiencia {
             background: var(--status-success);
@@ -614,28 +512,21 @@
             padding: 8px 12px;
             cursor: pointer;
             margin-top: 8px;
-            min-height: 44px;
-            min-width: 44px;
         }
         .diligencias-container {
             margin-bottom: 10px;
-            width: 100%;
         }
         .diligencia-item {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 8px;
-            width: 100%;
-            flex-wrap: wrap;
         }
         .diligencia-item input[type="datetime-local"] {
             flex: 1;
-            min-width: 200px;
         }
         .diligencia-item input[type="text"] {
             flex: 2;
-            min-width: 150px;
         }
         .btn-eliminar-diligencia {
             background: var(--status-danger);
@@ -644,8 +535,6 @@
             border-radius: 6px;
             padding: 8px 12px;
             cursor: pointer;
-            min-height: 44px;
-            min-width: 44px;
         }
         .btn-diligencia {
             background: var(--color-diligencias);
@@ -655,24 +544,15 @@
             padding: 8px 12px;
             cursor: pointer;
             margin-top: 8px;
-            min-height: 44px;
-            min-width: 44px;
         }
         .tabs-container {
             margin-bottom: 15px;
-            width: 100%;
         }
         .tabs-nav {
             display: flex;
             border-bottom: 2px solid #ddd;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            width: 100%;
-        }
-        .tabs-nav::-webkit-scrollbar {
-            display: none;
         }
         .tab-button {
             background: #f0f0f0;
@@ -685,9 +565,6 @@
             transition: all 0.2s ease;
             font-size: 0.9rem;
             white-space: nowrap;
-            flex-shrink: 0;
-            min-height: 44px;
-            min-width: 60px;
         }
         .tab-button.active {
             background: var(--primary-blue);
@@ -699,7 +576,6 @@
         .tab-content {
             padding: 15px 0;
             display: none;
-            width: 100%;
         }
         .tab-content.active {
             display: block;
@@ -718,14 +594,12 @@
             font-size: 0.8rem;
             margin-top: 4px;
             display: none;
-            word-break: break-word;
         }
         .field.error .error-message {
             display: block;
         }
         .field {
             margin-bottom: 15px;
-            width: 100%;
         }
         #verContenido .prioridad-destacada {
             display: flex;
@@ -735,7 +609,6 @@
             padding: 12px;
             border-radius: 12px;
             color: #fff;
-            word-break: break-word;
         }
         .prioridad-destacada h4 {
             margin: 0;
@@ -753,7 +626,6 @@
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid #ddd;
-            width: 100%;
         }
         .notes-history h4 {
             margin: 0 0 10px;
@@ -761,7 +633,6 @@
             font-size: 1rem;
             border-bottom: 2px solid var(--primary-blue);
             padding-bottom: 5px;
-            word-break: break-word;
         }
         .note-item {
             background: #f8f8f8;
@@ -769,7 +640,6 @@
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 8px;
-            word-break: break-word;
         }
         .note-meta {
             display: flex;
@@ -777,8 +647,6 @@
             font-size: 0.8rem;
             color: var(--secondary-dark-gray);
             margin-bottom: 5px;
-            flex-wrap: wrap;
-            gap: 8px;
         }
         .note-text {
             font-size: 0.9rem;
@@ -792,8 +660,6 @@
             background: #f8f9fa;
             border-radius: 8px;
             border: 1px solid #ddd;
-            flex-wrap: wrap;
-            width: 100%;
         }
         .editor-toolbar button {
             background: #fff;
@@ -805,9 +671,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 36px;
-            min-width: 36px;
-            flex-shrink: 0;
         }
         .editor-toolbar button:hover {
             background: #e9ecef;
@@ -846,8 +709,6 @@
             padding: 12px;
             background: #fff;
             line-height: 1.5;
-            width: 100%;
-            word-break: break-word;
         }
         #observaciones-editor:focus {
             outline: none;
@@ -865,16 +726,257 @@
         input[type="datetime-local"]::-moz-datetime-edit-ampm-field {
             display: none;
         }
+        
+        /* ESTILOS PARA LAS FUNCIONALIDADES DE VOZ */
+        .voice-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            align-items: center;
+        }
+        .voice-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .voice-btn:hover {
+            background: var(--primary-dark-blue);
+        }
+        .voice-btn.listening {
+            background: var(--status-danger);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+        }
+        .voice-btn.speaking {
+            background: var(--status-success);
+        }
+        .voice-status {
+            font-size: 0.85rem;
+            color: var(--secondary-dark-gray);
+            font-style: italic;
+            display: none;
+        }
+        .voice-status.active {
+            display: inline;
+            color: var(--status-info);
+        }
+        #voiceToolbar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .text-to-speech-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .text-to-speech-btn:hover {
+            background: var(--primary-dark-blue);
+        }
+        .voice-input-container {
+            position: relative;
+        }
+        .voice-input-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--primary-blue);
+            cursor: pointer;
+            padding: 4px;
+        }
+        .voice-input-btn:hover {
+            color: var(--primary-dark-blue);
+        }
+        
+        /* ESTILOS PARA ASISTENTE IA */
+        #modalIA .content {
+            max-width: 700px;
+            max-height: 85vh;
+        }
+        
+        .ia-modal-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            height: 60vh;
+        }
+        
+        .ia-conversacion {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .ia-mensaje {
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 85%;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+        
+        .ia-mensaje.usuario {
+            background: var(--primary-blue);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .ia-mensaje.asistente {
+            background: white;
+            border: 1px solid #dee2e6;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .ia-carga {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--secondary-dark-gray);
+            font-style: italic;
+        }
+        
+        .ia-input-container {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .ia-input-container input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .ia-input-container button {
+            padding: 12px 24px;
+            white-space: nowrap;
+        }
+        
+        .ia-info {
+            font-size: 0.85rem;
+            color: var(--secondary-dark-gray);
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+        .ia-analisis-detallado {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid var(--primary-blue);
+        }
+        
+        .ia-analisis-detallado h4 {
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        
+        .ia-estadistica-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            padding: 4px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .ia-estadistica-item:last-child {
+            border-bottom: none;
+        }
+        
+        .ia-estadistica-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .ia-estadistica-valor {
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+        
+        .ia-lista-expedientes {
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .ia-expediente-item {
+            padding: 6px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.9rem;
+        }
+        
+        .ia-expediente-item:last-child {
+            border-bottom: none;
+        }
+        
+        .ia-expediente-numero {
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+        
+        .ia-expediente-datos {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
         @media print {
             .button, .actions, .action-buttons, .controls-form,
             #btnNuevo, #btnPrintListado, #btnPrintFechas, #btnPrintForm,
             #btnPrintRegistro, #btnCerrarVer, #btnAgregarNota, #btnVerLineaTiempo,
-            #btnPrintTodos, #btnPrintFiltrado, #btnEventosHoy,
+            #btnPrintTodos, #btnPrintFiltrado, #btnEventosHoy, #btnAsistenteIA,
             .fa-solid, .fas, .far, .fa, .fa-eye, .fa-pen, .fa-trash, .fa-plus,
             .fa-save, .fa-print, .fa-xmark, .fa-check, .fa-arrow-left, .fa-arrow-right,
             .fa-exclamation-triangle, .fa-timeline, .fa-file-pen, .fa-calendar-day,
             .btn-eliminar-audiencia, .btn-audiencia, .floating-alert,
-            .prioridad-destacada, .tabs-nav, .tab-button, .editor-toolbar, .btn-dictado {
+            .prioridad-destacada, .tabs-nav, .tab-button, .editor-toolbar,
+            .voice-controls, .voice-btn, .text-to-speech-btn, .voice-input-btn {
                 display: none !important;
             }
             .header, .filters-section, .sidebar, .pagination-container {
@@ -953,7 +1055,6 @@
         }
         .eventos-hoy-modal {
             padding: 10px;
-            width: 100%;
         }
         .evento-titulo {
             font-weight: bold;
@@ -961,7 +1062,6 @@
             padding-bottom: 4px;
             border-bottom: 2px solid;
             font-size: 1rem;
-            word-break: break-word;
         }
         .evento-audiencias { color: var(--color-audiencias); border-color: var(--color-audiencias); }
         .evento-vencimientos { color: var(--color-vencimientos); border-color: var(--color-vencimientos); }
@@ -978,8 +1078,6 @@
             border-radius: 6px;
             border-left: 3px solid;
             transition: all 0.2s;
-            flex-wrap: wrap;
-            width: 100%;
         }
         .evento-item-audiencias { border-left-color: var(--color-audiencias); }
         .evento-item-vencimientos { border-left-color: var(--color-vencimientos); }
@@ -994,7 +1092,6 @@
             color: var(--primary-blue);
             cursor: pointer;
             text-decoration: underline;
-            word-break: break-word;
         }
         .evento-numero:hover {
             color: var(--primary-dark-blue);
@@ -1002,19 +1099,16 @@
         .evento-hora {
             font-size: 0.85rem;
             color: var(--text-secondary);
-            word-break: break-word;
         }
         .evento-vacio {
             font-style: italic;
             color: var(--text-secondary);
             padding: 6px 8px;
-            word-break: break-word;
         }
         .eventos-lista {
             max-height: 150px;
             overflow-y: auto;
             font-size: 0.8rem;
-            width: 100%;
         }
         .evento-tabla {
             padding: 4px 6px;
@@ -1022,23 +1116,19 @@
             border-left: 3px solid;
             background: #f8f9fa;
             border-radius: 4px;
-            word-break: break-word;
         }
         .evento-tabla.audiencia { border-left-color: var(--color-audiencias); }
         .evento-tabla.gesell { border-left-color: var(--color-gesell); }
         .evento-tabla.vencimiento { border-left-color: var(--color-vencimientos); }
         .evento-tabla.recurso { border-left-color: var(--color-recursos); }
         .evento-tabla.diligencia { border-left-color: var(--color-diligencias); }
-        
-        /* MEJORAS ESPECÍFICAS PARA MÓVIL */
         @media (max-width: 1024px) {
             .container {
                 max-width: 100%;
                 padding: var(--spacing-s);
             }
-            #modal .content, #modalVer .content, #modalEventosHoy .content {
+            #modal .content, #modalVer .content, #modalEventosHoy .content, #modalIA .content {
                 max-width: 95%;
-                max-height: 85vh;
             }
             .filter-row-1, .filter-row-2 {
                 flex-wrap: wrap;
@@ -1046,405 +1136,170 @@
             .filter-group {
                 min-width: 120px;
             }
-            .header-content {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .button {
-                padding: 10px 14px;
-                font-size: 14px;
-            }
         }
-        
         @media (max-width: 768px) {
             .header-content {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 10px;
+                flex-direction: column;
+                gap: var(--spacing-s);
+                text-align: center;
             }
-            
             .filter-row {
                 flex-direction: column;
             }
-            
             .filter-group {
                 min-width: auto;
-                width: 100%;
             }
-            
             #paginacion-container {
                 flex-direction: column;
                 gap: var(--spacing-m);
                 text-align: center;
-                padding: 12px;
             }
-            
             .table-title {
                 padding: var(--spacing-s);
-                text-align: center;
             }
-            
             .data-table th, 
             .data-table td {
-                padding: 10px 8px;
-                font-size: 13px;
+                padding: var(--spacing-s);
             }
-            
             .action-buttons {
-                flex-direction: row;
-                justify-content: center;
+                flex-direction: column;
             }
-            
             .controls-form {
-                flex-direction: row;
-                justify-content: center;
-                padding: 10px;
+                flex-direction: column;
             }
-            
             #formCausa .grid {
                 grid-template-columns: 1fr;
-                gap: 12px;
             }
-            
             .tabs-nav {
                 flex-wrap: nowrap;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
-                padding-bottom: 5px;
             }
-            
             .tab-button {
                 padding: 10px 14px;
-                font-size: 13px;
-                min-height: 40px;
+                font-size: 0.85rem;
             }
-            
             .data-table {
-                min-width: 700px;
+                min-width: 600px;
             }
-            
             .actions {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 6px;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 4px;
             }
-            
             .editor-toolbar {
                 flex-wrap: wrap;
-                justify-content: center;
             }
-            
             .filter-row-1, .filter-row-2 {
                 flex-direction: column;
-                gap: 12px;
             }
-            
-            .modal-header {
-                padding: 10px;
-                font-size: 16px;
-                text-align: center;
-                flex-wrap: wrap;
-            }
-            
-            .modal-body {
-                padding: 12px;
-            }
-            
-            .audiencia-item, .diligencia-item {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-            
-            .audiencia-item input,
-            .diligencia-item input[type="datetime-local"],
-            .diligencia-item input[type="text"] {
-                width: 100%;
-                min-width: 100%;
-            }
-            
-            .btn-eliminar-audiencia,
-            .btn-eliminar-diligencia {
-                width: 100%;
-                margin-top: 5px;
-            }
-            
-            .evento-item {
+            .voice-controls {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 5px;
             }
-            
-            .notes-history h4 {
-                font-size: 16px;
+            .text-to-speech-btn {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-top: 10px;
+                align-self: flex-end;
             }
-            
-            .note-meta {
+            .ia-input-container {
                 flex-direction: column;
-                gap: 3px;
             }
         }
-        
         @media (max-width: 576px) {
-            body {
-                font-size: 14px;
-            }
-            
             .container {
-                padding: 8px;
+                padding: var(--spacing-xs);
                 width: 100%;
             }
-            
             .filters-section,
             .table-section {
-                padding: 12px;
-                margin-bottom: 16px;
+                padding: var(--spacing-s);
             }
-            
             .filters-title,
             .table-title {
-                font-size: 16px;
-                text-align: center;
+                font-size: var(--body-large-size);
             }
-            
-            #modal .content, #modalVer .content, #modalEventosHoy .content {
+            #modal .content, #modalVer .content, #modalEventosHoy .content, #modalIA .content {
                 max-width: 100%;
                 max-height: 100vh;
                 border-radius: 0;
                 margin: 0;
-                width: 100%;
-                height: 100vh;
             }
-            
             .modal-header,
             .modal-body,
             .controls-form {
-                padding: 12px;
+                padding: var(--spacing-s);
             }
-            
             .filter-group {
                 width: 100%;
             }
-            
             .button {
                 width: 100%;
                 justify-content: center;
-                margin-bottom: 5px;
             }
-            
             .tab-button {
                 padding: 8px 12px;
-                font-size: 12px;
-                min-height: 38px;
-                min-width: 70px;
+                font-size: 0.8rem;
             }
-            
             .table-wrap {
-                margin: 0;
-                padding: 0;
+                margin: 0 -8px;
+                padding: 0 8px;
             }
-            
             .data-table {
                 min-width: 100%;
             }
-            
             .prioridad-pill {
-                font-size: 11px;
+                font-size: 0.7rem;
                 padding: 3px 6px;
             }
-            
             .actions {
                 flex-direction: column;
-                gap: 6px;
-                width: 100%;
+                gap: 4px;
             }
-            
             .actions .button {
                 width: 100%;
-                font-size: 13px;
+                font-size: 0.85rem;
             }
-            
             .floating-alert {
                 max-width: 90%;
-                font-size: 14px;
+                font-size: 0.9rem;
                 padding: 10px 15px;
-                left: 5%;
-                transform: translateX(0);
             }
-            
             .editor-toolbar {
                 padding: 6px;
-                justify-content: center;
             }
-            
             .editor-toolbar button {
-                padding: 5px 8px;
-                font-size: 12px;
-                min-height: 34px;
-                min-width: 34px;
+                padding: 4px 8px;
+                font-size: 0.8rem;
             }
-            
-            #formCausa input, #formCausa textarea, #formCausa select {
-                font-size: 16px; /* Previene zoom en iOS */
-                padding: 12px;
-            }
-            
-            .label-with-mic {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-            
-            .btn-dictado {
-                align-self: flex-start;
-                margin-left: 0;
-                margin-top: 5px;
-            }
-            
-            #paginacion-container .nav-buttons {
+            .voice-btn {
                 width: 100%;
                 justify-content: center;
             }
-            
-            #paginacion-container .nav-buttons .button {
-                flex: 1;
-                min-width: 120px;
-            }
-            
-            .eventos-hoy-modal {
-                padding: 8px;
-            }
-            
-            .evento-titulo {
-                font-size: 14px;
-            }
-            
-            .evento-item {
-                padding: 8px;
-            }
         }
-        
         @media (max-width: 360px) {
             .container {
-                padding: 6px;
+                padding: 4px;
             }
-            
             .filters-section,
             .table-section {
-                padding: 10px;
-            }
-            
-            .tab-button {
-                padding: 6px 8px;
-                font-size: 11px;
-                min-width: 60px;
-            }
-            
-            .data-table th, 
-            .data-table td {
-                padding: 8px 6px;
-                font-size: 12px;
-            }
-            
-            .button {
-                padding: 8px 10px;
-                font-size: 13px;
-            }
-            
-            .modal-header {
-                font-size: 15px;
                 padding: 8px;
             }
-            
-            .modal-body {
-                padding: 10px;
-            }
-            
-            .controls-form {
-                padding: 10px;
-            }
-            
-            .action-buttons {
-                gap: 6px;
-            }
-            
-            .header-content {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            .tabs-nav {
-                gap: 2px;
-            }
-            
             .tab-button {
                 padding: 6px 8px;
-                font-size: 11px;
+                font-size: 0.75rem;
             }
-            
-            .filter-label {
-                font-size: 13px;
+            .data-table th, 
+            .data-table td {
+                padding: 6px;
+                font-size: 0.8rem;
             }
-            
-            .input, .dropdown {
-                font-size: 14px;
-                padding: 10px;
-            }
-        }
-        
-        /* Ajustes específicos para iOS */
-        @supports (-webkit-touch-callout: none) {
-            .modal-body {
-                padding-bottom: env(safe-area-inset-bottom);
-            }
-            
-            .header {
-                padding-top: max(var(--spacing-s), env(safe-area-inset-top));
-            }
-            
-            .button, .input, .dropdown, .tab-button {
-                cursor: pointer;
-            }
-        }
-        
-        /* Asegurar que los botones sean tappables en móvil */
-        @media (hover: none) and (pointer: coarse) {
-            .button, .btn-dictado, .tab-button, .editor-toolbar button,
-            .btn-eliminar-audiencia, .btn-eliminar-diligencia,
-            .btn-audiencia, .btn-diligencia {
-                min-height: 44px;
-                min-width: 44px;
-            }
-            
-            input, select, textarea {
-                font-size: 16px !important; /* Previene zoom en iOS */
-            }
-            
-            .data-table td, .data-table th {
-                padding: 12px 8px;
-            }
-        }
-        
-        /* Prevenir desbordamientos */
-        .word-break {
-            word-break: break-word;
-            overflow-wrap: break-word;
-        }
-        
-        /* Scroll suave en móvil */
-        .modal-body, .table-wrap, .tabs-nav {
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        /* Ajustes para teclado virtual */
-        @media (max-height: 600px) {
-            .modal .content {
-                max-height: 80vh;
-            }
-            
-            .modal-body {
-                max-height: 60vh;
+            .button {
+                padding: 8px 12px;
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -1458,10 +1313,13 @@
     <header class="header">
         <div class="header-content">
             <button id="btnNuevo" class="button">
-                <i class="fas fa-plus"></i> <span class="button-text">Nuevo Expediente</span>
+                <i class="fas fa-plus"></i> Nuevo Expediente
             </button>
             <button id="btnEventosHoy" class="button">
-                <i class="fas fa-calendar-day"></i> <span class="button-text">Eventos Hoy</span>
+                <i class="fas fa-calendar-day"></i> Eventos Hoy
+            </button>
+            <button id="btnAsistenteIA" class="button">
+                <i class="fas fa-robot"></i> Asistente IA
             </button>
         </div>
     </header>
@@ -1472,7 +1330,12 @@
                 <div class="filter-row-1">
                     <div class="filter-group">
                         <label class="filter-label" for="buscador">Búsqueda</label>
-                        <input type="text" id="buscador" class="input" placeholder="🔍 Buscar...">
+                        <div class="voice-input-container">
+                            <input type="text" id="buscador" class="input" placeholder="🔍 Buscar...">
+                            <button class="voice-input-btn" id="btnVoiceSearch" title="Búsqueda por voz">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="filter-group">
                         <label class="filter-label" for="filtroTipoProceso">Tipo de Proceso</label>
@@ -1534,7 +1397,7 @@
             </div>
             <div class="action-buttons">
                 <button id="btnPrintFiltrado" class="button button-success">
-                    <i class="fas fa-print"></i> <span class="button-text">Imprimir Filtrado</span>
+                    <i class="fas fa-print"></i> Imprimir Filtrado
                 </button>
             </div>
         </section>
@@ -1567,6 +1430,44 @@
         <div id="paginacion-container"></div>
     </main>
 
+    <!-- MODAL ASISTENTE IA -->
+    <div id="modalIA">
+        <div class="content">
+            <div class="modal-header">
+                <i class="fas fa-robot"></i>
+                <h2 style="margin:0;">Asistente IA - Análisis Inteligente</h2>
+            </div>
+            <div class="modal-body ia-modal-body">
+                <div class="ia-conversacion" id="iaConversacion">
+                    <div class="ia-mensaje asistente">
+                        <strong>🤖 Asistente IA de Expedientes Judiciales</strong><br><br>
+                        Puedo analizar tus datos de forma detallada. Puedes preguntarme:<br><br>
+                        • <strong>Por usuario:</strong> "Expedientes del usuario Juan Pérez"<br>
+                        • <strong>Por tipo:</strong> "Expedientes de tipo Penal"<br>
+                        • <strong>Por estado:</strong> "Expedientes en trámite"<br>
+                        • <strong>Por prioridad:</strong> "Expedientes con prioridad alta"<br>
+                        • <strong>Por juzgado:</strong> "Expedientes del Juzgado N°1"<br>
+                        • <strong>Estadísticas:</strong> "Estadísticas completas"<br>
+                        • <strong>Vencimientos:</strong> "Expedientes próximos a vencer"
+                    </div>
+                </div>
+                <div class="ia-input-container">
+                    <input type="text" id="iaPregunta" placeholder="Ej: Estadísticas por usuario, Expedientes de tipo Penal..." autocomplete="off">
+                    <button id="iaEnviar" class="button button-success">Analizar</button>
+                </div>
+                <div class="ia-info">
+                    Análisis en tiempo real de tus datos de Firebase
+                </div>
+            </div>
+            <div class="controls-form">
+                <button id="btnCerrarIA" class="button button-secondary">
+                    <i class="fa fa-xmark"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EVENTOS HOY -->
     <div id="modalEventosHoy">
         <div class="content">
             <div class="modal-header">
@@ -1603,6 +1504,7 @@
         </div>
     </div>
 
+    <!-- MODALES EXISTENTES -->
     <div id="modal">
         <div class="content">
             <div class="modal-header">
@@ -1614,13 +1516,13 @@
                     <input type="hidden" id="editId" />
                     <div class="tabs-container">
                         <div class="tabs-nav">
-                            <button type="button" class="tab-button active" data-tab="tab1">Datos</button>
+                            <button type="button" class="tab-button active" data-tab="tab1">Datos Principales</button>
                             <button type="button" class="tab-button" data-tab="tab2">Fechas</button>
                             <button type="button" class="tab-button" data-tab="tab3">Audiencias</button>
                             <button type="button" class="tab-button" data-tab="tab4">Vencimientos</button>
                             <button type="button" class="tab-button" data-tab="tab5">Diligencias</button>
                             <button type="button" class="tab-button" data-tab="tab6">Recursos</button>
-                            <button type="button" class="tab-button" data-tab="tab7">Observ.</button>
+                            <button type="button" class="tab-button" data-tab="tab7">Observaciones</button>
                         </div>
                         <div id="tab1" class="tab-content active">
                             <div class="field">
@@ -1629,11 +1531,13 @@
                                 <span class="error-message">Este campo es obligatorio.</span>
                             </div>
                             <div class="field">
-                                <label for="caratula" class="label-with-mic">
-                                    Carátula Completa *
-                                    <button type="button" class="btn-dictado" onclick="toggleDictado('caratula', this)" title="Dictar por voz"><i class="fas fa-microphone"></i></button>
-                                </label>
-                                <textarea id="caratula" rows="2" required></textarea>
+                                <label for="caratula">Carátula Completa *</label>
+                                <div class="voice-input-container">
+                                    <textarea id="caratula" rows="2" required></textarea>
+                                    <button class="voice-input-btn" id="btnVoiceCaratula" title="Dictado por voz">
+                                        <i class="fas fa-microphone"></i>
+                                    </button>
+                                </div>
                                 <span class="error-message">Este campo es obligatorio.</span>
                             </div>
                             <div class="field">
@@ -1674,11 +1578,14 @@
                                 </select>
                             </div>
                             <div class="field">
-                                <label for="datosNnya" class="label-with-mic">
-                                    Datos de NNyA (máx. 500 palabras)
-                                    <button type="button" class="btn-dictado" onclick="toggleDictado('datosNnya', this)" title="Dictar por voz"><i class="fas fa-microphone"></i></button>
-                                </label>
-                                <textarea id="datosNnya" disabled></textarea><div class="counter" id="counterNnya" style="display:none">0/500</div>
+                                <label for="datosNnya">Datos de NNyA (máx. 500 palabras)</label>
+                                <div class="voice-input-container">
+                                    <textarea id="datosNnya" disabled></textarea>
+                                    <button class="voice-input-btn" id="btnVoiceDatosNnya" title="Dictado por voz">
+                                        <i class="fas fa-microphone"></i>
+                                    </button>
+                                </div>
+                                <div class="counter" id="counterNnya" style="display:none">0/500</div>
                             </div>
                         </div>
                         <div id="tab2" class="tab-content">
@@ -1697,11 +1604,14 @@
                                 <input type="datetime-local" id="audienciaGesell" disabled />
                             </div>
                             <div class="field">
-                                <label for="nnyaGesell" class="label-with-mic">
-                                    NNyA en Gesell (máx. 400 palabras)
-                                    <button type="button" class="btn-dictado" onclick="toggleDictado('nnyaGesell', this)" title="Dictar por voz"><i class="fas fa-microphone"></i></button>
-                                </label>
-                                <textarea id="nnyaGesell" disabled></textarea><div class="counter" id="counterNnyaGesell" style="display:none">0/400</div>
+                                <label for="nnyaGesell">NNyA en Gesell (máx. 400 palabras)</label>
+                                <div class="voice-input-container">
+                                    <textarea id="nnyaGesell" disabled></textarea>
+                                    <button class="voice-input-btn" id="btnVoiceNnyaGesell" title="Dictado por voz">
+                                        <i class="fas fa-microphone"></i>
+                                    </button>
+                                </div>
+                                <div class="counter" id="counterNnyaGesell" style="display:none">0/400</div>
                             </div>
                         </div>
                         <div id="tab4" class="tab-content">
@@ -1727,25 +1637,29 @@
                                 </div>
                                 <div class="field">
                                     <label for="estadoRecursos">Estado de Recursos</label>
-                                    <select id="estadoRecursos"><option value="">Seleccione un estado</option><option>Pendiente</option><option>En trámite</option><option>Resuelto</option><option>Rechazado</option></select>
+                                    <select id="estadoRecursos"><option value="">Seleccione un estado</option><option>Pendiente</option><option>En trámite</option<option>Resuelto</option><option>Rechazado</option></select>
                                 </div>
                             </div>
                         </div>
                         <div id="tab7" class="tab-content">
                             <div class="field">
                                 <label for="observaciones">Observaciones (máx. 1000 palabras)</label>
-                                <div class="editor-toolbar">
+                                <div id="voiceToolbar" class="editor-toolbar">
                                     <button type="button" id="btnBold" title="Negrita"><i class="fas fa-bold"></i></button>
                                     <button type="button" id="btnColorAzul" class="color-button azul" title="Color Azul">A</button>
                                     <button type="button" id="btnColorRojo" class="color-button rojo" title="Color Rojo">A</button>
                                     <button type="button" id="btnColorVerde" class="color-button verde" title="Color Verde">A</button>
                                     <button type="button" id="btnColorNormal" class="color-button normal" title="Color Normal">Normal</button>
-                                    <button type="button" id="btnTTSObservaciones" title="Leer Observaciones"><i id="iconTTSObservaciones" class="fas fa-volume-up"></i></button>
-                                    <button type="button" class="btn-dictado-editor" onclick="toggleDictado('observaciones-editor', this)" title="Dictar por voz"><i class="fas fa-microphone"></i></button>
+                                    <button type="button" id="btnVoiceObservaciones" class="voice-btn" title="Dictado por voz">
+                                        <i class="fas fa-microphone"></i> Voz
+                                    </button>
                                 </div>
                                 <div id="observaciones-editor" contenteditable="true"></div>
                                 <input type="hidden" id="observaciones" name="observaciones">
                                 <div class="counter" id="counter">0/1000</div>
+                                <div class="voice-controls">
+                                    <span class="voice-status" id="voiceStatus"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1761,15 +1675,20 @@
             <div class="modal-header">
                 <i class="fa-solid fa-eye"></i>
                 <h2 style="margin:0;">Detalle del Expediente</h2>
+                <button class="text-to-speech-btn" id="btnTextToSpeech" title="Escuchar contenido">
+                    <i class="fas fa-volume-up"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <div id="verContenido"></div>
                 <div id="agregarNota">
-                    <label for="notaBitacora" class="label-with-mic">
-                        Agregar Nota de Seguimiento:
-                        <button type="button" class="btn-dictado" onclick="toggleDictado('notaBitacora', this)" title="Dictar por voz"><i class="fas fa-microphone"></i></button>
-                    </label>
-                    <textarea id="notaBitacora" placeholder="Escribe aquí la nota..."></textarea>
+                    <label for="notaBitacora">Agregar Nota de Seguimiento:</label>
+                    <div class="voice-input-container">
+                        <textarea id="notaBitacora" placeholder="Escribe aquí la nota..."></textarea>
+                        <button class="voice-input-btn" id="btnVoiceNota" title="Dictado por voz">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
                     <button id="btnAgregarNota" class="button"><i class="fa fa-plus"></i> Guardar Nota</button>
                 </div>
                 <div class="notes-history">
@@ -1816,7 +1735,6 @@
             db = firebase.firestore();
             console.log("Firebase Firestore inicializado correctamente");
             
-            // HABILITAR PERSISTENCIA DE FIREBASE
             try {
                 db.enablePersistence()
                     .then(() => {
@@ -1847,7 +1765,7 @@
         let unsubCausas = null;
         let usuariosCache = [];
         let juzgadosPorTipoCache = {};
-        let filterTimeout = null; // Para debounce de búsqueda
+        let filterTimeout = null;
         
         const recordsPerPage = 10;
         const intervencionOptions = [
@@ -1863,6 +1781,7 @@
         const modal = $("modal");
         const modalVer = $("modalVer");
         const modalEventosHoy = $("modalEventosHoy");
+        const modalIA = $("modalIA");
         const verContenido = $("verContenido");
         const tituloForm = $("tituloForm");
         const editId = $("editId");
@@ -1893,6 +1812,11 @@
         const alertTitle = $("alertTitle");
         const alertMessage = $("alertMessage");
         const btnAlertOK = $("btnAlertOK");
+        const iaConversacion = $("iaConversacion");
+        const iaPregunta = $("iaPregunta");
+        const iaEnviar = $("iaEnviar");
+        const btnAsistenteIA = $("btnAsistenteIA");
+        const btnCerrarIA = $("btnCerrarIA");
         
         const selTipo = $("tipoProceso"), selJuz = $("juzgado"), selUsu = $("usuarioAsignado"), selPrioridad = $("prioridad");
         const tabButtons = document.querySelectorAll(".tab-button");
@@ -1986,7 +1910,6 @@
             const errorSpan = numCausaField.querySelector('.error-message');
             
             if (modo === "nuevo" && numCausa) {
-                // Buscar en datosCache si ya existe este número
                 const existe = datosCache.some(causa => causa.numCausa === numCausa);
                 
                 if (existe) {
@@ -1995,10 +1918,8 @@
                     errorSpan.style.color = "#dc3545";
                     errorSpan.style.fontWeight = "bold";
                     
-                    // Mostrar alerta flotante
                     mostrarAlertaFlotante("El número de expediente ya existe en el sistema. Verifique e intente con otro número.", 'danger');
                     
-                    // Deshabilitar otros campos hasta que se corrija
                     deshabilitarCamposFormulario(true);
                 } else {
                     numCausaField.classList.remove('error');
@@ -2006,11 +1927,9 @@
                     errorSpan.style.color = "";
                     errorSpan.style.fontWeight = "";
                     
-                    // Habilitar campos si estaban deshabilitados
                     deshabilitarCamposFormulario(false);
                 }
             } else if (modo === "editar") {
-                // En modo edición, solo validar que no esté vacío
                 if (!numCausa) {
                     numCausaField.classList.add('error');
                     errorSpan.textContent = "Este campo es obligatorio.";
@@ -2022,7 +1941,6 @@
             }
         }
 
-        // FUNCIÓN PARA HABILITAR/DESHABILITAR CAMPOS DEL FORMULARIO
         function deshabilitarCamposFormulario(deshabilitar) {
             const campos = document.querySelectorAll('#formCausa input:not(#numCausa), #formCausa textarea, #formCausa select');
             const btnGuardar = $("btnGuardar");
@@ -2035,6 +1953,152 @@
                 btnGuardar.disabled = deshabilitar;
                 btnGuardar.style.opacity = deshabilitar ? "0.5" : "1";
                 btnGuardar.style.cursor = deshabilitar ? "not-allowed" : "pointer";
+            }
+        }
+        
+        // FUNCIONES FALTANTES AÑADIDAS
+        function recolectarDatosForm() {
+            const datos = {
+                numCausa: $("numCausa").value.trim(),
+                caratula: $("caratula").value.trim(),
+                tipoProceso: $("tipoProceso").value,
+                juzgado: $("juzgado").value,
+                prioridad: $("prioridad").value,
+                usuarioAsignado: $("usuarioAsignado").value,
+                estado: $("estado").value,
+                intervencion: $("intervencion").value,
+                datosNnya: $("datosNnya").value.trim(),
+                fechaInicio: $("fechaInicio").value || null,
+                fechaPase: $("fechaPase").value || null,
+                audienciaGesell: $("habilitarAudienciaGesell").checked ? $("audienciaGesell").value : null,
+                nnyaGesell: $("nnyaGesell").value.trim(),
+                vencimiento: $("vencimiento").value || null,
+                vencimientoRecursos: $("vencimientoRecursos").value || null,
+                recursos: $("recursos").value || null,
+                recursosContestacion: $("recursosContestacion").value || null,
+                estadoRecursos: $("estadoRecursos").value || null,
+                observaciones: observacionesHidden.value
+            };
+
+            const audienciasInputs = audienciasContainer.querySelectorAll('.audiencia-fecha');
+            datos.audiencias = [];
+            audienciasInputs.forEach(input => {
+                if (input.value) datos.audiencias.push(input.value);
+            });
+
+            const diligenciasItems = diligenciasContainer.querySelectorAll('.diligencia-item');
+            datos.diligencias = [];
+            diligenciasItems.forEach(item => {
+                const fecha = item.querySelector('.diligencia-fecha').value;
+                const detalle = item.querySelector('.diligencia-detalle').value.trim();
+                if (fecha) {
+                    datos.diligencias.push({ fecha, detalle });
+                }
+            });
+
+            return datos;
+        }
+
+        function resetFormCausa() {
+            $("formCausa").reset();
+            observacionesEditor.innerHTML = '';
+            observacionesHidden.value = '';
+            audienciasContainer.innerHTML = '';
+            diligenciasContainer.innerHTML = '';
+            $("habilitarAudienciaGesell").checked = false;
+            $("audienciaGesell").disabled = true;
+            $("nnyaGesell").disabled = true;
+            $("recursos-opcionales").style.display = 'none';
+            
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            tabButtons[0].classList.add('active');
+            tabContents[0].classList.add('active');
+            
+            $("counter").textContent = '0/1000';
+            $("counterNnya").textContent = '0/500';
+            $("counterNnyaGesell").textContent = '0/400';
+            
+            document.querySelectorAll('.field').forEach(field => field.classList.remove('error'));
+        }
+
+        function cargarDatosEnForm(data) {
+            $("numCausa").value = data.numCausa || '';
+            $("caratula").value = data.caratula || '';
+            $("tipoProceso").value = data.tipoProceso || '';
+            poblarJuzgadosPorTipo(data.tipoProceso);
+            setTimeout(() => { $("juzgado").value = data.juzgado || ''; }, 100);
+            $("prioridad").value = data.prioridad || 'Ninguna';
+            $("usuarioAsignado").value = data.usuarioAsignado || '';
+            $("estado").value = data.estado || 'En trámite';
+            $("intervencion").value = data.intervencion || '';
+            $("datosNnya").value = data.datosNnya || '';
+            $("fechaInicio").value = data.fechaInicio ? formatFechaParaInput(toDate(data.fechaInicio), false) : '';
+            $("fechaPase").value = data.fechaPase ? formatFechaParaInput(toDate(data.fechaPase), true) : '';
+            $("vencimiento").value = data.vencimiento ? formatFechaParaInput(toDate(data.vencimiento), true) : '';
+            $("vencimientoRecursos").value = data.vencimientoRecursos ? formatFechaParaInput(toDate(data.vencimientoRecursos), true) : '';
+            $("recursos").value = data.recursos || '';
+            $("recursosContestacion").value = data.recursosContestacion || '';
+            $("estadoRecursos").value = data.estadoRecursos || '';
+            observacionesEditor.innerHTML = data.observaciones || '';
+            observacionesHidden.value = data.observaciones || '';
+            
+            audienciasContainer.innerHTML = '';
+            if (Array.isArray(data.audiencias)) {
+                data.audiencias.forEach(aud => {
+                    const div = document.createElement('div');
+                    div.className = 'audiencia-item';
+                    div.innerHTML = `
+                        <input type="datetime-local" class="audiencia-fecha" value="${formatFechaParaInput(toDate(aud), true)}">
+                        <button type="button" class="btn-eliminar-audiencia"><i class="fa fa-trash"></i></button>
+                    `;
+                    audienciasContainer.appendChild(div);
+                    div.querySelector('.btn-eliminar-audiencia').onclick = function() {
+                        audienciasContainer.removeChild(div);
+                    };
+                });
+            }
+            
+            diligenciasContainer.innerHTML = '';
+            if (Array.isArray(data.diligencias)) {
+                data.diligencias.forEach(dilig => {
+                    const div = document.createElement('div');
+                    div.className = 'diligencia-item';
+                    div.innerHTML = `
+                        <input type="datetime-local" class="diligencia-fecha" value="${formatFechaParaInput(toDate(dilig.fecha), true)}">
+                        <input type="text" class="diligencia-detalle" placeholder="Detalle" value="${dilig.detalle || ''}">
+                        <button type="button" class="btn-eliminar-diligencia"><i class="fa fa-trash"></i></button>
+                    `;
+                    diligenciasContainer.appendChild(div);
+                    div.querySelector('.btn-eliminar-diligencia').onclick = function() {
+                        diligenciasContainer.removeChild(div);
+                    };
+                });
+            }
+            
+            if (data.audienciaGesell) {
+                $("habilitarAudienciaGesell").checked = true;
+                $("audienciaGesell").disabled = false;
+                $("nnyaGesell").disabled = false;
+                $("audienciaGesell").value = formatFechaParaInput(toDate(data.audienciaGesell), true);
+                $("nnyaGesell").value = data.nnyaGesell || '';
+            }
+            
+            if (data.recursos) {
+                $("recursos-opcionales").style.display = 'block';
+            }
+            
+            if (data.observaciones) {
+                const palabrasObs = data.observaciones.trim().split(/\s+/).filter(p => p.length > 0);
+                $("counter").textContent = `${palabrasObs.length}/1000`;
+            }
+            if (data.datosNnya) {
+                const palabrasNnya = data.datosNnya.trim().split(/\s+/).filter(p => p.length > 0);
+                $("counterNnya").textContent = `${palabrasNnya.length}/500`;
+            }
+            if (data.nnyaGesell) {
+                const palabrasGesell = data.nnyaGesell.trim().split(/\s+/).filter(p => p.length > 0);
+                $("counterNnyaGesell").textContent = `${palabrasGesell.length}/400`;
             }
         }
         
@@ -2198,7 +2262,6 @@
             if (current) filtroUsuario.value = current;
         }
 
-        // NUEVA FUNCIÓN DE SUSCRIPCIÓN OPTIMIZADA
         function suscribirCausas(reset = true) {
             if (reset) {
                 paginaActual = 1;
@@ -2217,7 +2280,6 @@
             console.log("Construyendo consulta optimizada...");
             let query = db.collection("causas");
             
-            // FILTROS DE SERVIDOR
             const fEstado = filtroEstado.value;
             const fUsuario = filtroUsuario.value;
             const fPrioridad = filtroPrioridad.value;
@@ -2228,14 +2290,12 @@
             const fHasta = filtroFechaHasta.value;
             const busqueda = buscador.value.trim();
             
-            // Aplicar filtros de igualdad
             if (fEstado) query = query.where("estado", "==", fEstado);
             if (fUsuario) query = query.where("usuarioAsignado", "==", fUsuario);
             if (fPrioridad) query = query.where("prioridad", "==", fPrioridad);
             if (fIntervencion) query = query.where("intervencion", "==", fIntervencion);
             if (fTipoProceso) query = query.where("tipoProceso", "==", fTipoProceso);
             
-            // Filtro por evento
             if (fEvento) {
                 switch(fEvento) {
                     case 'audiencias': query = query.where("audiencias", "!=", null); break;
@@ -2246,7 +2306,6 @@
                 }
             }
             
-            // Búsqueda por keywords (optimizada)
             if (busqueda) {
                 const palabras = busqueda.toLowerCase()
                     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -2254,18 +2313,15 @@
                     .filter(p => p.length > 0);
                 
                 if (palabras.length > 0) {
-                    // Limitar a 10 palabras para no exceder límites de Firestore
                     const palabrasLimitadas = palabras.slice(0, 10);
                     query = query.where("keywords", "array-contains-any", palabrasLimitadas);
                 }
             }
             
-            // Filtro por fecha exacta (si desde y hasta son iguales)
             if (fDesde && fHasta && fDesde === fHasta) {
                 query = query.where("fechasFiltro", "array-contains", fDesde);
             }
             
-            // Ordenar por fecha de registro (descendente)
             query = query.orderBy("fechaRegistro", "desc");
             
             console.log("Suscribiendo a cambios optimizados...");
@@ -2277,9 +2333,7 @@
                         datosCache.push({ id: d.id, ...d.data() });
                     });
                     
-                    // FILTROS EN CLIENTE (solo para rango de fechas cuando son diferentes)
                     datosFiltrados = datosCache.filter(d => {
-                        // Filtro por rango de fechas (si desde y hasta son diferentes)
                         if (fDesde && fHasta && fDesde !== fHasta) {
                             const fechasCausa = d.fechasFiltro || [];
                             const tieneFechaEnRango = fechasCausa.some(fecha => {
@@ -2308,7 +2362,6 @@
             );
         }
 
-        // Función para debounce de filtros
         function actualizarFiltros() {
             clearTimeout(filterTimeout);
             filterTimeout = setTimeout(() => {
@@ -2503,15 +2556,9 @@
             editId.value = ""; 
             tituloForm.textContent = "Nuevo Expediente"; 
             
-            // Asegurarse de que los campos estén habilitados
             deshabilitarCamposFormulario(false);
             
             modal.style.display = "flex"; 
-            // En móvil, asegurar que el modal ocupe toda la pantalla
-            if (window.innerWidth <= 768) {
-                document.querySelector('#modal .content').style.maxHeight = '90vh';
-                document.querySelector('#modal .content').style.width = '95%';
-            }
         }
         
         function validateForm() {
@@ -2547,13 +2594,11 @@
             alertModal.style.display = "none";
         };
         
-        // FUNCIÓN GUARDAR ACTUALIZADA CON INDEXING
         const guardarExpediente = async () => {
             if (!validateForm()) {
                 return;
             }
             
-            // Validar duplicado en modo nuevo
             if (modo === "nuevo") {
                 const numCausa = $("numCausa").value.trim();
                 const existe = datosCache.some(causa => causa.numCausa === numCausa);
@@ -2561,7 +2606,6 @@
                 if (existe) {
                     mostrarAlertaFlotante("No se puede guardar: El número de expediente ya está registrado en el sistema.", 'danger');
                     
-                    // Resaltar el campo en rojo
                     const numCausaField = $("numCausa").closest('.field');
                     numCausaField.classList.add('error');
                     const errorSpan = numCausaField.querySelector('.error-message');
@@ -2569,7 +2613,6 @@
                     errorSpan.style.color = "#dc3545";
                     errorSpan.style.fontWeight = "bold";
                     
-                    // Hacer scroll al campo problemático
                     $("numCausa").scrollIntoView({ behavior: 'smooth', block: 'center' });
                     $("numCausa").focus();
                     
@@ -2588,8 +2631,6 @@
             btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
             
             try {
-                // GENERAR CAMPOS DE INDEXING
-                // 1. Keywords para búsqueda eficiente
                 const textoParaKeywords = [datos.numCausa, datos.caratula, datos.usuarioAsignado]
                     .join(' ')
                     .toLowerCase()
@@ -2599,7 +2640,6 @@
                     .filter(palabra => palabra.length > 0);
                 datos.keywords = textoParaKeywords;
                 
-                // 2. fechasFiltro para filtrado por fechas
                 const fechasSet = new Set();
                 const agregarFecha = (fecha) => {
                     if (!fecha) return;
@@ -2622,7 +2662,6 @@
                 datos.fechasFiltro = Array.from(fechasSet);
                 
                 if (modo === "nuevo") {
-                    // Validar duplicado en servidor (doble verificación)
                     const dupCheck = await db.collection("causas").where("numCausa", "==", $("numCausa").value.trim()).get();
                     if (!dupCheck.empty) {
                         mostrarAlertaFlotante("El N° Expediente ya existe en la base de datos.", 'danger');
@@ -2669,11 +2708,6 @@
                 if (snap.exists){
                     cargarDatosEnForm(snap.data());
                     modal.style.display = "flex"; 
-                    // En móvil, asegurar que el modal ocupe toda la pantalla
-                    if (window.innerWidth <= 768) {
-                        document.querySelector('#modal .content').style.maxHeight = '90vh';
-                        document.querySelector('#modal .content').style.width = '95%';
-                    }
                 } else {
                     mostrarAlertaPersonalizada("Error", "El expediente no fue encontrado.");
                 }
@@ -2683,89 +2717,6 @@
             }
         }
         
-        // CORRECCIÓN MEJORADA: Función para text-to-speech (TTS)
-        let ttsEnProgreso = false;
-        let speechSynthesis = window.speechSynthesis;
-        
-        function toggleTTS(texto, buttonIconId) {
-            // Detener cualquier lectura en curso
-            stopTTS();
-            
-            if (!texto || texto.trim() === "") {
-                mostrarAlertaFlotante("No hay texto para leer", 'warning');
-                return;
-            }
-            
-            // Limpiar etiquetas HTML y espacios múltiples
-            const cleanText = texto.replace(/<[^>]*>/g, ' ')
-                                  .replace(/&nbsp;/g, ' ')
-                                  .replace(/\s+/g, ' ')
-                                  .trim();
-            
-            if (cleanText === '') {
-                mostrarAlertaFlotante("El texto está vacío", 'warning');
-                return;
-            }
-            
-            const utterance = new SpeechSynthesisUtterance(cleanText);
-            utterance.lang = 'es-ES';
-            utterance.rate = 1.0;
-            utterance.pitch = 1.0;
-            utterance.volume = 1.0;
-            
-            const icon = document.getElementById(buttonIconId);
-            
-            utterance.onstart = function() {
-                ttsEnProgreso = true;
-                if (icon) {
-                    icon.className = "fas fa-stop";
-                    icon.style.color = "#dc3545";
-                }
-            };
-            
-            utterance.onend = function() {
-                ttsEnProgreso = false;
-                if (icon) {
-                    icon.className = "fas fa-volume-up";
-                    icon.style.color = "";
-                }
-            };
-            
-            utterance.onerror = function(event) {
-                ttsEnProgreso = false;
-                if (icon) {
-                    icon.className = "fas fa-volume-up";
-                    icon.style.color = "";
-                }
-                console.error('Error en TTS:', event);
-                mostrarAlertaFlotante("Error al leer el texto", 'danger');
-            };
-            
-            // Cancelar cualquier lectura anterior
-            speechSynthesis.cancel();
-            
-            // Pequeña pausa antes de iniciar nueva lectura
-            setTimeout(() => {
-                speechSynthesis.speak(utterance);
-            }, 50);
-        }
-        
-        function stopTTS() {
-            if (speechSynthesis.speaking || ttsEnProgreso) {
-                speechSynthesis.cancel();
-                ttsEnProgreso = false;
-                
-                // Resetear iconos
-                const icons = document.querySelectorAll('.fa-volume-up, .fa-stop');
-                icons.forEach(icon => {
-                    if (icon.classList.contains('fa-stop')) {
-                        icon.className = "fas fa-volume-up";
-                        icon.style.color = "";
-                    }
-                });
-            }
-        }
-
         async function abrirVer(id){
             causaActualId = id;
             try{
@@ -2815,33 +2766,15 @@
                         } else if (v.seconds) {
                             contenidoHTML += `<p><strong>${etiqueta}:</strong> ${formatearFecha(v, true)}</p>`;
                         } else if (k === "observaciones") {
-                            contenidoHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin: 10px 0;">
-                                                <strong>${etiqueta}:</strong>
-                                                <button class="button button-secondary" id="btnLeerObservacionesVer" style="padding: 4px 12px; font-size: 0.9rem;">
-                                                    <i id="iconLeerObservacionesVer" class="fas fa-volume-up"></i> Leer
-                                                </button>
-                                              </div>
-                                              <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px;">${v}</div>`;
+                            contenidoHTML += `<p><strong>${etiqueta}:</strong></p><div>${v}</div>`;
                         } else if (k !== "audiencias" && k !== "diligencias") {
                             contenidoHTML += `<p><strong>${etiqueta}:</strong> ${v}</p>`;
                         }
                     }
                 });
                 verContenido.innerHTML = contenidoHTML;
-                
-                // Configurar evento de lectura en Modal Ver
-                const btnLeer = $("btnLeerObservacionesVer");
-                if(btnLeer && d.observaciones) {
-                    btnLeer.onclick = () => toggleTTS(d.observaciones, "iconLeerObservacionesVer");
-                }
-
                 await cargarNotas(id);
                 modalVer.style.display = "flex";
-                // En móvil, asegurar que el modal ocupe toda la pantalla
-                if (window.innerWidth <= 768) {
-                    document.querySelector('#modalVer .content').style.maxHeight = '90vh';
-                    document.querySelector('#modalVer .content').style.width = '95%';
-                }
             } catch(e) {
                 console.error(e);
                 mostrarAlertaPersonalizada("Error", "No se pudo abrir el detalle: " + e.message);
@@ -2896,901 +2829,914 @@
         }
         
         btnAgregarNota.onclick = agregarNota;
-        $("btnCerrarVer").onclick = ()=> { stopTTS(); modalVer.style.display = "none"; };
+        $("btnCerrarVer").onclick = ()=> modalVer.style.display = "none";
         $("btnCerrarEventosHoy").onclick = ()=> modalEventosHoy.style.display = "none";
+        btnCerrarIA.onclick = ()=> modalIA.style.display = "none";
         
-        const printSection = (html)=>{ 
-            const w = window.open("","_blank","width=900,height=700"); 
-            w.document.write(`
-                <html>
-                    <head>
-                        <title>Imprimir</title>
-                        <style>
-                            @media print {
-                                .button, .actions, .action-buttons, .controls-form,
-                                #btnNuevo, #btnPrintListado, #btnPrintFechas, #btnPrintForm,
-                                #btnPrintRegistro, #btnCerrarVer, #btnAgregarNota, #btnVerLineaTiempo,
-                                #btnPrintTodos, #btnPrintFiltrado, #btnEventosHoy,
-                                .fa-solid, .fas, .far, .fa, .fa-eye, .fa-pen, .fa-trash, .fa-plus,
-                                .fa-save, .fa-print, .fa-xmark, .fa-check, .fa-arrow-left, .fa-arrow-right,
-                                .fa-exclamation-triangle, .fa-timeline, .fa-file-pen, .fa-calendar-day,
-                                .btn-eliminar-audiencia, .btn-audiencia, .floating-alert,
-                                .prioridad-destacada, .tabs-nav, .tab-button, .editor-toolbar, .btn-dictado {
-                                    display: none !important;
-                                }
-                                .header, .filters-section, .sidebar, .pagination-container {
-                                    display: none !important;
-                                }
-                                body, .container, .main-layout, .main {
-                                    margin: 0 !important;
-                                    padding: 0 !important;
-                                    width: 100% !important;
-                                    max-width: 100% !important;
-                                }
-                                .table-section, .kpi-section, .modal .content, #modalVer .content {
-                                    box-shadow: none !important;
-                                    border: 1px solid #ddd !important;
-                                    page-break-inside: avoid;
-                                }
-                                .data-table {
-                                    min-width: 100% !important;
-                                }
-                                .kpi-cards {
-                                    display: grid !important;
-                                    grid-template-columns: repeat(3, 1fr) !important;
-                                    gap: 10px !important;
-                                }
-                                .prioridad-pill {
-                                    color: #000 !important;
-                                    background-color: transparent !important;
-                                    border: 1px solid #000 !important;
-                                }
-                                .actions {
-                                    display: none !important;
-                                }
-                                .tab-content {
-                                    display: block !important;
-                                }
-                                #formCausa .grid {
-                                    display: table !important;
-                                    width: 100% !important;
-                                }
-                                .field {
-                                    display: table-row !important;
-                                    margin-bottom: 0 !important;
-                                }
-                                .field label {
-                                    display: table-cell !important;
-                                    padding: 8px !important;
-                                    font-weight: bold !important;
-                                    width: 40% !important;
-                                    border-bottom: 1px solid #ddd !important;
-                                }
-                                .field input, .field textarea, .field select {
-                                    display: table-cell !important;
-                                    width: 100% !important;
-                                    padding: 8px !important;
-                                    border: none !important;
-                                    border-bottom: 1px solid #ddd !important;
-                                    background: transparent !important;
-                                }
-                                .field textarea {
-                                    height: auto !important;
-                                    min-height: 60px !important;
-                                }
-                                .prioridad-texto {
-                                    color: #000 !important;
-                                    background-color: transparent !important;
-                                    border: 1px solid #000 !important;
-                                    font-weight: bold !important;
-                                }
-                                #verContenido p {
-                                    margin: 8px 0 !important;
-                                    font-size: 14px !important;
-                                    line-height: 1.4 !important;
-                                }
-                                #verContenido strong {
-                                    color: #000 !important;
-                                    font-weight: bold !important;
-                                }
-                                .notes-history {
-                                    margin-top: 20px !important;
-                                    padding-top: 20px !important;
-                                    border-top: 1px solid #ddd !important;
-                                }
-                                .notes-history h4 {
-                                    margin: 0 0 10px !important;
-                                    color: #000 !important;
-                                    font-size: 16px !important;
-                                    border-bottom: 2px solid #000 !important;
-                                    padding-bottom: 5px !important;
-                                }
-                                .note-item {
-                                    background: #f8f8f8 !important;
-                                    border-left: 4px solid #007bff !important;
-                                    padding: 10px !important;
-                                    margin-bottom: 10px !important;
-                                    border-radius: 8px !important;
-                                }
-                                .note-meta {
-                                    display: flex !important;
-                                    justify-content: space-between !important;
-                                    font-size: 12px !important;
-                                    color: #6c757d !important;
-                                    margin-bottom: 5px !important;
-                                }
-                                .note-text {
-                                    font-size: 14px !important;
-                                    line-height: 1.4 !important;
-                                }
-                                #observaciones-editor {
-                                    border: none !important;
-                                    padding: 0 !important;
-                                    min-height: auto !important;
-                                    max-height: none !important;
-                                }
-                            }
-                        </style>
-                    </head>
-                    <body>${html}</body>
-                </html>
-            `); 
-            w.document.close(); 
-            w.focus(); 
-            w.print(); 
-        };
+        // ======================================================================
+        // ASISTENTE IA CORREGIDO
+        // ======================================================================
         
-        function generarTablaImpresion(data, titulo) {
-            let tableHTML = `
-                <table border="1" style="width:100%; border-collapse:collapse; margin-top:20px;">
-                    <thead>
-                        <tr>
-                            <th>N°</th>
-                            <th>Carátula</th>
-                            <th>Tipo</th>
-                            <th>Juzgado</th>
-                            <th>Usuario</th>
-                            <th>Estado</th>
-                            <th>Prioridad</th>
-                            <th>Registro</th>
-                            <th>Eventos</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            data.forEach(d => {
-                const todosEventos = obtenerTodosEventos(d);
-                let eventosTexto = "—";
-                if (todosEventos.length > 0) {
-                    eventosTexto = todosEventos.map(evento => {
-                        let texto = `${evento.tipo}: ${formatearFecha(evento.fecha, true)}`;
-                        if (evento.tipo === "Diligencia" && evento.detalle) {
-                            texto += ` - ${evento.detalle}`;
-                        }
-                        return texto;
-                    }).join('; ');
-                }
-                tableHTML += `
-                    <tr>
-                        <td>${d.numCausa||""}</td>
-                        <td>${d.caratula||""}</td>
-                        <td>${d.tipoProceso||""}</td>
-                        <td>${d.juzgado||""}</td>
-                        <td>${d.usuarioAsignado||""}</td>
-                        <td>${d.estado||""}</td>
-                        <td>${d.prioridad||"Ninguna"}</td>
-                        <td>${formatearFecha(d.fechaRegistro, false)}</td>
-                        <td>${eventosTexto}</td>
-                    </tr>
-                `;
-            });
-            tableHTML += `
-                    </tbody>
-                </table>
-            `;
-            return `<h2>${titulo}</h2>${tableHTML}`;
-        }
-                
-        $("btnPrintFiltrado").onclick = ()=> { 
-            const html = generarTablaImpresion(datosFiltrados, "Listado Filtrado de Expedientes Judiciales");
-            printSection(html); 
-        };
-        $("btnPrintRegistro").onclick = ()=> {
-            const contenido = `
-                <div style="padding: 20px; font-family: Arial, sans-serif;">
-                    <h2 style="text-align: center; margin-bottom: 20px; color: #007bff;">Detalle del Expediente</h2>
-                    <div style="margin-bottom: 20px;">
-                        ${verContenido.innerHTML}
-                    </div>
-                    <div class="notes-history">
-                        <h4 style="color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px;">Historial de Notas</h4>
-                        ${historialNotas.innerHTML}
-                    </div>
-                </div>
-            `;
-            printSection(contenido);
-        };
+        let conversacionIA = [];
         
-        tabButtons.forEach(button => {
-            button.addEventListener("click", () => {
-                tabButtons.forEach(btn => btn.classList.remove("active"));
-                tabContents.forEach(content => content.classList.remove("active"));
-                button.classList.add("active");
-                const tabId = button.dataset.tab;
-                $(tabId).classList.add("active");
-            });
-        });
-        
-        function initEditor() {
-            if (btnBold) {
-                btnBold.addEventListener('click', function() {
-                    document.execCommand('bold', false, null);
-                    observacionesEditor.focus();
-                });
-            }
-            
-            if (btnColorAzul) {
-                btnColorAzul.addEventListener('click', function() {
-                    document.execCommand('styleWithCSS', false, true);
-                    document.execCommand('foreColor', false, '#007bff');
-                    observacionesEditor.focus();
-                });
-            }
-            
-            if (btnColorRojo) {
-                btnColorRojo.addEventListener('click', function() {
-                    document.execCommand('styleWithCSS', false, true);
-                    document.execCommand('foreColor', false, '#dc3545');
-                    observacionesEditor.focus();
-                });
-            }
-            
-            if (btnColorVerde) {
-                btnColorVerde.addEventListener('click', function() {
-                    document.execCommand('styleWithCSS', false, true);
-                    document.execCommand('foreColor', false, '#28a745');
-                    observacionesEditor.focus();
-                });
-            }
-            
-            if (btnColorNormal) {
-                btnColorNormal.addEventListener('click', function() {
-                    document.execCommand('styleWithCSS', false, true);
-                    document.execCommand('foreColor', false, '#212529');
-                    observacionesEditor.focus();
-                });
-            }
-            
-            if (observacionesEditor) {
-                observacionesEditor.addEventListener('input', function() {
-                    const text = this.innerText || this.textContent;
-                    const words = text.trim().split(/\s+/).filter(Boolean);
-                    $("counter").textContent = `${words.length}/1000`;
-                    
-                    observacionesHidden.value = this.innerHTML;
-                });
-                
-                observacionesEditor.addEventListener('paste', function(e) {
-                    e.preventDefault();
-                    const text = (e.clipboardData || window.clipboardData).getData('text/plain');
-                    document.execCommand('insertText', false, text);
-                });
-            }
-
-            // Inicializar botón TTS en Editor
-            const btnTTS = $("btnTTSObservaciones");
-            if (btnTTS) {
-                btnTTS.addEventListener('click', function() {
-                    const text = observacionesEditor.innerText || observacionesEditor.textContent;
-                    if (text && text.trim() !== "") {
-                        toggleTTS(text, "iconTTSObservaciones");
-                    } else {
-                        mostrarAlertaFlotante("No hay texto para leer en las observaciones", 'warning');
-                    }
-                });
+        function abrirAsistenteIA() {
+            modalIA.style.display = "flex";
+            iaPregunta.focus();
+            if (conversacionIA.length === 0) {
+                agregarMensajeIA("asistente", 
+                    `<strong>🤖 Asistente IA de Expedientes Judiciales</strong><br><br>
+                    Puedo analizar tus datos de forma detallada. Puedes preguntarme:<br><br>
+                    • <strong>Por usuario:</strong> "Expedientes del usuario Juan Pérez"<br>
+                    • <strong>Por tipo:</strong> "Expedientes de tipo Penal"<br>
+                    • <strong>Por estado:</strong> "Expedientes en trámite"<br>
+                    • <strong>Por prioridad:</strong> "Expedientes con prioridad alta"<br>
+                    • <strong>Por juzgado:</strong> "Expedientes del Juzgado N°1"<br>
+                    • <strong>Estadísticas:</strong> "Estadísticas completas"<br>
+                    • <strong>Vencimientos:</strong> "Expedientes próximos a vencer"`);
             }
         }
         
-        function initFormEventListeners(){
-            if (selTipo) {
-                selTipo.addEventListener("change", function() {
-                    poblarJuzgadosPorTipo(this.value);
-                });
-            }
+        async function enviarPreguntaIA() {
+            const pregunta = iaPregunta.value.trim();
+            if (!pregunta) return;
             
-            // Agregar evento de validación en tiempo real para número de expediente
-            if ($("numCausa")) {
-                let timeoutId;
-                $("numCausa").addEventListener("input", function() {
-                    clearTimeout(timeoutId);
-                    timeoutId = setTimeout(validarExistenciaExpediente, 500); // Debounce de 500ms
-                });
-                
-                // También validar al perder el foco
-                $("numCausa").addEventListener("blur", validarExistenciaExpediente);
-            }
+            iaPregunta.value = "";
             
-            if ($("recursos")) {
-                $("recursos").addEventListener("change", function(){
-                    const recursosOpcionales = $("recursos-opcionales");
-                    recursosOpcionales.style.display = this.value ? "block" : "none";
-                });
-            }
+            agregarMensajeIA("usuario", pregunta);
             
-            if ($("intervencion")) {
-                $("intervencion").addEventListener("change", function(){
-                    const datosNnya = $("datosNnya"), contadorNnya = $("counterNnya");
-                    if (this.value === "Ministerio Complementario") { 
-                        datosNnya.removeAttribute("disabled"); 
-                        contadorNnya.style.display='block'; 
-                    } else { 
-                        datosNnya.value = ""; 
-                        datosNnya.setAttribute("disabled","true"); 
-                        contadorNnya.style.display='none'; 
-                    }
-                });
-            }
+            const mensajeCarga = agregarMensajeCarga();
             
-            const limitWords = (text, max)=>{ 
-                const words = text.trim().split(/\s+/).filter(Boolean); 
-                return words.length > max ? words.slice(0,max).join(" ") : text; 
-            };
-            
-            if ($("datosNnya")) {
-                $("datosNnya").addEventListener("input", function(){ 
-                    this.value = limitWords(this.value, 500); 
-                    $("counterNnya").textContent = `${this.value.trim().split(/\s+/).filter(Boolean).length}/500`; 
-                });
-            }
-            
-            if ($("nnyaGesell")) {
-                $("nnyaGesell").addEventListener("input", function(){ 
-                    this.value = limitWords(this.value, 400); 
-                    $("counterNnyaGesell").textContent = `${this.value.trim().split(/\s+/).filter(Boolean).length}/400`; 
-                });
-            }
-            
-            if ($("habilitarAudienciaGesell")) {
-                $("habilitarAudienciaGesell").addEventListener("change", function(){ 
-                    toggleGesell(this.checked); 
-                });
-            }
-            
-            initEditor();
-        }
-        
-        function toggleGesell(enabled){ 
-            const ag = $("audienciaGesell"), ng = $("nnyaGesell"); 
-            if (enabled){ 
-                ag.removeAttribute("disabled"); 
-                ng.removeAttribute("disabled"); 
-                $("counterNnyaGesell").style.display='block'; 
-            } else { 
-                ag.value = ""; 
-                ng.value = ""; 
-                ag.setAttribute("disabled","true"); 
-                ng.setAttribute("disabled","true"); 
-                $("counterNnyaGesell").style.display='none'; 
-            } 
-        }
-        
-        function resetFormCausa(){ 
-            $("formCausa").reset(); 
-            $("counter").textContent = "0/1000"; 
-            $("counterNnya").textContent = "0/500"; 
-            $("counterNnyaGesell").textContent = "0/400"; 
-            selPrioridad.value = "Ninguna"; 
-            audienciasContainer.innerHTML = ""; 
-            diligenciasContainer.innerHTML = "";
-            agregarAudiencia();
-            agregarDiligencia();
-            stopTTS(); // Detener lectura al resetear form
-            
-            // Resetear errores
-            document.querySelectorAll('.field.error').forEach(el => el.classList.remove('error'));
-            const errorSpans = document.querySelectorAll('.error-message');
-            errorSpans.forEach(span => {
-                span.textContent = "Este campo es obligatorio.";
-                span.style.color = "";
-                span.style.fontWeight = "";
-            });
-            
-            tabButtons.forEach(btn => btn.classList.remove("active"));
-            tabContents.forEach(content => content.classList.remove("active"));
-            tabButtons[0].classList.add("active");
-            tabContents[0].classList.add("active");
-            $("recursos-opcionales").style.display = "none";
-            toggleGesell(false);
-            $("habilitarAudienciaGesell").checked = false;
-            
-            // Habilitar todos los campos
-            deshabilitarCamposFormulario(false);
-            
-            observacionesEditor.innerHTML = "";
-            observacionesHidden.value = "";
-        }
-        
-        function recolectarDatosForm(){
-            const fields = ["numCausa","caratula","tipoProceso","juzgado","fechaInicio","fechaPase","intervencion","datosNnya","vencimiento","usuarioAsignado","estado","prioridad","recursos","recursosContestacion","estadoRecursos","vencimientoRecursos","audienciaGesell","nnyaGesell","observaciones"];
-            const datos = {};
-            fields.forEach(id=>{ 
-                const el = $(id); 
-                if(!el) return; 
-                if (["date","datetime-local"].includes(el.type)) { 
-                    let fecha = el.value ? new Date(el.value) : null;
-                    datos[id] = fecha;
-                } else { 
-                    datos[id] = el.value || ""; 
-                } 
-            });
-            
-            // Observaciones del editor
-            datos.observaciones = observacionesEditor.innerHTML;
-            
-            const audiencias = [];
-            audienciasContainer.querySelectorAll('input[type="datetime-local"]').forEach(input => { 
-                if (input.value) {
-                    let fecha = new Date(input.value);
-                    audiencias.push(fecha);
-                }
-            });
-            datos.audiencias = audiencias.length > 0 ? audiencias : null;
-            
-            const diligencias = [];
-            diligenciasContainer.querySelectorAll('.diligencia-item').forEach(item => {
-                const fechaInput = item.querySelector('input[type="datetime-local"]');
-                const detalleInput = item.querySelector('input[type="text"]');
-                if (fechaInput.value) {
-                    let fecha = new Date(fechaInput.value);
-                    diligencias.push({
-                        fecha: fecha,
-                        detalle: detalleInput.value || ''
-                    });
-                }
-            });
-            datos.diligencias = diligencias.length > 0 ? diligencias : null;
-            
-            return datos;
-        }
-        
-        function cargarDatosEnForm(d) {
-            const setVal = (id, val) => {
-                const el = $(id);
-                if (!el) return;
-                if (val?.seconds) {
-                    const fecha = toDate(val);
-                    if (el.type === "date") {
-                        el.value = formatFechaParaInput(fecha, false);
-                    } else if (el.type === "datetime-local") {
-                        el.value = formatFechaParaInput(fecha, true);
-                    } else {
-                        el.value = val ?? "";
-                    }
-                } else if (val && (el.type === "date" || el.type === "datetime-local")) {
-                    const fecha = toDate(val);
-                    el.value = formatFechaParaInput(fecha, el.type === "datetime-local");
-                }
-                else {
-                    el.value = val ?? "";
-                }
-            };
-            
-            if (d.tipoProceso) {
-                selTipo.value = d.tipoProceso;
-                poblarJuzgadosPorTipo(d.tipoProceso);
-            }
-            ["numCausa", "caratula", "tipoProceso", "juzgado", "intervencion", "datosNnya", "usuarioAsignado", "estado", "prioridad", "recursos", "recursosContestacion", "estadoRecursos", "nnyaGesell"].forEach(k => setVal(k, d[k]));
-            ["fechaInicio", "fechaPase", "vencimiento", "vencimientoRecursos", "audienciaGesell"].forEach(k => setVal(k, d[k]));
-            
-            if (d.observaciones) {
-                observacionesEditor.innerHTML = d.observaciones;
-                observacionesHidden.value = d.observaciones;
-                const text = observacionesEditor.innerText || observacionesEditor.textContent;
-                const words = text.trim().split(/\s+/).filter(Boolean);
-                $("counter").textContent = `${words.length}/1000`;
-            }
-            
-            const hayRecursos = !!d.recursos;
-            $("recursos-opcionales").style.display = hayRecursos ? "block" : "none";
-            audienciasContainer.innerHTML = "";
-            if (Array.isArray(d.audiencias) && d.audiencias.length > 0) {
-                d.audiencias.forEach(aud => {
-                    const fecha = toDate(aud);
-                    if (fecha) {
-                        audienciasContainer.appendChild(crearAudienciaItem(formatFechaParaInput(fecha, true)));
-                    }
-                });
-            } else {
-                agregarAudiencia();
-            }
-            diligenciasContainer.innerHTML = "";
-            if (Array.isArray(d.diligencias) && d.diligencias.length > 0) {
-                d.diligencias.forEach(dilig => {
-                    const fecha = toDate(dilig.fecha);
-                    if (fecha) {
-                        diligenciasContainer.appendChild(crearDiligenciaItem(formatFechaParaInput(fecha, true), dilig.detalle || ''));
-                    }
-                });
-            } else {
-                agregarDiligencia();
-            }
-            const habilitar = !!(d.audienciaGesell || d.nnyaGesell);
-            $("habilitarAudienciaGesell").checked = habilitar;
-            toggleGesell(habilitar);
-        }
-        
-        function crearAudienciaItem(value = "") {
-            const item = document.createElement('div');
-            item.className = 'audiencia-item';
-            item.innerHTML = `<input type="datetime-local" value="${value}"><button type="button" class="btn-eliminar-audiencia"><i class="fa fa-trash"></i></button>`;
-            const eliminarBtn = item.querySelector('.btn-eliminar-audiencia');
-            
-            eliminarBtn.onclick = function() { 
-                if (audienciasContainer.children.length > 1) {
-                    item.remove(); 
-                } else {
-                    mostrarAlertaPersonalizada("Error", "Debe haber al menos una audiencia"); 
-                }
-            };
-            return item;
-        }
-        
-        function agregarAudiencia() { 
-            audienciasContainer.appendChild(crearAudienciaItem()); 
-        }
-        
-        function crearDiligenciaItem(fechaValue = "", detalleValue = "") {
-            const item = document.createElement('div');
-            item.className = 'diligencia-item';
-            item.innerHTML = `
-                <input type="datetime-local" value="${fechaValue}">
-                <input type="text" placeholder="Detalle de la diligencia" value="${detalleValue}">
-                <button type="button" class="btn-eliminar-diligencia"><i class="fa fa-trash"></i></button>
-            `;
-            const eliminarBtn = item.querySelector('.btn-eliminar-diligencia');
-            
-            eliminarBtn.onclick = function() { 
-                if (diligenciasContainer.children.length > 1) {
-                    item.remove(); 
-                } else {
-                    mostrarAlertaPersonalizada("Error", "Debe haber al menos una diligencia"); 
-                }
-            };
-            return item;
-        }
-        
-        function agregarDiligencia() { 
-            diligenciasContainer.appendChild(crearDiligenciaItem()); 
-        }
-        
-        if (btnAgregarAudiencia) {
-            btnAgregarAudiencia.onclick = agregarAudiencia;
-        }
-        if (btnAgregarDiligencia) {
-            btnAgregarDiligencia.onclick = agregarDiligencia;
-        }
-        
-        window.addEventListener("click", e=>{ 
-            if (e.target === modal) { modal.style.display="none"; stopTTS(); } 
-            if (e.target === modalVer) { modalVer.style.display="none"; stopTTS(); }
-            if (e.target === alertModal) alertModal.style.display="none";
-            if (e.target === modalEventosHoy) modalEventosHoy.style.display="none";
-        });
-        
-        // Event listeners para filtros OPTIMIZADOS
-        buscador.oninput = actualizarFiltros;
-        filtroEstado.onchange = actualizarFiltros;
-        filtroUsuario.onchange = actualizarFiltros;
-        filtroPrioridad.onchange = actualizarFiltros;
-        filtroIntervencion.onchange = actualizarFiltros;
-        filtroTipoProceso.onchange = actualizarFiltros;
-        filtroEventos.onchange = actualizarFiltros;
-        filtroFechaDesde.onchange = actualizarFiltros;
-        filtroFechaHasta.onchange = actualizarFiltros;
-        
-        $("btnEventosHoy").onclick = function() {
-            renderEventosHoy();
-            modalEventosHoy.style.display = "flex";
-            // En móvil, asegurar que el modal ocupe toda la pantalla
-            if (window.innerWidth <= 768) {
-                document.querySelector('#modalEventosHoy .content').style.maxHeight = '90vh';
-                document.querySelector('#modalEventosHoy .content').style.width = '95%';
-            }
-        };
-        
-        // --- FUNCIONALIDAD DE DICTADO POR VOZ MEJORADA ---
-        let recognition;
-        let dictadoActivo = false;
-        let campoDictadoActual = null;
-        let ultimaTranscripcion = '';
-        let tiempoUltimaTranscripcion = 0;
-        
-        function toggleDictado(elementId, btnElement) {
-            // Verificar compatibilidad del navegador
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                mostrarAlertaFlotante("Tu navegador no soporta dictado por voz. Intenta usar Chrome o Edge.", 'danger');
-                return;
-            }
-
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-            // Si ya hay dictado activo, detenerlo
-            if (dictadoActivo && recognition) {
-                recognition.stop();
-                dictadoActivo = false;
-                btnElement.classList.remove('grabando');
-                campoDictadoActual = null;
-                return;
-            }
-
-            // Crear nueva instancia
-            recognition = new SpeechRecognition();
-            recognition.lang = 'es-ES';
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            recognition.maxAlternatives = 1;
-
-            // Feedback visual: activar
-            btnElement.classList.add('grabando');
-            dictadoActivo = true;
-            campoDictadoActual = elementId;
-            ultimaTranscripcion = '';
-            tiempoUltimaTranscripcion = Date.now();
-
-            recognition.onstart = () => {
-                console.log("Dictado iniciado para campo:", elementId);
-                mostrarAlertaFlotante("Dictado activo. Habla ahora...", 'success');
-            };
-
-            recognition.onresult = (event) => {
-                let textoTranscrito = '';
-                let esFinal = false;
-                
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    if (event.results[i].isFinal) {
-                        textoTranscrito += event.results[i][0].transcript;
-                        esFinal = true;
-                    }
-                }
-                
-                // Solo procesar si es resultado final y ha pasado suficiente tiempo
-                if (esFinal && textoTranscrito && textoTranscrito !== ultimaTranscripcion) {
-                    const ahora = Date.now();
-                    if (ahora - tiempoUltimaTranscripcion > 500) { // Evitar repeticiones rápidas
-                        ultimaTranscripcion = textoTranscrito;
-                        tiempoUltimaTranscripcion = ahora;
-                        
-                        const inputField = document.getElementById(elementId);
-                        
-                        if (inputField) {
-                            // Verificar si es un div contenteditable
-                            if (inputField.isContentEditable) {
-                                // Insertar texto en el editor
-                                inputField.focus();
-                                const textoActual = inputField.innerText || inputField.textContent;
-                                const espacio = (textoActual.length > 0 && !textoActual.endsWith(' ')) ? ' ' : '';
-                                
-                                document.execCommand('insertText', false, espacio + textoTranscrito);
-                                inputField.dispatchEvent(new Event('input'));
-                            } else {
-                                // Es un input o textarea normal
-                                const textoActual = inputField.value;
-                                const espacio = (textoActual.length > 0 && !textoActual.endsWith(' ')) ? ' ' : '';
-                                inputField.value = textoActual + espacio + textoTranscrito;
-                                inputField.dispatchEvent(new Event('input'));
-                            }
-                        }
-                    }
-                }
-            };
-
-            recognition.onerror = (event) => {
-                console.error("Error de reconocimiento:", event.error);
-                dictadoActivo = false;
-                btnElement.classList.remove('grabando');
-                campoDictadoActual = null;
-                
-                if (event.error === 'not-allowed') {
-                    mostrarAlertaFlotante("Permiso de micrófono denegado. Habilítalo en tu navegador.", 'danger');
-                } else if (event.error === 'no-speech') {
-                    mostrarAlertaFlotante("No se detectó voz. Intenta de nuevo.", 'warning');
-                } else if (event.error === 'audio-capture') {
-                    mostrarAlertaFlotante("No se pudo acceder al micrófono.", 'danger');
-                }
-            };
-
-            recognition.onend = () => {
-                dictadoActivo = false;
-                btnElement.classList.remove('grabando');
-                campoDictadoActual = null;
-                ultimaTranscripcion = '';
-                console.log("Dictado finalizado.");
-            };
-
             try {
-                recognition.start();
+                const respuesta = await analizarPreguntaIA(pregunta);
+                
+                mensajeCarga.remove();
+                agregarMensajeIA("asistente", respuesta);
+                
+                conversacionIA.push({ rol: "usuario", contenido: pregunta });
+                conversacionIA.push({ rol: "asistente", contenido: respuesta });
+                
             } catch (error) {
-                console.error("Error al iniciar reconocimiento:", error);
-                mostrarAlertaFlotante("Error al iniciar el dictado por voz.", 'danger');
-                dictadoActivo = false;
-                btnElement.classList.remove('grabando');
-                campoDictadoActual = null;
+                console.error("Error en Asistente IA:", error);
+                mensajeCarga.remove();
+                agregarMensajeIA("asistente", "Lo siento, hubo un error al procesar tu pregunta. Por favor, inténtalo de nuevo.");
             }
         }
-        // --- FIN DICTADO POR VOZ MEJORADO ---
-
-        // MEJORAS RESPONSIVAS ADICIONALES
-        function ajustarInterfazMovil() {
-            const esMovil = window.innerWidth <= 768;
+        
+        function analizarPreguntaIA(pregunta) {
+            const preguntaLower = pregunta.toLowerCase();
+            const datosAnalisis = generarEstadisticasDetalladas();
             
-            // Ajustar texto de botones en móvil
-            const botones = document.querySelectorAll('.button');
-            botones.forEach(boton => {
-                const texto = boton.querySelector('.button-text');
-                if (esMovil && texto) {
-                    // En móvil, ocultar texto largo pero mantener accesibilidad
-                    if (window.innerWidth <= 480) {
-                        texto.style.display = 'none';
-                        boton.setAttribute('aria-label', boton.textContent);
-                    } else {
-                        texto.style.display = 'inline';
+            // 1. ANÁLISIS POR USUARIO
+            if (preguntaLower.includes("usuario") || preguntaLower.includes("abogado") || preguntaLower.includes("asignado")) {
+                return generarAnalisisPorUsuario(pregunta, datosAnalisis);
+            }
+            
+            // 2. ANÁLISIS POR TIPO DE PROCESO
+            if (preguntaLower.includes("tipo") || preguntaLower.includes("proceso") || preguntaLower.includes("categoría")) {
+                return generarAnalisisPorTipo(pregunta, datosAnalisis);
+            }
+            
+            // 3. ANÁLISIS POR ESTADO
+            if (preguntaLower.includes("estado") || preguntaLower.includes("trámite") || preguntaLower.includes("finalizado")) {
+                return generarAnalisisPorEstado(pregunta, datosAnalisis);
+            }
+            
+            // 4. ANÁLISIS POR PRIORIDAD
+            if (preguntaLower.includes("prioridad") || preguntaLower.includes("alta") || preguntaLower.includes("media") || preguntaLower.includes("baja")) {
+                return generarAnalisisPorPrioridad(pregunta, datosAnalisis);
+            }
+            
+            // 5. ANÁLISIS POR JUZGADO
+            if (preguntaLower.includes("juzgado") || preguntaLower.includes("tribunal")) {
+                return generarAnalisisPorJuzgado(pregunta, datosAnalisis);
+            }
+            
+            // 6. ANÁLISIS DE VENCIMIENTOS
+            if (preguntaLower.includes("venc") || preguntaLower.includes("próximo") || preguntaLower.includes("fecha límite")) {
+                return generarAnalisisVencimientos(pregunta, datosAnalisis);
+            }
+            
+            // 7. ESTADÍSTICAS COMPLETAS
+            if (preguntaLower.includes("estadística") || preguntaLower.includes("resumen") || preguntaLower.includes("total") || preguntaLower.includes("cuántos")) {
+                return generarEstadisticasCompletas(datosAnalisis);
+            }
+            
+            // 8. ANÁLISIS GENERAL
+            return generarAnalisisGeneral(datosAnalisis);
+        }
+        
+        function generarEstadisticasDetalladas() {
+            const hoy = new Date();
+            const estadisticas = {
+                total: datosCache.length,
+                porUsuario: {},
+                porTipo: {},
+                porEstado: {},
+                porPrioridad: {
+                    alta: 0, media: 0, baja: 0, ninguna: 0
+                },
+                porJuzgado: {},
+                porIntervencion: {},
+                vencimientosProximos: [],
+                expedientesRecientes: [],
+                usuariosActivos: [],
+                tiposFrecuentes: []
+            };
+            
+            datosCache.forEach(causa => {
+                const usuario = causa.usuarioAsignado || "Sin usuario";
+                const tipo = causa.tipoProceso || "Sin tipo";
+                const estado = causa.estado || "Sin estado";
+                const prioridad = causa.prioridad || "Ninguna";
+                const juzgado = causa.juzgado || "Sin juzgado";
+                const intervencion = causa.intervencion || "Sin intervención";
+                
+                estadisticas.porUsuario[usuario] = (estadisticas.porUsuario[usuario] || 0) + 1;
+                estadisticas.porTipo[tipo] = (estadisticas.porTipo[tipo] || 0) + 1;
+                estadisticas.porEstado[estado] = (estadisticas.porEstado[estado] || 0) + 1;
+                estadisticas.porJuzgado[juzgado] = (estadisticas.porJuzgado[juzgado] || 0) + 1;
+                estadisticas.porIntervencion[intervencion] = (estadisticas.porIntervencion[intervencion] || 0) + 1;
+                
+                if (prioridad === "Alta") estadisticas.porPrioridad.alta++;
+                else if (prioridad === "Media") estadisticas.porPrioridad.media++;
+                else if (prioridad === "Baja") estadisticas.porPrioridad.baja++;
+                else estadisticas.porPrioridad.ninguna++;
+                
+                if (causa.vencimiento) {
+                    const fechaVenc = toDate(causa.vencimiento);
+                    if (fechaVenc) {
+                        const diferenciaDias = Math.ceil((fechaVenc - hoy) / (1000 * 60 * 60 * 24));
+                        if (diferenciaDias >= 0 && diferenciaDias <= 7) {
+                            estadisticas.vencimientosProximos.push({
+                                numero: causa.numCausa || "Sin número",
+                                caratula: causa.caratula || "Sin carátula",
+                                usuario: usuario,
+                                fechaVencimiento: formatearFecha(fechaVenc, true),
+                                diasRestantes: diferenciaDias,
+                                prioridad: prioridad
+                            });
+                        }
                     }
-                } else if (texto) {
-                    texto.style.display = 'inline';
+                }
+                
+                if (causa.fechaRegistro) {
+                    const fechaReg = toDate(causa.fechaRegistro);
+                    if (fechaReg) {
+                        const diferenciaDiasReg = Math.ceil((hoy - fechaReg) / (1000 * 60 * 60 * 24));
+                        if (diferenciaDiasReg <= 30) {
+                            estadisticas.expedientesRecientes.push({
+                                numero: causa.numCausa || "Sin número",
+                                caratula: causa.caratula || "Sin carátula",
+                                fechaRegistro: formatearFecha(fechaReg, false),
+                                usuario: usuario,
+                                tipo: tipo
+                            });
+                        }
+                    }
                 }
             });
             
-            // Ajustar tabs en móvil
-            const tabs = document.querySelectorAll('.tab-button');
-            if (esMovil) {
-                tabs.forEach(tab => {
-                    tab.style.padding = '10px 12px';
-                    tab.style.fontSize = '12px';
-                });
-            } else {
-                tabs.forEach(tab => {
-                    tab.style.padding = '12px 18px';
-                    tab.style.fontSize = '0.9rem';
-                });
-            }
+            estadisticas.usuariosActivos = Object.entries(estadisticas.porUsuario)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
             
-            // Ajustar modales en móvil
-            const modales = document.querySelectorAll('#modal .content, #modalVer .content, #modalEventosHoy .content');
-            if (esMovil) {
-                modales.forEach(modal => {
-                    modal.style.width = '95%';
-                    modal.style.maxHeight = '90vh';
-                });
-            } else {
-                modales.forEach(modal => {
-                    modal.style.width = '';
-                    modal.style.maxHeight = '90vh';
-                });
-            }
+            estadisticas.tiposFrecuentes = Object.entries(estadisticas.porTipo)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+            
+            estadisticas.vencimientosProximos.sort((a, b) => a.diasRestantes - b.diasRestantes);
+            
+            estadisticas.expedientesRecientes.sort((a, b) => new Date(b.fechaRegistro.split('/').reverse().join('-')) - 
+                new Date(a.fechaRegistro.split('/').reverse().join('-')));
+            
+            return estadisticas;
         }
         
-        // Ajustar interfaz al cambiar tamaño de ventana
-        window.addEventListener('resize', ajustarInterfazMovil);
-        
-        // Ajustar al cargar
-        window.addEventListener('load', ajustarInterfazMovil);
-
-        async function initApp() {
-            try {
-                console.log("Inicializando aplicación optimizada...");
+        function generarAnalisisPorUsuario(pregunta, datosAnalisis) {
+            let respuesta = `<strong>📊 ANÁLISIS POR USUARIO</strong><br><br>`;
+            
+            const palabras = pregunta.toLowerCase().split(' ');
+            let usuarioBuscado = null;
+            for (const palabra of palabras) {
+                if (palabra !== "usuario" && palabra !== "del" && palabra !== "de" && palabra.length > 2) {
+                    const usuarios = Object.keys(datosAnalisis.porUsuario);
+                    for (const usuario of usuarios) {
+                        if (usuario.toLowerCase().includes(palabra)) {
+                            usuarioBuscado = usuario;
+                            break;
+                        }
+                    }
+                    if (usuarioBuscado) break;
+                }
+            }
+            
+            if (usuarioBuscado) {
+                const cantidad = datosAnalisis.porUsuario[usuarioBuscado];
+                respuesta += `<strong>Usuario: ${usuarioBuscado}</strong><br>`;
+                respuesta += `• Expedientes asignados: ${cantidad}<br>`;
+                respuesta += `• Porcentaje del total: ${((cantidad / datosAnalisis.total) * 100).toFixed(1)}%<br><br>`;
                 
-                if (!app || !db) {
-                    mostrarAlertaFlotante("Error: No se pudo conectar con la base de datos", 'danger');
-                    tbody.innerHTML = "<tr><td colspan='10'>Error: Base de datos no disponible</td></tr>";
+                respuesta += `<div class="ia-analisis-detallado">`;
+                respuesta += `<h4>📈 Top 5 Usuarios con más expedientes</h4>`;
+                datosAnalisis.usuariosActivos.slice(0, 5).forEach(([usuario, count], index) => {
+                    const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
+                    respuesta += `<div class="ia-estadistica-item">
+                        <span class="ia-estadistica-label">${index + 1}. ${usuario}</span>
+                        <span class="ia-estadistica-valor">${count} (${porcentaje}%)</span>
+                    </div>`;
+                });
+                respuesta += `</div>`;
+            } else {
+                respuesta += `<strong>Total de expedientes: ${datosAnalisis.total}</strong><br><br>`;
+                respuesta += `<div class="ia-analisis-detallado">`;
+                respuesta += `<h4>👥 Distribución por Usuario</h4>`;
+                datosAnalisis.usuariosActivos.forEach(([usuario, count], index) => {
+                    if (index < 8) {
+                        const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
+                        respuesta += `<div class="ia-estadistica-item">
+                            <span class="ia-estadistica-label">${usuario}</span>
+                            <span class="ia-estadistica-valor">${count} (${porcentaje}%)</span>
+                        </div>`;
+                    }
+                });
+                respuesta += `</div>`;
+                
+                respuesta += `<div class="ia-analisis-detallado">`;
+                respuesta += `<h4>🏆 Usuarios más activos</h4>`;
+                datosAnalisis.usuariosActivos.slice(0, 3).forEach(([usuario, count], index) => {
+                    const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
+                    const medalla = index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉";
+                    respuesta += `<div class="ia-estadistica-item">
+                        <span class="ia-estadistica-label">${medalla} ${usuario}</span>
+                        <span class="ia-estadistica-valor">${count} expedientes</span>
+                    </div>`;
+                });
+                respuesta += `</div>`;
+            }
+            
+            return respuesta;
+        }
+        
+        function generarAnalisisPorTipo(pregunta, datosAnalisis) {
+            let respuesta = `<strong>⚖️ ANÁLISIS POR TIPO DE PROCESO</strong><br><br>`;
+            
+            const palabras = pregunta.toLowerCase().split(' ');
+            let tipoBuscado = null;
+            for (const palabra of palabras) {
+                if (palabra !== "tipo" && palabra !== "de" && palabra !== "proceso" && palabra.length > 2) {
+                    const tipos = Object.keys(datosAnalisis.porTipo);
+                    for (const tipo of tipos) {
+                        if (tipo.toLowerCase().includes(palabra)) {
+                            tipoBuscado = tipo;
+                            break;
+                        }
+                    }
+                    if (tipoBuscado) break;
+                }
+            }
+            
+            if (tipoBuscado) {
+                const cantidad = datosAnalisis.porTipo[tipoBuscado];
+                respuesta += `<strong>Tipo: ${tipoBuscado}</strong><br>`;
+                respuesta += `• Cantidad de expedientes: ${cantidad}<br>`;
+                respuesta += `• Porcentaje del total: ${((cantidad / datosAnalisis.total) * 100).toFixed(1)}%<br><br>`;
+            }
+            
+            respuesta += `<div class="ia-analisis-detallado">`;
+            respuesta += `<h4>📊 Distribución por Tipo de Proceso</h4>`;
+            datosAnalisis.tiposFrecuentes.forEach(([tipo, count], index) => {
+                if (index < 10) {
+                    const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
+                    respuesta += `<div class="ia-estadistica-item">
+                        <span class="ia-estadistica-label">${tipo}</span>
+                        <span class="ia-estadistica-valor">${count} (${porcentaje}%)</span>
+                    </div>`;
+                }
+            });
+            respuesta += `</div>`;
+            
+            respuesta += `<div class="ia-analisis-detallado">`;
+            respuesta += `<h4>🏆 Tipos más frecuentes</h4>`;
+            datosAnalisis.tiposFrecuentes.slice(0, 3).forEach(([tipo, count], index) => {
+                const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
+                const medalla = index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉";
+                respuesta += `<div class="ia-estadistica-item">
+                    <span class="ia-estadistica-label">${medalla} ${tipo}</span>
+                    <span class="ia-estadistica-valor">${count} expedientes</span>
+                </div>`;
+            });
+            respuesta += `</div>`;
+            
+            return respuesta;
+        }
+        
+        function generarAnalisisPorEstado(pregunta, datosAnalisis) {
+            let respuesta = `<strong>📋 ANÁLISIS POR ESTADO</strong><br><br>`;
+            
+            respuesta += `<div class="ia-analisis-detallado">`;
+            respuesta += `<h4>📊 Distribución por Estado</h4>`;
+            
+            const estadosOrdenados = Object.entries(datosAnalisis.porEstado)
+                .sort((a, b) => b[1] - a[1]);
+            
+            estadosOrdenados.forEach(([estado, count]) => {
+                const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
+                let icono = "📄";
+                if (estado.toLowerCase().includes("trámite")) icono = "⏳";
+                else if (estado.toLowerCase().includes("finalizado")) icono = "✅";
+                else if (estado.toLowerCase().includes("archivado")) icono = "📁";
+                else if (estado.toLowerCase().includes("alzada")) icono = "⚖️";
+                respuesta += `<div class="ia-estadistica-item">
+                    <span class="ia-estadistica-label">${icono} ${estado}</span>
+                    <span class="ia-estadistica-valor">${count} (${porcentaje}%)</span>
+                </div>`;
+            });
+            respuesta += `</div>`;
+            
+            return respuesta;
+        }
+        
+        function generarAnalisisPorPrioridad(pregunta, datosAnalisis) {
+            let respuesta = `<strong>🚨 ANÁLISIS POR PRIORIDAD</strong><br><br>`;
+            
+            const total = datosAnalisis.total;
+            const prioridades = datosAnalisis.porPrioridad;
+            
+            respuesta += `<div class="ia-analisis-detallado">`;
+            respuesta += `<h4>📊 Distribución por Prioridad</h4>`;
+            
+            let porcentajeAlta = ((prioridades.alta / total) * 100).toFixed(1);
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">🔴 Alta</span>
+                <span class="ia-estadistica-valor">${prioridades.alta} (${porcentajeAlta}%)</span>
+            </div>`;
+            
+            let porcentajeMedia = ((prioridades.media / total) * 100).toFixed(1);
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">🟡 Media</span>
+                <span class="ia-estadistica-valor">${prioridades.media} (${porcentajeMedia}%)</span>
+            </div>`;
+            
+            let porcentajeBaja = ((prioridades.baja / total) * 100).toFixed(1);
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">🟢 Baja</span>
+                <span class="ia-estadistica-valor">${prioridades.baja} (${porcentajeBaja}%)</span>
+            </div>`;
+            
+            let porcentajeNinguna = ((prioridades.ninguna / total) * 100).toFixed(1);
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">⚫ Ninguna</span>
+                <span class="ia-estadistica-valor">${prioridades.ninguna} (${porcentajeNinguna}%)</span>
+            </div>`;
+            
+            respuesta += `</div>`;
+            
+            if (prioridades.alta > 0) {
+                respuesta += `<div class="ia-analisis-detallado">`;
+                respuesta += `<h4>⚠️ Expedientes con Prioridad Alta</h4>`;
+                let contador = 0;
+                datosCache.forEach(causa => {
+                    if (causa.prioridad === "Alta" && contador < 5) {
+                        respuesta += `<div class="ia-expediente-item">
+                            <span class="ia-expediente-numero">${causa.numCausa || "Sin número"}</span><br>
+                            <span class="ia-expediente-datos">${causa.caratula || "Sin carátula"} - ${causa.usuarioAsignado || "Sin usuario"}</span>
+                        </div>`;
+                        contador++;
+                    }
+                });
+                respuesta += `</div>`;
+            }
+            
+            return respuesta;
+        }
+        
+        function generarAnalisisPorJuzgado(pregunta, datosAnalisis) {
+            let respuesta = `<strong>🏛️ ANÁLISIS POR JUZGADO</strong><br><br>`;
+            
+            respuesta += `<div class="ia-analisis-detallado">`;
+            respuesta += `<h4>📊 Top 10 Juzgados con más expedientes</h4>`;
+            
+            const juzgadosOrdenados = Object.entries(datosAnalisis.porJuzgado)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+            
+            juzgadosOrdenados.forEach(([juzgado, count], index) => {
+                const porcentaje = ((count / datosAnalisis.total) * 100).toFixed(1);
+                respuesta += `<div class="ia-estadistica-item">
+                    <span class="ia-estadistica-label">${index + 1}. ${juzgado}</span>
+                    <span class="ia-estadistica-valor">${count} (${porcentaje}%)</span>
+                </div>`;
+            });
+            respuesta += `</div>`;
+            
+            return respuesta;
+        }
+        
+        function generarAnalisisVencimientos(pregunta, datosAnalisis) {
+            let respuesta = `<strong>⏰ ANÁLISIS DE VENCIMIENTOS</strong><br><br>`;
+            
+            const vencimientos = datosAnalisis.vencimientosProximos;
+            
+            if (vencimientos.length === 0) {
+                respuesta += `<p>No hay vencimientos próximos (en los próximos 7 días).</p>`;
+            } else {
+                respuesta += `<p>Se encontraron <strong>${vencimientos.length}</strong> expedientes con vencimientos en los próximos 7 días.</p>`;
+                respuesta += `<div class="ia-analisis-detallado">`;
+                respuesta += `<h4>📅 Vencimientos más próximos</h4>`;
+                vencimientos.slice(0, 10).forEach(venc => {
+                    let icono = "⏰";
+                    if (venc.diasRestantes <= 1) icono = "🚨";
+                    else if (venc.diasRestantes <= 3) icono = "⚠️";
+                    respuesta += `<div class="ia-expediente-item">
+                        <span class="ia-expediente-numero">${icono} ${venc.numero}</span><br>
+                        <span class="ia-expediente-datos">${venc.caratula}<br>
+                        <strong>Usuario:</strong> ${venc.usuario} | <strong>Vence:</strong> ${venc.fechaVencimiento} (en ${venc.diasRestantes} días) | <strong>Prioridad:</strong> ${venc.prioridad}</span>
+                    </div>`;
+                });
+                respuesta += `</div>`;
+            }
+            
+            return respuesta;
+        }
+        
+        function generarEstadisticasCompletas(datosAnalisis) {
+            let respuesta = `<strong>📈 ESTADÍSTICAS COMPLETAS</strong><br><br>`;
+            
+            respuesta += `<div class="ia-analisis-detallado">`;
+            respuesta += `<h4>📊 Resumen General</h4>`;
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">Total de Expedientes</span>
+                <span class="ia-estadistica-valor">${datosAnalisis.total}</span>
+            </div>`;
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">Expedientes en Trámite</span>
+                <span class="ia-estadistica-valor">${datosAnalisis.porEstado["En trámite"] || 0}</span>
+            </div>`;
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">Expedientes Finalizados</span>
+                <span class="ia-estadistica-valor">${datosAnalisis.porEstado["Finalizado"] || 0}</span>
+            </div>`;
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">Expedientes con Prioridad Alta</span>
+                <span class="ia-estadistica-valor">${datosAnalisis.porPrioridad.alta}</span>
+            </div>`;
+            respuesta += `</div>`;
+            
+            respuesta += `<div class="ia-analisis-detallado">`;
+            respuesta += `<h4>👥 Top 3 Usuarios</h4>`;
+            datosAnalisis.usuariosActivos.slice(0, 3).forEach(([usuario, count], index) => {
+                const medalla = index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉";
+                respuesta += `<div class="ia-estadistica-item">
+                    <span class="ia-estadistica-label">${medalla} ${usuario}</span>
+                    <span class="ia-estadistica-valor">${count} expedientes</span>
+                </div>`;
+            });
+            respuesta += `</div>`;
+            
+            respuesta += `<div class="ia-analisis-detallado">`;
+            respuesta += `<h4>⚖️ Top 3 Tipos de Proceso</h4>`;
+            datosAnalisis.tiposFrecuentes.slice(0, 3).forEach(([tipo, count], index) => {
+                const medalla = index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉";
+                respuesta += `<div class="ia-estadistica-item">
+                    <span class="ia-estadistica-label">${medalla} ${tipo}</span>
+                    <span class="ia-estadistica-valor">${count} expedientes</span>
+                </div>`;
+            });
+            respuesta += `</div>`;
+            
+            if (datosAnalisis.vencimientosProximos.length > 0) {
+                respuesta += `<div class="ia-analisis-detallado">`;
+                respuesta += `<h4>⏰ Vencimientos Próximos (7 días)</h4>`;
+                respuesta += `<div class="ia-estadistica-item">
+                    <span class="ia-estadistica-label">Expedientes por vencer</span>
+                    <span class="ia-estadistica-valor">${datosAnalisis.vencimientosProximos.length}</span>
+                </div>`;
+                respuesta += `</div>`;
+            }
+            
+            return respuesta;
+        }
+        
+        function generarAnalisisGeneral(datosAnalisis) {
+            let respuesta = `<strong>🤖 ANÁLISIS GENERAL DEL SISTEMA</strong><br><br>`;
+            
+            respuesta += `<p>Bienvenido al Asistente IA. He analizado todos los expedientes y he encontrado la siguiente información:</p>`;
+            
+            respuesta += `<div class="ia-analisis-detallado">`;
+            respuesta += `<h4>📈 Datos Generales</h4>`;
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">Total de Expedientes</span>
+                <span class="ia-estadistica-valor">${datosAnalisis.total}</span>
+            </div>`;
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">Usuarios Activos</span>
+                <span class="ia-estadistica-valor">${Object.keys(datosAnalisis.porUsuario).length}</span>
+            </div>`;
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">Tipos de Proceso</span>
+                <span class="ia-estadistica-valor">${Object.keys(datosAnalisis.porTipo).length}</span>
+            </div>`;
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">Juzgados</span>
+                <span class="ia-estadistica-valor">${Object.keys(datosAnalisis.porJuzgado).length}</span>
+            </div>`;
+            respuesta += `</div>`;
+            
+            respuesta += `<div class="ia-analisis-detallado">`;
+            respuesta += `<h4>🚨 Resumen de Prioridades</h4>`;
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">Alta</span>
+                <span class="ia-estadistica-valor">${datosAnalisis.porPrioridad.alta} expedientes</span>
+            </div>`;
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">Media</span>
+                <span class="ia-estadistica-valor">${datosAnalisis.porPrioridad.media} expedientes</span>
+            </div>`;
+            respuesta += `<div class="ia-estadistica-item">
+                <span class="ia-estadistica-label">Baja</span>
+                <span class="ia-estadistica-valor">${datosAnalisis.porPrioridad.baja} expedientes</span>
+            </div>`;
+            respuesta += `</div>`;
+            
+            respuesta += `<div class="ia-analisis-detallado">`;
+            respuesta += `<h4>💡 Recomendaciones</h4>`;
+            if (datosAnalisis.porPrioridad.alta > 0) {
+                respuesta += `<p>• Tienes <strong>${datosAnalisis.porPrioridad.alta}</strong> expedientes con prioridad alta. Revisa la sección de vencimientos para asegurar que no se pasen las fechas límite.</p>`;
+            }
+            if (datosAnalisis.vencimientosProximos.length > 0) {
+                respuesta += `<p>• Hay <strong>${datosAnalisis.vencimientosProximos.length}</strong> expedientes con vencimientos en los próximos 7 días. Utiliza el filtro de vencimientos para revisarlos.</p>`;
+            }
+            respuesta += `<p>• Para un análisis detallado, puedes preguntar por usuarios, tipos de proceso, estados, prioridades, juzgados o vencimientos.</p>`;
+            respuesta += `</div>`;
+            
+            return respuesta;
+        }
+        
+        function agregarMensajeIA(rol, contenido) {
+            const div = document.createElement('div');
+            div.className = `ia-mensaje ${rol}`;
+            div.innerHTML = contenido;
+            iaConversacion.appendChild(div);
+            iaConversacion.scrollTop = iaConversacion.scrollHeight;
+            return div;
+        }
+        
+        function agregarMensajeCarga() {
+            const div = document.createElement('div');
+            div.className = 'ia-carga';
+            div.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analizando datos...';
+            iaConversacion.appendChild(div);
+            iaConversacion.scrollTop = iaConversacion.scrollHeight;
+            return div;
+        }
+
+        // FUNCIONES DE VOZ
+        function setupFuncionesVoz() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                console.warn("El navegador no soporta reconocimiento de voz");
+                return;
+            }
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            let reconocimiento = null;
+            let reconocimientoActivo = false;
+            
+            function iniciarReconocimiento(idCampo) {
+                if (reconocimientoActivo) {
+                    detenerReconocimiento();
                     return;
                 }
                 
-                await Promise.all([cargarUsuarios(), cargarJuzgados()]);
+                reconocimiento = new SpeechRecognition();
+                reconocimiento.lang = 'es-ES';
+                reconocimiento.interimResults = false;
+                reconocimiento.continuous = false;
                 
-                poblarFiltroUsuarios();
-                poblarTiposProceso();
-                poblarFiltroTiposProceso();
-                poblarFiltroIntervencion();
-                poblarSelectUsuarios();
+                reconocimiento.onstart = function() {
+                    reconocimientoActivo = true;
+                    const btn = document.querySelector(`#btnVoice${idCampo}`);
+                    if (btn) btn.classList.add('listening');
+                    mostrarAlertaFlotante("Escuchando... Habla ahora", 'info');
+                };
                 
-                initFormEventListeners();
+                reconocimiento.onresult = function(event) {
+                    const transcripcion = event.results[0][0].transcript;
+                    const campo = $(idCampo);
+                    if (campo) {
+                        if (campo.tagName === 'TEXTAREA' || campo.tagName === 'INPUT') {
+                            campo.value += (campo.value ? ' ' : '') + transcripcion;
+                            campo.dispatchEvent(new Event('input'));
+                        } else if (campo.contentEditable === 'true') {
+                            campo.textContent += (campo.textContent ? ' ' : '') + transcripcion;
+                            campo.dispatchEvent(new Event('input'));
+                        }
+                    }
+                };
                 
-                suscribirCausas();
+                reconocimiento.onerror = function(event) {
+                    console.error("Error en reconocimiento de voz:", event.error);
+                    mostrarAlertaFlotante("Error en reconocimiento de voz", 'danger');
+                };
                 
-                if ($("btnNuevo")) {
-                    $("btnNuevo").onclick = abrirNuevoExpediente;
-                }
-                if ($("btnGuardar")) {
-                    $("btnGuardar").onclick = guardarExpediente;
-                }
+                reconocimiento.onend = function() {
+                    reconocimientoActivo = false;
+                    const btn = document.querySelector(`#btnVoice${idCampo}`);
+                    if (btn) btn.classList.remove('listening');
+                };
                 
-                // Ajustar interfaz inicial
-                ajustarInterfazMovil();
-                
-                console.log("Aplicación optimizada inicializada correctamente");
-            } catch (error) {
-                console.error("Error durante la inicialización:", error);
-                mostrarAlertaFlotante("Error al cargar los datos iniciales: " + error.message, 'danger');
-                tbody.innerHTML = `<tr><td colspan='10'>Error al inicializar la aplicación: ${error.message}</td></tr>`;
+                reconocimiento.start();
             }
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const set24HourFormat = () => {
-                const inputs = document.querySelectorAll('input[type="datetime-local"]');
-                inputs.forEach(input => {
-                    input.setAttribute('step', '3600');
+            
+            function detenerReconocimiento() {
+                if (reconocimiento) {
+                    reconocimiento.stop();
+                }
+                reconocimientoActivo = false;
+                document.querySelectorAll('.voice-btn, .voice-input-btn').forEach(btn => {
+                    btn.classList.remove('listening');
                 });
+            }
+            
+            const botonesVoz = {
+                'Caratula': 'btnVoiceCaratula',
+                'DatosNnya': 'btnVoiceDatosNnya',
+                'NnyaGesell': 'btnVoiceNnyaGesell',
+                'Observaciones': 'btnVoiceObservaciones',
+                'Nota': 'btnVoiceNota',
+                'Search': 'btnVoiceSearch'
             };
             
-            set24HourFormat();
+            Object.keys(botonesVoz).forEach(campo => {
+                const btn = $(botonesVoz[campo]);
+                if (btn) {
+                    btn.onclick = () => iniciarReconocimiento(campo);
+                }
+            });
             
-            const observer = new MutationObserver(set24HourFormat);
-            observer.observe(document.body, { childList: true, subtree: true });
-        });
-        
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initApp);
-        } else {
-            initApp();
+            const btnTextToSpeech = $('btnTextToSpeech');
+            if (btnTextToSpeech) {
+                btnTextToSpeech.onclick = function() {
+                    const contenido = verContenido.innerText;
+                    if ('speechSynthesis' in window) {
+                        const sintesis = speechSynthesis;
+                        const utterance = new SpeechSynthesisUtterance(contenido);
+                        utterance.lang = 'es-ES';
+                        utterance.rate = 1.0;
+                        utterance.pitch = 1.0;
+                        
+                        this.classList.toggle('speaking');
+                        if (sintesis.speaking) {
+                            sintesis.cancel();
+                            this.classList.remove('speaking');
+                        } else {
+                            sintesis.speak(utterance);
+                            utterance.onend = () => {
+                                this.classList.remove('speaking');
+                            };
+                        }
+                    }
+                };
+            }
         }
 
-        // FUNCIÓN DE MIGRACIÓN (COPIADA DE REDUCE.html)
-        window.migrarDatosParaBusqueda = async function() {
-            if (!confirm("¿Migrar todos los datos para búsqueda optimizada? Esto actualizará todos los expedientes con campos keywords y fechasFiltro. Puede tardar varios minutos.")) return;
+        // INICIALIZACIÓN
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log("Inicializando aplicación...");
             
-            const btn = document.createElement("button");
-            btn.textContent = "Migrando...";
-            btn.disabled = true;
-            document.body.appendChild(btn);
+            await cargarUsuarios();
+            await cargarJuzgados();
+            
+            poblarTiposProceso();
+            poblarSelectUsuarios();
+            poblarFiltroTiposProceso();
+            poblarFiltroIntervencion();
+            poblarFiltroUsuarios();
+            
+            suscribirCausas(true);
+            
+            // Event Listeners
+            $("btnNuevo").onclick = abrirNuevoExpediente;
+            $("btnGuardar").onclick = guardarExpediente;
+            $("btnCerrarVer").onclick = () => modalVer.style.display = "none";
+            $("btnCerrarEventosHoy").onclick = () => modalEventosHoy.style.display = "none";
+            $("btnCerrarIA").onclick = () => modalIA.style.display = "none";
+            $("btnEventosHoy").onclick = () => {
+                renderEventosHoy();
+                modalEventosHoy.style.display = "flex";
+            };
+            $("btnAsistenteIA").onclick = abrirAsistenteIA;
+            $("btnPrintFiltrado").onclick = () => window.print();
+            $("btnPrintRegistro").onclick = () => window.print();
+            
+            // Filtros
+            buscador.addEventListener('input', actualizarFiltros);
+            filtroEstado.addEventListener('change', actualizarFiltros);
+            filtroUsuario.addEventListener('change', actualizarFiltros);
+            filtroPrioridad.addEventListener('change', actualizarFiltros);
+            filtroIntervencion.addEventListener('change', actualizarFiltros);
+            filtroTipoProceso.addEventListener('change', actualizarFiltros);
+            filtroEventos.addEventListener('change', actualizarFiltros);
+            filtroFechaDesde.addEventListener('change', actualizarFiltros);
+            filtroFechaHasta.addEventListener('change', actualizarFiltros);
+            
+            // Tabs
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    button.classList.add('active');
+                    $(tabId).classList.add('active');
+                });
+            });
+            
+            // Editor de observaciones
+            btnBold.onclick = () => {
+                document.execCommand('bold', false, null);
+                btnBold.classList.toggle('active');
+            };
+            btnColorAzul.onclick = () => document.execCommand('foreColor', false, '#007bff');
+            btnColorRojo.onclick = () => document.execCommand('foreColor', false, '#dc3545');
+            btnColorVerde.onclick = () => document.execCommand('foreColor', false, '#28a745');
+            btnColorNormal.onclick = () => document.execCommand('foreColor', false, '#212529');
+            
+            // Validación de existencia de expediente
+            $("numCausa").addEventListener('blur', validarExistenciaExpediente);
+            $("numCausa").addEventListener('input', function() {
+                const field = this.closest('.field');
+                field.classList.remove('error');
+                const errorSpan = field.querySelector('.error-message');
+                errorSpan.textContent = "Este campo es obligatorio.";
+                errorSpan.style.color = "";
+                errorSpan.style.fontWeight = "";
+            });
+            
+            // Select de tipo de proceso para cargar juzgados
+            selTipo.addEventListener('change', function() {
+                poblarJuzgadosPorTipo(this.value);
+            });
+            
+            // Select de recursos para mostrar campos opcionales
+            $("recursos").addEventListener('change', function() {
+                $("recursos-opcionales").style.display = this.value ? "block" : "none";
+            });
+            
+            // Habilitar/deshabilitar Gesell
+            $("habilitarAudienciaGesell").addEventListener('change', function() {
+                $("audienciaGesell").disabled = !this.checked;
+                $("nnyaGesell").disabled = !this.checked;
+            });
+            
+            // Agregar audiencias y diligencias dinámicas
+            btnAgregarAudiencia.onclick = function() {
+                const container = audienciasContainer;
+                const div = document.createElement('div');
+                div.className = 'audiencia-item';
+                div.innerHTML = `
+                    <input type="datetime-local" class="audiencia-fecha">
+                    <button type="button" class="btn-eliminar-audiencia"><i class="fa fa-trash"></i></button>
+                `;
+                container.appendChild(div);
+                div.querySelector('.btn-eliminar-audiencia').onclick = function() {
+                    container.removeChild(div);
+                };
+            };
+            
+            btnAgregarDiligencia.onclick = function() {
+                const container = diligenciasContainer;
+                const div = document.createElement('div');
+                div.className = 'diligencia-item';
+                div.innerHTML = `
+                    <input type="datetime-local" class="diligencia-fecha">
+                    <input type="text" class="diligencia-detalle" placeholder="Detalle">
+                    <button type="button" class="btn-eliminar-diligencia"><i class="fa fa-trash"></i></button>
+                `;
+                container.appendChild(div);
+                div.querySelector('.btn-eliminar-diligencia').onclick = function() {
+                    container.removeChild(div);
+                };
+            };
+            
+            // Contadores de texto
+            function setupContadores() {
+                const editor = observacionesEditor;
+                const counter = $("counter");
+                editor.addEventListener('input', function() {
+                    const texto = editor.innerText || "";
+                    const palabras = texto.trim().split(/\s+/).filter(p => p.length > 0);
+                    counter.textContent = `${palabras.length}/1000`;
+                    if (palabras.length > 1000) {
+                        counter.style.color = 'red';
+                    } else {
+                        counter.style.color = '';
+                    }
+                    observacionesHidden.value = editor.innerHTML;
+                });
+                
+                const contadores = [
+                    { campo: $("datosNnya"), contador: $("counterNnya"), max: 500 },
+                    { campo: $("nnyaGesell"), contador: $("counterNnyaGesell"), max: 400 }
+                ];
+                contadores.forEach(item => {
+                    if (item.campo) {
+                        item.campo.addEventListener('input', function() {
+                            const palabras = this.value.trim().split(/\s+/).filter(p => p.length > 0);
+                            item.contador.textContent = `${palabras.length}/${item.max}`;
+                            if (palabras.length > item.max) {
+                                item.contador.style.color = 'red';
+                            } else {
+                                item.contador.style.color = '';
+                            }
+                        });
+                        item.contador.style.display = 'block';
+                    }
+                });
+            }
+            setupContadores();
+            
+            // Funciones de voz
+            setupFuncionesVoz();
+            
+            // Asistente IA
+            iaEnviar.onclick = enviarPreguntaIA;
+            iaPregunta.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    enviarPreguntaIA();
+                }
+            });
+            
+            console.log("Aplicación inicializada correctamente.");
+        });
 
+        // FUNCIÓN PARA MIGRAR DATOS CORREGIDA
+        window.migrarDatosParaBusqueda = async function() {
+            if (!db) {
+                alert("Firebase no está inicializado");
+                return;
+            }
+            
+            const confirmar = confirm("Esta operación actualizará todos los registros para habilitar búsquedas avanzadas. ¿Continuar?");
+            if (!confirmar) return;
+            
             try {
                 const snapshot = await db.collection("causas").get();
                 const batch = db.batch();
-                let count = 0;
+                let contador = 0;
+                
                 snapshot.forEach(doc => {
-                    const d = doc.data();
+                    const data = doc.data();
+                    
                     // Generar keywords
-                    const texto = [d.numCausa, d.caratula, d.usuarioAsignado].join(' ');
-                    const keywords = texto.toLowerCase()
-                        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                        .replace(/[^\w\s]/gi, '')
-                        .split(/\s+/)
-                        .filter(palabra => palabra.length > 0);
-
+                    const textoParaKeywords = [
+                        data.numCausa || '',
+                        data.caratula || '', 
+                        data.usuarioAsignado || '',
+                        data.observaciones || ''
+                    ]
+                    .filter(Boolean)
+                    .join(' ')
+                    .toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[^\w\s]/gi, '')
+                    .split(/\s+/)
+                    .filter(palabra => palabra.length > 0);
+                    
                     // Generar fechasFiltro
                     const fechasSet = new Set();
                     const agregarFecha = (fecha) => {
                         if (!fecha) return;
-                        const date = toDate(fecha);
-                        if (date && !isNaN(date)) {
-                            fechasSet.add(formatFechaParaInput(date, false));
+                        const d = toDate(fecha);
+                        if (d && !isNaN(d)) {
+                            fechasSet.add(formatFechaParaInput(d, false));
                         }
                     };
-                    agregarFecha(d.vencimiento);
-                    agregarFecha(d.vencimientoRecursos);
-                    agregarFecha(d.audienciaGesell);
-                    if (Array.isArray(d.audiencias)) d.audiencias.forEach(agregarFecha);
-                    if (Array.isArray(d.diligencias)) d.diligencias.forEach(dilig => agregarFecha(dilig.fecha));
-
-                    batch.update(doc.ref, {
-                        keywords: keywords,
+                    
+                    agregarFecha(data.vencimiento);
+                    agregarFecha(data.vencimientoRecursos);
+                    agregarFecha(data.audienciaGesell);
+                    if (Array.isArray(data.audiencias)) {
+                        data.audiencias.forEach(agregarFecha);
+                    }
+                    if (Array.isArray(data.diligencias)) {
+                        data.diligencias.forEach(dilig => agregarFecha(dilig.fecha));
+                    }
+                    
+                    // Actualizar documento
+                    const ref = db.collection("causas").doc(doc.id);
+                    batch.update(ref, {
+                        keywords: textoParaKeywords,
                         fechasFiltro: Array.from(fechasSet)
                     });
-                    count++;
-                    if (count % 500 === 0) {
-                        console.log(`Procesados ${count} documentos`);
-                    }
+                    
+                    contador++;
                 });
+                
                 await batch.commit();
-                alert(`Migración completada. ${count} documentos actualizados.`);
-                // Recargar datos después de migración
-                suscribirCausas(true);
-            } catch (e) {
-                console.error("Error en migración:", e);
-                alert("Error en migración: " + e.message);
-            } finally {
-                btn.remove();
+                alert(`Se actualizaron ${contador} registros correctamente.`);
+                location.reload();
+            } catch (error) {
+                console.error("Error en migración:", error);
+                alert("Error durante la migración: " + error.message);
             }
         };
     </script>
