@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
     <style>
-        /* MANTENGO TODO EL CSS ORIGINAL SIN CAMBIOS, AÑADIENDO SÓLO LO NUEVO */
+        /* TODO EL CSS ORIGINAL SE MANTIENE SIN CAMBIOS */
         :root {
             --primary-blue: #007bff;
             --primary-light-blue: #e7f4ff;
@@ -3806,73 +3806,75 @@
             return div;
         }
 
-        // FUNCIONES DE VOZ ORIGINALES
+        // ======================================================================
+        // FUNCIÓN DE RECONOCIMIENTO DE VOZ CORREGIDA Y ROBUSTA
+        // ======================================================================
+        // Función de reconocimiento de voz corregida
+        function startDictation(inputId) {
+            // Verificar si el navegador soporta la API
+            if (window.hasOwnProperty('webkitSpeechRecognition') || window.hasOwnProperty('SpeechRecognition')) {
+                
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                var recognition = new SpeechRecognition();
+
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = "es-AR"; // Configurado para español Argentina
+                
+                // Indicador visual: Cambiar color del ícono al empezar a escuchar
+                const icon = document.querySelector(`i[onclick="startDictation('${inputId}')"]`);
+                if(icon) icon.style.color = "red";
+
+                recognition.start();
+
+                recognition.onresult = function(event) {
+                    var transcript = event.results[0][0].transcript;
+                    var input = document.getElementById(inputId);
+                    
+                    if (input) {
+                        // 1. Insertar el texto (respetando si ya había algo escrito)
+                        // Si quieres que reemplace todo, usa: input.value = transcript;
+                        // Si quieres que agregue al final:
+                        input.value = input.value ? input.value + " " + transcript : transcript;
+
+                        // 2. IMPORTANTE: Disparar el evento para que funcionen los filtros
+                        // Esto simula que el usuario escribió, activando el filtrado
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                        input.dispatchEvent(new Event('change', { bubbles: true }));
+                        input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
+                        
+                        // Si es específicamente el campo de búsqueda global, forzar el filtro
+                        if(inputId === 'buscador' && typeof actualizarFiltros === 'function'){
+                            actualizarFiltros();
+                        }
+                    }
+                    if(icon) icon.style.color = ""; // Restaurar color original
+                    recognition.stop();
+                };
+
+                recognition.onerror = function(event) {
+                    console.error("Error en reconocimiento de voz:", event.error);
+                    if(icon) icon.style.color = ""; // Restaurar color
+                    recognition.stop();
+                };
+                
+                recognition.onend = function() {
+                     if(icon) icon.style.color = ""; // Restaurar color al terminar
+                };
+
+            } else {
+                alert("Tu navegador no soporta reconocimiento de voz. Por favor usa Google Chrome.");
+            }
+        }
+
+        // FUNCIONES DE VOZ ORIGINALES - ACTUALIZADAS PARA USAR LA NUEVA FUNCIÓN
         function setupFuncionesVoz() {
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
                 console.warn("El navegador no soporta reconocimiento de voz");
                 return;
             }
             
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            let reconocimiento = null;
-            let reconocimientoActivo = false;
-            
-            function iniciarReconocimiento(idCampo) {
-                if (reconocimientoActivo) {
-                    detenerReconocimiento();
-                    return;
-                }
-                
-                reconocimiento = new SpeechRecognition();
-                reconocimiento.lang = 'es-ES';
-                reconocimiento.interimResults = false;
-                reconocimiento.continuous = false;
-                
-                reconocimiento.onstart = function() {
-                    reconocimientoActivo = true;
-                    const btn = document.querySelector(`#btnVoice${idCampo}`);
-                    if (btn) btn.classList.add('listening');
-                    mostrarAlertaFlotante("Escuchando... Habla ahora", 'info');
-                };
-                
-                reconocimiento.onresult = function(event) {
-                    const transcripcion = event.results[0][0].transcript;
-                    const campo = $(idCampo);
-                    if (campo) {
-                        if (campo.tagName === 'TEXTAREA' || campo.tagName === 'INPUT') {
-                            campo.value += (campo.value ? ' ' : '') + transcripcion;
-                            campo.dispatchEvent(new Event('input'));
-                        } else if (campo.contentEditable === 'true') {
-                            campo.textContent += (campo.textContent ? ' ' : '') + transcripcion;
-                            campo.dispatchEvent(new Event('input'));
-                        }
-                    }
-                };
-                
-                reconocimiento.onerror = function(event) {
-                    console.error("Error en reconocimiento de voz:", event.error);
-                    mostrarAlertaFlotante("Error en reconocimiento de voz", 'danger');
-                };
-                
-                reconocimiento.onend = function() {
-                    reconocimientoActivo = false;
-                    const btn = document.querySelector(`#btnVoice${idCampo}`);
-                    if (btn) btn.classList.remove('listening');
-                };
-                
-                reconocimiento.start();
-            }
-            
-            function detenerReconocimiento() {
-                if (reconocimiento) {
-                    reconocimiento.stop();
-                }
-                reconocimientoActivo = false;
-                document.querySelectorAll('.voice-btn, .voice-input-btn').forEach(btn => {
-                    btn.classList.remove('listening');
-                });
-            }
-            
+            // Configurar botones de voz existentes para usar startDictation
             const botonesVoz = {
                 'Caratula': 'btnVoiceCaratula',
                 'DatosNnya': 'btnVoiceDatosNnya',
@@ -3882,13 +3884,28 @@
                 'Search': 'btnVoiceSearch'
             };
             
+            // Mapeo de IDs de botón a IDs de campo
+            const campoPorBoton = {
+                'btnVoiceCaratula': 'caratula',
+                'btnVoiceDatosNnya': 'datosNnya',
+                'btnVoiceNnyaGesell': 'nnyaGesell',
+                'btnVoiceObservaciones': 'observaciones-editor',
+                'btnVoiceNota': 'notaBitacora',
+                'btnVoiceSearch': 'buscador'
+            };
+            
             Object.keys(botonesVoz).forEach(campo => {
                 const btn = $(botonesVoz[campo]);
                 if (btn) {
-                    btn.onclick = () => iniciarReconocimiento(campo);
+                    // Obtener el ID del campo correspondiente
+                    const campoId = campoPorBoton[botonesVoz[campo]];
+                    
+                    // Configurar el botón para usar startDictation
+                    btn.onclick = () => startDictation(campoId);
                 }
             });
             
+            // Configurar botón de texto a voz en modal de ver
             const btnTextToSpeech = $('btnTextToSpeech');
             if (btnTextToSpeech) {
                 btnTextToSpeech.onclick = function() {
