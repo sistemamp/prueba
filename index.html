@@ -1440,15 +1440,32 @@
             #formCausa .grid {
                 grid-template-columns: 1fr;
             }
+            /* AJUSTE PARA SOLAPAS EN MOVIL */
             .tabs-nav {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
+                flex-wrap: wrap; /* Permite que las pestañas bajen de línea */
+                justify-content: center; /* Centra las pestañas */
+                overflow-x: hidden;
             }
             .tab-button {
-                padding: 10px 14px;
-                font-size: 0.85rem;
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                flex-grow: 1; /* Hace que ocupen el ancho disponible */
+                text-align: center;
+                border-bottom: 1px solid #ddd;
             }
+            /* AJUSTE MODAL EN MÓVIL */
+            #modal .content {
+                display: flex;
+                flex-direction: column;
+                height: 100%; /* Ocupa altura completa */
+                max-height: 95vh;
+                margin: 10px;
+            }
+            .modal-body {
+                flex: 1; /* Ocupa el espacio restante */
+                overflow-y: auto; /* Scroll solo en el cuerpo */
+            }
+            
             .data-table {
                 min-width: 600px;
             }
@@ -1511,6 +1528,7 @@
                 max-height: 100vh;
                 border-radius: 0;
                 margin: 0;
+                height: 100vh;
             }
             .modal-header,
             .modal-body,
@@ -1525,8 +1543,8 @@
                 justify-content: center;
             }
             .tab-button {
-                padding: 8px 12px;
-                font-size: 0.8rem;
+                padding: 6px 10px;
+                font-size: 0.75rem;
             }
             .table-wrap {
                 margin: 0 -8px;
@@ -1730,7 +1748,6 @@
         <div id="paginacion-container"></div>
     </main>
 
-    <!-- MODAL ASISTENTE IA - PANTALLA COMPLETA -->
     <div id="modalIA">
         <div class="content">
             <div class="modal-header">
@@ -1751,8 +1768,7 @@
                     
                     <div class="ia-conversacion-wrapper">
                         <div class="ia-conversacion" id="iaConversacion">
-                            <!-- La conversación se insertará aquí dinámicamente -->
-                        </div>
+                            </div>
                     </div>
                     
                     <div class="ia-input-container-pantalla">
@@ -1768,14 +1784,12 @@
                     </div>
                     
                     <div class="ia-chips-container" id="iaChipsContainer">
-                        <!-- Los chips se generarán dinámicamente -->
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL EVENTOS HOY -->
     <div id="modalEventosHoy">
         <div class="content">
             <div class="modal-header">
@@ -1812,7 +1826,6 @@
         </div>
     </div>
 
-    <!-- MODALES EXISTENTES -->
     <div id="modal">
         <div class="content">
             <div class="modal-header">
@@ -3832,16 +3845,23 @@
                     var input = document.getElementById(inputId);
                     
                     if (input) {
-                        // 1. Insertar el texto (respetando si ya había algo escrito)
-                        // Si quieres que reemplace todo, usa: input.value = transcript;
-                        // Si quieres que agregue al final:
-                        input.value = input.value ? input.value + " " + transcript : transcript;
-
-                        // 2. IMPORTANTE: Disparar el evento para que funcionen los filtros
-                        // Esto simula que el usuario escribió, activando el filtrado
-                        input.dispatchEvent(new Event('input', { bubbles: true }));
-                        input.dispatchEvent(new Event('change', { bubbles: true }));
-                        input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
+                        // 1. Detectar si es un elemento Editable (DIV contenteditable) como Observaciones
+                        if (input.isContentEditable) {
+                            // Añadir espacio si ya hay texto
+                            const textoActual = input.innerText;
+                            input.innerText = textoActual ? textoActual + " " + transcript : transcript;
+                            
+                            // Disparar evento 'input' para que se actualicen los contadores y campos ocultos
+                            input.dispatchEvent(new Event('input', { bubbles: true }));
+                        } 
+                        // 2. Detectar si es un Input o Textarea normal
+                        else {
+                            input.value = input.value ? input.value + " " + transcript : transcript;
+                            
+                            // Disparar eventos para filtros y validaciones
+                            input.dispatchEvent(new Event('input', { bubbles: true }));
+                            input.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
                         
                         // Si es específicamente el campo de búsqueda global, forzar el filtro
                         if(inputId === 'buscador' && typeof actualizarFiltros === 'function'){
@@ -3951,12 +3971,12 @@
             $("btnNuevo").onclick = abrirNuevoExpediente;
             $("btnGuardar").onclick = guardarExpediente;
             // Cerrar modal al hacer clic fuera del contenido
-modal.addEventListener('click', function(e) {
-    if (e.target === modal) {
-        modal.style.display = "none";
-        resetFormCausa();
-    }
-});
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = "none";
+                    resetFormCausa();
+                }
+            });
             $("btnCerrarVer").onclick = () => modalVer.style.display = "none";
             $("btnCerrarEventosHoy").onclick = () => modalEventosHoy.style.display = "none";
             $("btnEventosHoy").onclick = () => {
